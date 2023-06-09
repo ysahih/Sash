@@ -9,7 +9,7 @@ void	builtin_cmds(char *s)
 
 bool	is_symbol(char c)
 {
-	return (c == ' ' && c == '\'' && c == '"' && c == '|' && c == '<' && c == '>'&& c == '*');
+	return (c == ' ' || c == '\'' || c == '"' || c == '|' || c == '<' || c == '>'|| c == '*');
 }
 
 int	ft_strlen(char *s)
@@ -30,65 +30,79 @@ char	*ft_strcpy(char *str, int size)
 
 	i = 0;
 	word = malloc(size + 1);
-	while (str[i] != '\0' && i < (size -1))
+	while (str[i] && i < size)
 	{
 		word[i] = str[i];
 		i++;
 	}
 	word[i] = '\0';
+
 	return (word);
 }	
 
 
-void	tokenize_word(t_tokenize **node, char *s)
+void	tokenize_word(t_tokenize **node, char **s)
 {
-	char *cmd;
 	int	i;
 
+	char *tmp;
+
+	tmp = *s;
 	i = 0;
-	while (*s && !is_symbol(*s))
-		s++;
-	cmd = ft_strcpy(s, i);
-	create_node(node, cmd, WORD);
+	
+	while (tmp[i] && !is_symbol(tmp[i]))
+		i++;
+	
+	create_node(node, ft_strcpy(*s, i), WORD);
+	*s += i;
 }
 
-void	tokenize(char *str)
+void	tokenize(char *line)
 {
-	char	*wp;
-	char *line;
 	t_tokenize *node = NULL;
 
-	line = str;
+	int i = strlen(line);
 	while (*line)
 	{
 		while (*line == ' ')
 			line++;
-		if (*line == '|')
+		if (*line == '|'){
 			create_node(&node, "|", PIPE);
-		if (*line == '>')
+			line++;
+		}
+		else if (*line == '>')
 		{
 			if (*line + 1 == '>')
+			{
 				create_node(&node, ">>", APPEND);
+				line++;
+			}
 			else
 				create_node(&node, ">", OUTRED);
+			line++;
 		}
-		if (*line == '<')
+		else if (*line == '<')
 		{
 			if (*line + 1 == '<')
+			{
 				create_node(&node, "<<", HERDOC);
+				line++;
+			}
 			else
 				create_node(&node, "<", INRED);
+			line++;
 		}
 		else
-			tokenize_word(&node, str);
+			tokenize_word(&node, &line);
 		line++;
 	}
 	
-	while (node)
-	{
-		printf("%s\n", node->str);
-		node = node->next;
-	}
+	// printf("%s\n", (node)->str);
+	// while (node)
+	// {
+	// 	printf("-----%s-----\n", node->str);
+	// 	node = node->next;
+	// }
 }
 
 int	main(int ac, char **av)
