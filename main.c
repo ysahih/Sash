@@ -101,11 +101,11 @@ void	tokenize(char *line)
 		// printf("+%s+\n", line);
 	
 	// printf("%s\n", (node)->str);
-	while (node)
-	{
-		printf("-----%s-----\n", node->str);
-		node = node->next;
-	}
+	// while (node)
+	// {
+	// 	printf("-----%s-----\n", node->str);
+	// 	node = node->next;
+	// }
 }
 
 int	main(int ac, char **av)
