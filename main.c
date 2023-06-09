@@ -7,55 +7,49 @@ void	builtin_cmds(char *s)
 }
 
 
-t_tokenize	*create_node(t_tokenize	*lst, char *s, int operator)
+bool	is_symbol(char c)
 {
-	t_tokenize	*node;
-
-	node = malloc(sizeof(t_tokenize));
-	node->str = s;
-	node->type = operator;
-	node->previous = NULL;
-	node->next = NULL;
-	ft_lstadd_back(lst, node);
-	return (node);
+	return (c == ' ' && c == '\'' && c == '"' && c == '|' && c == '<' && c == '>'&& c == '*');
 }
 
-// t_tokenize	*link_nodes(char *line, t_operators operators)
-// {
-// 	t_tokenize	*node;
-// 	int	i;
-
-// 	i = 0;
-// 	while (*line)
-// 	{
-// 		while (*line == ' ')
-// 			line++;
-// 		if (line[i] )
-// 		line++;
-// 	}
-// 	return (node);
-// }
-
-t_tokenize	*ft_lstlast(t_tokenize *lst)
+int	ft_strlen(char *s)
 {
-	if (!lst)
-		return (0);
-	while (lst->next)
-		lst = lst->next;
-	return (lst);
+	int	i;
+
+	i = 0;
+	while (i[s])
+		i++;
+	return (i);
 }
 
-void	ft_lstadd_back(t_tokenize **lst, t_tokenize *new)
+
+char	*ft_strcpy(char *str, int size)
 {
-	if (!lst)
-		return ;
-	if (*lst == NULL)
+	int	i;
+	char *word;
+
+	i = 0;
+	word = malloc(size + 1);
+	while (str[i] != '\0' && i < (size -1))
 	{
-		*lst = new;
-		return ;
+		word[i] = str[i];
+		i++;
 	}
-	last_node = ft_lstlast(*lst);
-	last_node->next = new;
+	word[i] = '\0';
+	return (word);
+}	
+
+
+void	tokenize_word(t_tokenize **node, char *s)
+{
+	char *cmd;
+	int	i;
+
+	i = 0;
+	while (*s && !is_symbol(*s))
+		s++;
+	cmd = ft_strcpy(s, i);
+	create_node(node, cmd, WORD);
 }
 
 void	tokenize(char *str)
@@ -70,26 +64,31 @@ void	tokenize(char *str)
 		while (*line == ' ')
 			line++;
 		if (*line == '|')
-			create_node(node, "|", PIPE);
+			create_node(&node, "|", PIPE);
 		if (*line == '>')
 		{
 			if (*line + 1 == '>')
-				create_node(node, ">>", APPEND);
+				create_node(&node, ">>", APPEND);
 			else
-				create_node(node, ">", OUTRED);
+				create_node(&node, ">", OUTRED);
 		}
 		if (*line == '<')
 		{
 			if (*line + 1 == '<')
-				create_node(node, "<<", HERDOC);
+				create_node(&node, "<<", HERDOC);
 			else
-				create_node(node, "<", INRED);
+				create_node(&node, "<", INRED);
 		}
 		else
-			node = create_node(node, "cmn", WORD);
+			tokenize_word(&node, str);
 		line++;
 	}
-	// link_nodes(str, operator);
+	
+	while (node)
+	{
+		printf("%s\n", node->str);
+		node = node->next;
+	}
 }
 
 int	main(int ac, char **av)
@@ -103,7 +102,7 @@ int	main(int ac, char **av)
 		line = readline("sh$ ");
 		if (!line)
 			break ;
-		builtin_cmds(line);
+		// builtin_cmds(line);
 		tokenize(line);
 
 
