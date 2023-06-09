@@ -54,6 +54,7 @@ void	tokenize_word(t_tokenize **node, char **s)
 		i++;
 	
 	create_node(node, ft_strcpy(*s, i), WORD);
+	// printf("+%s+\n", *s + i);
 	*s += i;
 }
 
@@ -61,18 +62,19 @@ void	tokenize(char *line)
 {
 	t_tokenize *node = NULL;
 
-	int i = strlen(line);
+	
 	while (*line)
 	{
 		while (*line == ' ')
 			line++;
-		if (*line == '|'){
+		if (*line == '|')
+		{
 			create_node(&node, "|", PIPE);
 			line++;
 		}
 		else if (*line == '>')
 		{
-			if (*line + 1 == '>')
+			if (*(line + 1) == '>' && *(line + 1) != '\0')
 			{
 				create_node(&node, ">>", APPEND);
 				line++;
@@ -83,8 +85,9 @@ void	tokenize(char *line)
 		}
 		else if (*line == '<')
 		{
-			if (*line + 1 == '<')
+			if (*(line + 1) == '<' && *(line + 1) != '\0')
 			{
+	
 				create_node(&node, "<<", HERDOC);
 				line++;
 			}
@@ -94,15 +97,15 @@ void	tokenize(char *line)
 		}
 		else
 			tokenize_word(&node, &line);
-		line++;
 	}
+		// printf("+%s+\n", line);
 	
 	// printf("%s\n", (node)->str);
-	// while (node)
-	// {
-	// 	printf("-----%s-----\n", node->str);
-	// 	node = node->next;
-	// }
+	while (node)
+	{
+		printf("-----%s-----\n", node->str);
+		node = node->next;
+	}
 }
 
 int	main(int ac, char **av)
