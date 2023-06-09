@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-enum	operator {PIPE, VAR, WORD, OUTRED, INRED, APPEND, HERDOC, SQUOTE, DQUOTE };
+enum	operator {SPACE, PIPE, VAR, WORD, OUTRED, INRED, APPEND, HERDOC, SQUOTE, DQUOTE };
 
 # define SC  " \t\n!%*\"'+,-./\\:;<=>?@[]~^`|$"
 # define NOTWORD " \t\r\n\"'\v\f|<>$/"

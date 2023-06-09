@@ -28,7 +28,7 @@ char	*ft_strcpy(char *str, int size)
 	int	i;
 	char *word;
 
-	i = 0;
+	i = 0; 
 	word = malloc(size + 1);
 	while (str[i] && i < size)
 	{
@@ -36,7 +36,6 @@ char	*ft_strcpy(char *str, int size)
 		i++;
 	}
 	word[i] = '\0';
-
 	return (word);
 }	
 
@@ -58,23 +57,73 @@ void	tokenize_word(t_tokenize **node, char **s)
 	*s += i;
 }
 
+void	tokenize_quote(t_tokenize **node, char **s)
+{
+	int		j;
+	char	*tmp;
+	int		i;
+
+	create_node(node, "\"", DQUOTE);
+	i = 0;
+	tmp = *(s);
+	// printf("%s\n", tmp);
+	while (tmp[i])
+	{
+		if (tmp[i] == '"')
+		{
+			create_node(node, "\"", DQUOTE);
+			*s += i + 1;
+			return ;
+		}
+		else if (tmp[i] == '$')
+		{
+			j = ++i;
+			while (tmp[i] && !is_symbol(tmp[i]))
+				i++;
+			create_node(node, ft_strcpy(tmp + j, i - j), VAR);
+			// printf("%d||%d\n", i, j);
+			if (!tmp[i])
+				return ;
+			else
+				s += i;
+		}
+		j = i;
+		while (tmp[i] && tmp[i] != '"' && tmp[i] != '$')
+			i++;
+		create_node(node, ft_strcpy(tmp + j, i - j), WORD);
+		*s += i + 1;
+	}
+}
+
 void	tokenize(char *line)
 {
 	t_tokenize *node = NULL;
 
-	
+	while(*line == ' ')
+		line++;
 	while (*line)
 	{
-		while (*line == ' ')
-			line++;
-		if (*line == '|')
+		if (*line == ' ')
+		{
+			create_node(&node, " ", SPACE);
+			while(*line == ' ')
+				line++;
+		}
+		else if (*line == '|')
 		{
 			create_node(&node, "|", PIPE);
 			line++;
 		}
+		
+		else if (*line == '"')
+		{
+			line++;
+			tokenize_quote(&node, &line);
+		}
+
 		else if (*line == '>')
 		{
-			if (*(line + 1) == '>' && *(line + 1) != '\0')
+			if (*(line + 1) != '\0' && *(line + 1) == '>')
 			{
 				create_node(&node, ">>", APPEND);
 				line++;
@@ -85,7 +134,7 @@ void	tokenize(char *line)
 		}
 		else if (*line == '<')
 		{
-			if (*(line + 1) == '<' && *(line + 1) != '\0')
+			if (*(line + 1) != '\0' && *(line + 1) == '<')
 			{
 	
 				create_node(&node, "<<", HERDOC);
@@ -101,11 +150,11 @@ void	tokenize(char *line)
 		// printf("+%s+\n", line);
 	
 	// printf("%s\n", (node)->str);
-	// while (node)
-	// {
-	// 	printf("-----%s-----\n", node->str);
-	// 	node = node->next;
-	// }
+	while (node)
+	{
+		printf("-----%s-----\n", node->str);
+		node = node->next;
+	}
 }
 
 int	main(int ac, char **av)
