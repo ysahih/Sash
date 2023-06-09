@@ -22,6 +22,7 @@ void	ft_lstadd_back(t_tokenize **lst, t_tokenize *new)
 	}
 	last_node = ft_lstlast(*lst);
 	last_node->next = new;
+    last_node->next->previous = last_node;
 }
 
 
@@ -30,11 +31,11 @@ void   create_node(t_tokenize	**lst, char *s, int operator)
 	t_tokenize	*node;
 
 	node = malloc(sizeof(t_tokenize));
-	node->str = s;
-	if (operator == 2)
-		free(s);
 	node->type = operator;
-	node->previous = NULL;
+	node->str = s;
+	// if (operator == 2)
+	// 	free(s);
+    node->previous = NULL;
 	node->next = NULL;
-
+    ft_lstadd_back(lst, node);
 }
