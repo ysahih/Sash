@@ -6,6 +6,10 @@ void	builtin_cmds(char *s)
 		exit(0); 
 }
 
+bool	is_digit(char c)
+{
+	return (c >= '0' && c <= '9');
+}
 
 bool	is_symbol(char c)
 {
@@ -22,6 +26,28 @@ int	ft_strlen(char *s)
 	return (i);
 }
 
+bool	special_char(int c)
+{
+	return (c == '0' && c == '_' && c == '?' && c == ' ' && c == '"');
+}
+
+
+bool	is_alnum(char c)
+{
+	return ((c >= 'a' && c <= 'z')
+		|| (c >= 'A' && c <= 'Z') || is_digit(c));
+}
+
+bool	is_alpha(int c)
+{
+	return ((c >= 'a' && c <= 'z')
+		|| (c >= 'A' && c <= 'Z'));
+}
+
+bool	valid_var(char c)
+{
+	return (is_alpha(c) || is_digit(c) || c == '_');
+}
 
 char	*ft_strcpy(char *str, int size)
 {
@@ -51,9 +77,7 @@ void	tokenize_word(t_tokenize **node, char **s)
 	
 	while (tmp[i] && !is_symbol(tmp[i]))
 		i++;
-	
 	create_node(node, ft_strcpy(*s, i), WORD);
-	// printf("+%s+\n", *s + i);
 	*s += i;
 }
 
@@ -66,32 +90,32 @@ void	tokenize_quote(t_tokenize **node, char **s)
 	create_node(node, "\"", DQUOTE);
 	i = 0;
 	tmp = *(s);
-	// printf("%s\n", tmp);
 	while (tmp[i])
 	{
 		if (tmp[i] == '"')
 		{
 			create_node(node, "\"", DQUOTE);
-			*s += i + 1;
+			*s += ++i;
 			return ;
 		}
-		else if (tmp[i] == '$')
+		if (tmp[i] == '$' && tmp[i + 1] && valid_var(tmp[i + 1]))
 		{
 			j = ++i;
-			while (tmp[i] && !is_symbol(tmp[i]))
+			while (tmp[i] && valid_var(tmp[i]))
 				i++;
 			create_node(node, ft_strcpy(tmp + j, i - j), VAR);
-			// printf("%d||%d\n", i, j);
-			if (!tmp[i])
-				return ;
-			else
-				s += i;
 		}
-		j = i;
-		while (tmp[i] && tmp[i] != '"' && tmp[i] != '$')
-			i++;
-		create_node(node, ft_strcpy(tmp + j, i - j), WORD);
-		*s += i + 1;
+		else
+		{
+			j = i;
+			while (tmp[i] && tmp[i] != '"')
+			{
+				if (tmp[i] == '$' && tmp[i + 1] && valid_var(tmp[i + 1]))
+					break ;
+				i++;
+			}
+			create_node(node, ft_strcpy(tmp + j, i - j), WORD);
+		}
 	}
 }
 
@@ -106,7 +130,7 @@ void	tokenize(char *line)
 		if (*line == ' ')
 		{
 			create_node(&node, " ", SPACE);
-			while(*line == ' ')
+			while (*line == ' ')
 				line++;
 		}
 		else if (*line == '|')
@@ -119,11 +143,11 @@ void	tokenize(char *line)
 		{
 			line++;
 			tokenize_quote(&node, &line);
+			printf("%s>>\n", line);
 		}
-
 		else if (*line == '>')
 		{
-			if (*(line + 1) != '\0' && *(line + 1) == '>')
+			if (*(line + 1) && *(line + 1) == '>')
 			{
 				create_node(&node, ">>", APPEND);
 				line++;
@@ -136,7 +160,6 @@ void	tokenize(char *line)
 		{
 			if (*(line + 1) != '\0' && *(line + 1) == '<')
 			{
-	
 				create_node(&node, "<<", HERDOC);
 				line++;
 			}
@@ -147,14 +170,12 @@ void	tokenize(char *line)
 		else
 			tokenize_word(&node, &line);
 	}
-		// printf("+%s+\n", line);
 	
-	// printf("%s\n", (node)->str);
-	while (node)
-	{
-		printf("-----%s-----\n", node->str);
-		node = node->next;
-	}
+	// while (node)
+	// {
+	// 	printf("-----%s---%d--\n", node->str, node->type);
+	// 	node = node->next;
+	// }
 }
 
 int	main(int ac, char **av)
