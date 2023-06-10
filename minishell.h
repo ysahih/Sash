@@ -8,13 +8,13 @@
 #include <stdbool.h>
 
 enum	operator {SPACE, PIPE, VAR, WORD, OUTRED, INRED, APPEND, HERDOC, SQUOTE, DQUOTE };
+				// 0      1     2     3     4       5      6                        9
+
+
 
 # define SC  " \t\n!%*\"'+,-./\\:;<=>?@[]~^`|$"
 # define NOTWORD " \t\r\n\"'\v\f|<>$/"
 
-
-# define SC  " \t\n!%*\"'+,-./\\:;<=>?@[]~^`|$"
-# define NOTWORD " \t\r\n\"'\v\f|<>$/"
 typedef struct s_tokenize
 {
 	int		type;
