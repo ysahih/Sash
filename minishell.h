@@ -1,11 +1,11 @@
 #ifndef MINISHELL
 #define MINISHELL
-#include <readline/readline.h>
-#include <readline/history.h>
-#include<stdio.h>
-#include<string.h>
-#include <stdlib.h>
-#include <stdbool.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <stdio.h>
+# include <string.h>
+# include <stdlib.h>
+# include <stdbool.h>
 
 enum	operator {SPACE, PIPE, VAR, WORD, OUTRED, INRED, APPEND, HERDOC, SQUOTE, DQUOTE };
 				// 0      1     2     3     4       5      6                        9
