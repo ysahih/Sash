@@ -170,7 +170,7 @@ void	tokenize_red(t_tokenize **node, char **s)
 	*s = line;
 }
 
-void	tokenize(char *line)
+t_tokenize	*tokenize(char *line)
 {
 	t_tokenize *node = NULL;
 
@@ -203,11 +203,86 @@ void	tokenize(char *line)
 	// 	printf("-----%s---%d--\n", node->str, node->type);
 	// 	node = node->next;
 	// }
+	return (node);
+}
+bool	pipe_checker(t_tokenize *cmd, int i)
+{
+	if (i && cmd->type == SPACE && cmd->next == NULL)
+		return false;
+	if (!i && cmd->type == SPACE && cmd->previous == NULL)
+		return false;
+	else if (cmd->next && cmd->previous)
+	{
+		if (i && cmd->type == SPACE && cmd->next)
+			cmd = cmd->next;
+		else if (!i && cmd->type == SPACE && cmd->previous)
+			cmd = cmd->previous;
+	}
+	if (i)
+		return (cmd->type == WORD || cmd->type == VAR || cmd->type == SQUOTE || cmd->type == DQUOTE ||
+			cmd->type == OUTRED || cmd->type == INRED ||
+				cmd->type == APPEND || cmd->type == HERDOC);
+	return (cmd->type == WORD || cmd->type == VAR || cmd->type == SQUOTE || cmd->type == DQUOTE);
+}
+
+bool	pipe_analyze(t_tokenize *cmd)
+{
+	bool	flag;
+
+	flag = true;
+	if (cmd->next == NULL || cmd->previous == NULL)
+		flag = false;
+	else if (cmd->next && cmd->previous)
+	{
+		flag *= pipe_checker(cmd->next, 1);
+		flag *= pipe_checker(cmd->previous, 0);
+	}
+	// printf("%d\n", flag);
+
+	if (!flag){
+		write (1, "error\n", 6);
+		return false;
+	}
+	return true;
+}
+
+bool	analyze_syntax(t_tokenize *cmd)
+{
+	bool flag;
+
+	flag = true;
+	while (cmd)
+	{
+		if (!strcmp(cmd->str, " ") && cmd->next)
+			cmd = cmd->next;
+		if (!strcmp(cmd->str, "|"))
+			pipe_analyze(cmd);
+		if (!strcmp(cmd->str, ">") || !strcmp(cmd->str, ">>") || !strcmp(cmd->str, "<") || !strcmp(cmd->str, "<<"))
+		{
+			if (cmd->next)
+			{
+				if (cmd->next->type == SPACE)
+				{
+					if (cmd->next->next)
+						cmd = cmd->next->next;
+					else if (!cmd->next->next)
+						return false;
+				}
+			}
+			else if (!cmd->next)
+				return false;
+			if (cmd->type != WORD)
+				return false;
+		}
+		cmd = cmd->next;
+	}
+	return true;
 }
 
 int	main(int ac, char **av)
 {
 	char	*line;
+	t_tokenize	*cmd;
 
 	if (ac != 1)
 		return (printf("program does not accept agruments"), 0);
@@ -217,9 +292,9 @@ int	main(int ac, char **av)
 		if (!line)
 			break ;
 		// builtin_cmds(line);
-		tokenize(line);
-
-
+		cmd = tokenize(line);
+		if (!analyze_syntax(cmd))
+			write (1, "syntax error\n", 13);
 		if (*line)
 			add_history(line);
 	}
