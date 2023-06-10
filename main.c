@@ -81,15 +81,16 @@ void	tokenize_word(t_tokenize **node, char **s)
 	*s += i;
 }
 
-void	tokenize_quote(t_tokenize **node, char **s)
+void	tokenize_dquote(t_tokenize **node, char **s)
 {
+	int		i;
 	int		j;
 	char	*tmp;
-	int		i;
 
-	create_node(node, "\"", DQUOTE);
 	i = 0;
+	*s += 1;
 	tmp = *(s);
+	create_node(node, "\"", DQUOTE);
 	while (tmp[i])
 	{
 		if (tmp[i] == '"')
@@ -119,11 +120,61 @@ void	tokenize_quote(t_tokenize **node, char **s)
 	}
 }
 
+void	tokenize_squote(t_tokenize **node, char **s)
+{
+	int	i;
+	char	*tmp;
+
+	i = 0;
+	*s += 1;
+	tmp = *(s);
+	create_node(node, "'", SQUOTE);
+	while (tmp[i] && tmp[i] != '\'')
+		i++;
+	create_node(node, ft_strcpy(tmp, i), WORD);
+	if (tmp[i] == '\'')
+	{
+		create_node(node, "'", SQUOTE);
+		i++;
+	}
+	*s += i;
+}
+
+void	tokenize_red(t_tokenize **node, char **s)
+{
+	char *line;
+
+	line = *s;
+	if (*line == '>')
+	{
+		if (*(line + 1) && *(line + 1) == '>')
+		{
+			create_node(node, ">>", APPEND);
+			line++;
+		}
+		else
+			create_node(node, ">", OUTRED);
+		line++;
+	}
+	else if (*line == '<')
+	{
+		if (*(line + 1) && *(line + 1) == '<')
+		{
+			create_node(node, "<<", HERDOC);
+			line++;
+		}
+		else
+			create_node(node, "<", INRED);
+		line++;
+	}
+	*s = line;
+}
+
 void	tokenize(char *line)
 {
 	t_tokenize *node = NULL;
 
-	while(*line == ' ')
+	while(*line == ' ') 
 		line++;
 	while (*line)
 	{
@@ -138,37 +189,13 @@ void	tokenize(char *line)
 			create_node(&node, "|", PIPE);
 			line++;
 		}
-		
 		else if (*line == '"')
-		{
-			line++;
-			tokenize_quote(&node, &line);
-			printf("%s>>\n", line);
-		}
-		else if (*line == '>')
-		{
-			if (*(line + 1) && *(line + 1) == '>')
-			{
-				create_node(&node, ">>", APPEND);
-				line++;
-			}
-			else
-				create_node(&node, ">", OUTRED);
-			line++;
-		}
-		else if (*line == '<')
-		{
-			if (*(line + 1) != '\0' && *(line + 1) == '<')
-			{
-				create_node(&node, "<<", HERDOC);
-				line++;
-			}
-			else
-				create_node(&node, "<", INRED);
-			line++;
-		}
+			tokenize_dquote(&node, &line);
+		else if (*line == '\'')
+			tokenize_squote(&node, &line);
 		else
 			tokenize_word(&node, &line);
+		tokenize_red(&node, &line);
 	}
 	
 	// while (node)
