@@ -33,6 +33,7 @@ void   create_node(t_tokenize	**lst, char *s, int operator)
 	node = malloc(sizeof(t_tokenize));
 	node->type = operator;
 	node->str = s;
+	// printf("%c<<\n", *(node->str+ 10975238) );
 	// if (operator == 2)
 	// 	free(s);
     node->previous = NULL;
