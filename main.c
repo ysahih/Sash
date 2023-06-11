@@ -122,12 +122,12 @@ void	tokenize_dquote(t_tokenize **node, char **s)
 
 void	tokenize_squote(t_tokenize **node, char **s)
 {
-	int	i;
 	char	*tmp;
+	int		i;
 
 	i = 0;
 	*s += 1;
-	tmp = *(s);
+	tmp = *s;
 	create_node(node, "'", SQUOTE);
 	while (tmp[i] && tmp[i] != '\'')
 		i++;
@@ -172,10 +172,12 @@ void	tokenize_red(t_tokenize **node, char **s)
 
 t_tokenize	*tokenize(char *line)
 {
-	t_tokenize *node = NULL;
+	t_tokenize *node;
 
+	node = NULL;
 	while(*line == ' ') 
 		line++;
+		// printf("%s<<\n", line);
 	while (*line)
 	{
 		if (*line == ' ')
@@ -193,9 +195,10 @@ t_tokenize	*tokenize(char *line)
 			tokenize_dquote(&node, &line);
 		else if (*line == '\'')
 			tokenize_squote(&node, &line);
+		else if (*line == '>'|| *line == '<')
+			tokenize_red(&node, &line);
 		else
 			tokenize_word(&node, &line);
-		tokenize_red(&node, &line);
 	}
 	
 	// while (node)
@@ -219,10 +222,8 @@ bool	pipe_checker(t_tokenize *cmd, int i)
 			cmd = cmd->previous;
 	}
 	if (i)
-		return (cmd->type == WORD || cmd->type == VAR || cmd->type == SQUOTE || cmd->type == DQUOTE ||
-			cmd->type == OUTRED || cmd->type == INRED ||
-				cmd->type == APPEND || cmd->type == HERDOC);
-	return (cmd->type == WORD || cmd->type == VAR || cmd->type == SQUOTE || cmd->type == DQUOTE);
+		return (cmd->type >= VAR && cmd->type <= HERDOC);
+	return (cmd->type >= VAR && cmd->type <= DQUOTE);
 }
 
 bool	pipe_analyze(t_tokenize *cmd)
@@ -246,6 +247,23 @@ bool	pipe_analyze(t_tokenize *cmd)
 	return true;
 }
 
+bool analyze_quote(t_tokenize **node, int flag)
+{
+	t_tokenize	*cmd;
+
+	cmd = *node;
+	if (!cmd->next)
+		return false ;
+	cmd = cmd->next;
+	while(cmd && cmd->type != flag)
+		cmd = cmd->next;
+	// printf("%d\n", cmd->type);
+	*node = cmd;
+	if (!cmd)
+		return false ;
+	return true;
+}
+
 bool	analyze_syntax(t_tokenize *cmd)
 {
 	bool flag;
@@ -253,26 +271,38 @@ bool	analyze_syntax(t_tokenize *cmd)
 	flag = true;
 	while (cmd)
 	{
-		if (!strcmp(cmd->str, " ") && cmd->next)
+		if (cmd->type == SPACE && cmd->next)
 			cmd = cmd->next;
-		if (!strcmp(cmd->str, "|"))
-			pipe_analyze(cmd);
-		if (!strcmp(cmd->str, ">") || !strcmp(cmd->str, ">>") || !strcmp(cmd->str, "<") || !strcmp(cmd->str, "<<"))
+		if (cmd->type == PIPE)
+			flag *= pipe_analyze(cmd);
+		if (!flag)
+				return false;
+		if (cmd->type >= OUTRED && cmd->type <=  HERDOC)
 		{
 			if (cmd->next)
 			{
 				if (cmd->next->type == SPACE)
-				{
-					if (cmd->next->next)
-						cmd = cmd->next->next;
-					else if (!cmd->next->next)
-						return false;
-				}
+					cmd = cmd->next;
 			}
-			else if (!cmd->next)
+			if (!cmd->next || (cmd->next->type <= WORD && cmd->next->type >= DQUOTE))
+			{
 				return false;
-			if (cmd->type != WORD)
-				return false;
+			}
+		}
+		if (cmd->type == SQUOTE || cmd->type == DQUOTE )
+		{
+			if (cmd->type == SQUOTE)
+			{
+				flag *= analyze_quote(&cmd, SQUOTE);
+				if (!flag)
+					return false;
+			}
+			if (cmd->type == DQUOTE)
+			{
+				flag *= analyze_quote(&cmd, DQUOTE);
+				if (!flag)
+					return false;
+			}
 		}
 		cmd = cmd->next;
 	}
@@ -288,10 +318,9 @@ int	main(int ac, char **av)
 		return (printf("program does not accept agruments"), 0);
 	while (1)
 	{
-		line = readline("sh$ ");
+		line = readline("sash$ ");
 		if (!line)
 			break ;
-		// builtin_cmds(line);
 		cmd = tokenize(line);
 		if (!analyze_syntax(cmd))
 			write (1, "syntax error\n", 13);
