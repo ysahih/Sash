@@ -8,7 +8,8 @@
 # include <stdlib.h>
 # include <stdbool.h>
 
-enum	operator {SPACE, PIPE, VAR, WORD, OUTRED, INRED, APPEND, HERDOC, SQUOTE, DQUOTE};
+enum	pipe {BEFORE, AFTER};
+enum	operator {SPACE, PIPE, VAR, WORD, SQUOTE, DQUOTE, OUTRED, INRED, APPEND, HERDOC};
 				// 0      1     2     3     4       5      6                        9
 
 
