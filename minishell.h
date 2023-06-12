@@ -60,6 +60,9 @@ bool	analyze_quote(t_lexer **node, int flag);
 bool	pipe_analyze(t_lexer *cmd);
 bool	pipe_checker(t_lexer *cmd, int i);
 
+//parse
+void    parse(t_lexer *cmdline);
+
 
 #endif
 
