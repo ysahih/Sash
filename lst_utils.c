@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_tokenize	*ft_lstlast(t_tokenize *lst)
+t_lexer	*ft_lstlast(t_lexer *lst)
 {
 	if (!lst)
 		return (0);
@@ -9,9 +9,9 @@ t_tokenize	*ft_lstlast(t_tokenize *lst)
 	return (lst);
 }
 
-void	ft_lstadd_back(t_tokenize **lst, t_tokenize *new)
+void	ft_lstadd_back(t_lexer **lst, t_lexer *new)
 {
-	t_tokenize	*last_node;
+	t_lexer	*last_node;
 
 	if (!lst)
 		return ;
@@ -26,11 +26,11 @@ void	ft_lstadd_back(t_tokenize **lst, t_tokenize *new)
 }
 
 
-void   create_node(t_tokenize	**lst, char *s, int operator)
+void   create_node(t_lexer	**lst, char *s, int operator)
 {
-	t_tokenize	*node;
+	t_lexer	*node;
 
-	node = malloc(sizeof(t_tokenize));
+	node = malloc(sizeof(t_lexer));
 	node->type = operator;
 	node->str = s;
 	// printf("%c<<\n", *(node->str+ 10975238) );
