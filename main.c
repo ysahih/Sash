@@ -356,9 +356,9 @@ int	main(int ac, char **av)
 		if (!analyze_syntax(cmd))
 		{
 			write (1, "syntax error\n", 13);
-			return 0;
+			// break;
 		}
-		
+		parse(cmd);
 		if (*line)
 			add_history(line);
 	}
