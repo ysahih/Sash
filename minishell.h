@@ -44,7 +44,6 @@ void	tokenize_red(t_lexer **node, char **s);
 //lexer utils
 char	*ft_strcpy(char *str, int size);
 bool	valid_var(char c);
-
 bool	is_symbol(char c);
 bool	is_digit(char c);
 int		ft_strlen(char *s);

@@ -160,10 +160,10 @@ t_lexer	*tokenize(char *line)
 			tokenize_word(&node, &line);
 	}
 	// t_lexer	 *tmp = node;
-	// puts("ls");
+	// // puts("ls");
 	// while (tmp)
 	// {
-	// 	printf("----|%s|---%d--\n", tmp->str, tmp->type);
+	// 	printf("|%s|-%d\n", tmp->str, tmp->type);
 	// 	tmp = tmp->next;
 	// }
 	return (node);
