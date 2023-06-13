@@ -339,11 +339,13 @@ void	builtin_cmds(char *s)
 // 	return true;
 // }
 
-int	main(int ac, char **av)
+int	main(int ac, char **av, char **env)
 {
 	char	*line;
+	// char	**cpy;
 	t_lexer	*cmd;
 
+	// cpy = env;
 	if (ac != 1 || av[1])
 		return (printf("program does not accept agruments"), 0);
 	while (true)
@@ -352,13 +354,11 @@ int	main(int ac, char **av)
 		if (!line)
 			break ;
 		cmd = tokenize(line);
-		// printf("%s\n", line);
 		if (!analyze_syntax(cmd))
 		{
 			write (1, "syntax error\n", 13);
-			// break;
 		}
-		parse(cmd);
+		parse(cmd, env);
 		if (*line)
 			add_history(line);
 	}
