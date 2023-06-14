@@ -44,6 +44,7 @@ typedef struct s_simple_cmds
 	struct s_simple_cmds	*previous;
 } t_simple_cmd;
 
+
 //list utils
 void	create_node(t_lexer	**lst, char *s, int operator);
 void	ft_lstadd_back(t_lexer **lst, t_lexer *new);

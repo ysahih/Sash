@@ -18,7 +18,7 @@ int	count_len(char *str)
 {
 	int	i;
 	int	count;
-
+	
 	i = 0;
 	count = 0;
 	while (str[i])
@@ -60,27 +60,32 @@ char	**ft_split(char *str)
 	return (s);
 }
 
-char	*ft_strcat(char *dest, char *src)
+char	*ft_strjoin(char *s1, char *s2)
 {
-	int	i;
-	int	j;
-	
+	char	*p;
+	int		i;
+	int		j;
 
+	if (!s1 && !s2)
+		return (0);
+	if(!s1)
+		return (s2);
+	if(!s2)
+		return (s1);
+	p = (char *)malloc (ft_strlen (s1) + ft_strlen (s2) + 1);
+	if (!p)
+		return (0);
 	i = 0;
+	while (s1[i])
+	{
+		p[i] = s1[i];
+		i++;
+	}
 	j = 0;
-	if (!dest && !src)
-		return (NULL);
-	if(!dest)
-		return (src);
-	if(!src)
-		return (dest);
-	while (dest[j] != '\0')
-		j++;
-	while (src[i])
-		dest[j++] = src[i++];
-	dest[j] = '\0';
-	// printf("%s\n", dest);
-	return (dest);
+	while (s2[j])
+		p[i++] = s2[j++];
+	p[i] = '\0';
+	return (p);
 }
 
 t_lexer	*rm_quote(t_lexer *cmdline)
@@ -116,7 +121,7 @@ t_lexer	*merge_word(t_lexer *cmd)
 	{
 		if (cmd->next && cmd->type == WORD && cmd->next->type == WORD)
 		{
-			create_node(&node, ft_strcat(cmd->str, cmd->next->str) , WORD);
+			create_node(&node, ft_strjoin(cmd->str, cmd->next->str) , WORD);
 			cmd = cmd->next->next;
 		}
 		if (!cmd)
@@ -177,7 +182,7 @@ t_simple_cmd	*last_cmd(t_simple_cmd *lst)
 	return (lst);
 }
 
-void	add_cmd(t_simple_cmd **lst, t_simple_cmd *new)
+void	add_scmd(t_simple_cmd **lst, t_simple_cmd *new)
 {
 	t_simple_cmd	*last_node;
 	if (!lst)
@@ -192,64 +197,33 @@ void	add_cmd(t_simple_cmd **lst, t_simple_cmd *new)
     last_node->next->previous = last_node;
 }
 
-t_simple_cmd *create_scmd(void)
+int	count_wd(t_lexer *cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd)
+	{
+		if ((cmd->type == WORD && !cmd->previous) || (cmd->type == WORD && cmd->previous && cmd->previous->type <= WORD))
+			i++;
+		cmd = cmd->next;
+	}
+	return (i);
+}
+
+t_simple_cmd *create_scmd(t_lexer *cmd)
 {
 	t_simple_cmd 	*scmd;
+	int				i;
 
+	i = count_wd(cmd) + 1;
 	scmd = malloc(sizeof(t_simple_cmd));
-	scmd->str = malloc(sizeof(char *));
+	scmd->str = malloc(sizeof(char *) * i);
 	scmd->next = NULL;
 	scmd->previous = NULL;
 	scmd->in_fd = 0;
 	scmd->out_fd = 1;
 	return (scmd);
-}
-
-void	collect_cmds(t_simple_cmd **node, t_lexer **cmd)
-{
-	t_simple_cmd 	*scmd;
-	int				i;
-
-	i = 0;
-	if (!cmd || !node)
-		return ;
-	scmd = create_scmd();
-	while((*cmd) && (*cmd)->type != PIPE)
-	{
-		while ((*cmd) && (*cmd)->type >= OUTRED)
-		{
-			if ((*cmd)->type == OUTRED)
-			{
-				scmd->out_fd = open((*cmd)->next->str, O_CREAT | O_TRUNC, 0644);
-			}
-			if ((*cmd)->type == INRED)
-				scmd->in_fd = open((*cmd)->next->str, O_WRONLY, 0644);
-			if ((*cmd)->type == APPEND)
-				scmd->out_fd = open((*cmd)->next->str, O_CREAT | O_APPEND, 0644);
-			perror("sash: ");//errno
-			// if ((*cmd)->type == HERDOC)
-				// scmd->in_fd = ;
-			(*cmd) = (*cmd)->next->next;
-
-		}
-		if (!(*cmd) || (*cmd)->type == PIPE)
-			break ;
-		
-		scmd->str[i++] = (*cmd)->str;
-		(*cmd) = (*cmd)->next;
-	}
-	add_cmd(node, scmd);
-	// i= 0;
-	// t_simple_cmd *tmp = *node;
-	// // while ((tmp))
-	// // {
-		// while(tmp->str[i] != NULL)
-		// {
-
-		// 	printf("%s-\n", tmp->str[i++]);
-		// }
-		// tmp = tmp->next;
-	// }
 }
 
 void	lst_var(t_var **var, char **s)
@@ -302,18 +276,60 @@ t_lexer *expand_var(t_lexer *cmdline, t_var *var)
 	node = NULL;
 	while (cmd)
 	{
-		if (cmd->type == VAR){
-		
+		if (cmd->type == VAR)
 			create_node(&node, find_var(var, cmd->str), WORD);
-		}
-		else{
+		else
 			create_node(&node, cmd->str, cmd->type);
-
-		}
 		cmd = cmd->next;
 	}
 
 	return (node);
+}
+
+t_simple_cmd	*collect_scmds(t_lexer **cmdline)
+{
+
+	t_simple_cmd	*cmd;
+	int				i;
+
+	i = 0;
+
+	cmd = create_scmd(*cmdline);
+	while (*cmdline)
+	{
+		if ((*cmdline)->type == PIPE)
+		{
+			*cmdline = (*cmdline)->next;
+			break ;
+		}
+		else if ((*cmdline)->type == OUTRED)
+		{
+			(*cmdline) = (*cmdline)->next;
+			cmd->out_fd = open((*cmdline)->str, O_CREAT | O_TRUNC, 0644);
+			(*cmdline) = (*cmdline)->next;
+		}
+		else if ((*cmdline)->type == INRED)
+		{
+			(*cmdline) = (*cmdline)->next;
+			cmd->in_fd = open((*cmdline)->str, O_RDONLY, 0644);
+			(*cmdline) = (*cmdline)->next;
+		}
+		else if ((*cmdline)->type == APPEND)
+		{
+			(*cmdline) = (*cmdline)->next;
+			cmd->out_fd = open((*cmdline)->str, O_CREAT | O_APPEND, 0644);
+			(*cmdline) = (*cmdline)->next;
+		}
+		else if ((*cmdline)->type == WORD)
+		{
+			cmd->str[i] = (*cmdline)->str;
+			i++;
+			(*cmdline) = (*cmdline)->next;
+		}
+	}
+
+	cmd->str[i] = NULL;
+	return (cmd);
 }
 
 void	parse(t_lexer *cmdline, char **env)
@@ -322,8 +338,8 @@ void	parse(t_lexer *cmdline, char **env)
 	t_lexer 		*cmd;
 	t_var			*var;
 
-	scmd = NULL;
 	int i = 0;
+	scmd = NULL;
 	var = NULL;
 	while (env[i])
 	{
@@ -331,29 +347,23 @@ void	parse(t_lexer *cmdline, char **env)
 		i++;
 	}
 	cmd = rm_quote(cmdline);
-
 	cmd = expand_var(cmd, var);
-
 	cmd = merge_word(cmd);
 	cmd = rm_space(cmd);
 
-	while (cmd)
-	{
-		if (cmd->type == PIPE)
-			cmd = cmd->next;
-		if (cmd)
-			collect_cmds(&scmd, &cmd);
-		else if (cmd == NULL)
-			break ;
-	}
-	// puts("he");
-	// printf("{%s}", cmd->str);
-	// i =0;
-	// t_simple_cmd *tmp = scmd;
-	// while ((tmp))
+	while(cmd)
+		add_scmd(&scmd, collect_scmds(&cmd));
+
+	
+	// while (scmd)
 	// {
-		// while(tmp->str[i] != NULL)
-	// 		printf("%s-\n", tmp->str[i++]);
-		// tmp = tmp->next;
+	// 	i = 0;
+	// 	printf("--\n");
+	// 	while (scmd->str[i]){
+	// 		printf("=%s=\n", scmd->str[i]);
+	// 		i++;
+	// 	}
+	// 	printf("--\n");
+	// 	scmd = scmd->next;
 	// }
 }
