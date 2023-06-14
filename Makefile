@@ -16,6 +16,7 @@ CC = cc
 OBJS = $(SRCS:%.c=%.o)
 B_OBJS = $(B_SRCS:%.c=%.o)
 CFLAGS = -Wall -Wextra -Werror 
+# -fsanitize=address -g
 
 
 all : $(NAME)

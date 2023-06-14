@@ -30,6 +30,8 @@ void   create_node(t_lexer	**lst, char *s, int operator)
 {
 	t_lexer	*node;
 
+	if (s == NULL)
+		return ;
 	node = malloc(sizeof(t_lexer));
 	node->type = operator;
 	node->str = s;
