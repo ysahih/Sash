@@ -114,5 +114,6 @@ char	*ft_strdup(char *str);
 int		exec(t_all *all);
 void	sort_env(t_var *lst);
 void	env(t_var *env);
+void	export(t_all *all);
 
 #endif
