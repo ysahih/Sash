@@ -44,7 +44,6 @@ typedef struct s_simple_cmds
 	struct s_simple_cmds	*previous;
 } t_simple_cmd;
 
-
 //list utils
 void	create_node(t_lexer	**lst, char *s, int operator);
 void	ft_lstadd_back(t_lexer **lst, t_lexer *new);
@@ -76,9 +75,44 @@ bool	analyze_quote(t_lexer **node, int flag);
 bool	pipe_analyze(t_lexer *cmd);
 bool	pipe_checker(t_lexer *cmd, int i);
 
-//parse
-void	parse(t_lexer *cmdline, char **env);
 
+//------------------------------------------------------------------------------
+
+typedef struct	s_export
+{
+	char 			*var;
+	char 			*val;
+	struct s_export	*next;
+} t_export;
+
+typedef struct	s_all
+{
+	t_var 				*env;
+	t_var 				*exp;
+	t_simple_cmd		*cmd;
+} t_all;
+
+typedef struct s_list
+{
+	void			*content;
+	struct s_list	*next;
+}					t_list;         
+
+//parse
+void	parse(t_all *all, t_lexer *cmdline, char **env);
+
+//utils
+int		ft_strncmp(const char *str1, const char *str2, size_t n);
+int		ft_strchr(char *str, int ch);
+char	*ft_substr(char *s, int start, int len);
+char	*ft_strdup(char *str);
+
+//builtin cmds
+// int		cd(char *str);
+
+// execution
+int		exec(t_all *all);
+void	sort_env(t_var *lst);
+void	env(t_var *env);
 
 #endif
-

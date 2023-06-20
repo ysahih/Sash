@@ -344,6 +344,7 @@ int	main(int ac, char **av, char **env)
 	char	*line;
 	// char	**cpy;
 	t_lexer	*cmd;
+	t_all	all;
 
 	// cpy = env;
 	if (ac != 1 || av[1])
@@ -351,15 +352,18 @@ int	main(int ac, char **av, char **env)
 	while (true)
 	{
 		line = readline("sash$ ");
+		// printf("%s\n", line);
 		if (!line)
 			break ;
 		cmd = tokenize(line);
 		if (!analyze_syntax(cmd))
 		{
 			write (1, "syntax error\n", 13);
+			continue;
 		}
-		parse(cmd, env);
+		parse(&all, cmd, env);
 		if (*line)
 			add_history(line);
+		exec(&all);
 	}
 }
