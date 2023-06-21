@@ -382,16 +382,13 @@ void	parse(t_all *all, t_lexer *cmdline, char **env)
 	cmd = rm_space(cmd);
 	while(cmd)
 		add_scmd(&scmd, collect_scmds(&cmd));
-<<<<<<< HEAD
 
 
-=======
 	all->cmd = scmd;
 	all->env = var;
 	all->exp = exp;
 	sort_env(all->exp);
-	// printf("%s\n",)
->>>>>>> dev/exec
+	// printf("%s\n"
 	// while (scmd)
 	// {
 	// 	i = 0;
