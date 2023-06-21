@@ -106,14 +106,18 @@ int		ft_strncmp(const char *str1, const char *str2, size_t n);
 int		ft_strchr(char *str, int ch);
 char	*ft_substr(char *s, int start, int len);
 char	*ft_strdup(char *str);
+void	sort_env(t_var *lst);
+int		arg(char *str);
 
-//builtin cmds
+//builtins cmds
+void	env(t_var *env);
+void	export(t_all *all);
+void    pwd(t_all   *all);
+void    echo(t_simple_cmd  *all);
 // int		cd(char *str);
+
 
 // execution
 int		exec(t_all *all);
-void	sort_env(t_var *lst);
-void	env(t_var *env);
-void	export(t_all *all);
 
 #endif
