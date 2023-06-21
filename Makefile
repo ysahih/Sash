@@ -8,8 +8,12 @@ lexer.c\
 lexer_utils.c\
 syntax_analyzer.c\
 parse.c\
-
-
+execution/exec.c\
+execution/utils.c\
+execution/env.c\
+execution/export.c\
+execution/pwd.c\
+execution/echo.c\
 
 RM = rm -rf
 CC = cc
