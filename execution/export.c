@@ -6,11 +6,11 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 16:28:32 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/20 19:51:28 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/06/21 15:14:26 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../minishell.h"
+#include "../minishell.h"
 
 void	sort_env(t_var *lst)
 {
@@ -41,11 +41,6 @@ int	ft_strchr(char *str, int ch)
 	int		i;
 
 	i = 0;
-	// if (ch == 0)
-    // {
-    //     j = str + ft_strlen(str);
-	// 	// return (j = ptr + ft_strlen(ptr));
-    // }
 	while (str[i] != '\0')
 	{
 		if (str[i] == (unsigned char)ch)
@@ -100,6 +95,18 @@ char	*ft_strdup(char *str)
 	return (p);
 }
 
+t_var	*ft_lstnewexp(void *content)
+{
+	t_var	*var;
+
+	var = malloc(sizeof(t_var));
+	if (!var)
+		return (NULL);
+	var->key = content;
+	var->next = NULL;
+	return (var);
+}
+
 void    export(t_all *all)
 {
     t_simple_cmd    *p;
@@ -124,7 +131,7 @@ void    export(t_all *all)
                     printf("%s", tmp->val);
                     printf("\"");
                 }
-                printf("/n");
+                printf("\n");
                 tmp = tmp->next;
             }
         }
@@ -141,12 +148,12 @@ void    export(t_all *all)
                     {
                         if (p->str[i][j-1] == '=')
                         {
-                            tmp->key = ft_substr(p->str[i], 0, k-0+1);
+                            tmp->key = ft_substr(p->str[i], 0, k+1);
                             tmp->val = ft_strdup("");
                         }
                         else if (p->str[i][j-1] != '=')
                         {
-                            tmp->key = ft_substr(p->str[i], 0, k-0+1);
+                            tmp->key = ft_substr(p->str[i], 0, k+1);
                             tmp->val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);
                         }
                     }
@@ -160,24 +167,3 @@ void    export(t_all *all)
         p = p->next;
     }
 }
-
-// t_lexer	*ft_lstnew(void *content)
-// {
-// 	t_lexer	*k;
-
-// 	k = malloc(sizeof(t_lexer));
-// 	if (!k)
-// 		return (NULL);
-// 	k->content = content;
-// 	k->next = NULL;
-// 	return (k);
-// }
-
-// int main()
-// {
-//     t_lexer *lst;
-//     lst = NULL;
-//     ft_lstadd_back(&lst, create_node("
-//     ft_lstadd_back(&lst, create_node("
-//     ft_lstadd_back(&lst, create_node("
-// }
