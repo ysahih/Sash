@@ -1,8 +1,8 @@
 #ifndef MINISHELL
 #define MINISHELL
+# include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include <stdio.h>
 # include <string.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -11,7 +11,7 @@
 #include <errno.h>
 
 enum	pipe {BEFORE, AFTER};
-enum	operator {SPACE, PIPE, VAR, WORD, SQUOTE, DQUOTE, OUTRED, INRED, APPEND, HERDOC};
+enum	operator {WSPACE, PIPE, VAR, WORD, SQUOTE, DQUOTE, OUTRED, INRED, APPEND, HERDOC};
 				// 0      1     2     3     4       5      6                        9
 
 
@@ -23,7 +23,7 @@ typedef struct s_lexer
 	int		type;
 	char	*str;
 	struct s_lexer	*next;
-	struct s_lexer *previous;
+	struct s_lexer *previous;	
 }  t_lexer;
 
 
