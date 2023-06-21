@@ -223,6 +223,7 @@ t_simple_cmd *create_scmd(t_lexer *cmd)
 	scmd->previous = NULL;
 	scmd->in_fd = 0;
 	scmd->out_fd = 1;
+	scmd->err = 0;
 	return (scmd);
 }
 
@@ -249,20 +250,21 @@ void	lst_var(t_var **var, char **s)
 char	*find_var(t_var *var, char *str)
 {
 	char	*val;
-	bool	flag;
+	// bool	flag;
 
-	flag = false;
+	val = NULL;
+	// flag = false;
 	while (var)
 	{
 		if (!strcmp(var->key, str))
 		{
 			val = var->val;
-			flag = true;
+			// flag = true;
 		}
 		var = var->next;
 	}
-	if (!flag)
-		return NULL;
+	// if (!flag)
+	// 	return NULL;
 	return (val);
 }
 
@@ -286,6 +288,18 @@ t_lexer *expand_var(t_lexer *cmdline, t_var *var)
 	return (node);
 }
 
+void	parse_hd(char *str)
+{
+	char *line;
+
+	while (true)
+	{
+		line = readline("> ");
+		if (!line || strcmp(line, str) == 0)
+			break ;
+	}
+	
+}
 t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 {
 
@@ -306,18 +320,30 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 		{
 			(*cmdline) = (*cmdline)->next;
 			cmd->out_fd = open((*cmdline)->str, O_CREAT | O_TRUNC, 0644);
+			// if(cmd->out_fd < 0)
+			// 	cmd->err = errno;
 			(*cmdline) = (*cmdline)->next;
 		}
 		else if ((*cmdline)->type == INRED)
 		{
 			(*cmdline) = (*cmdline)->next;
 			cmd->in_fd = open((*cmdline)->str, O_RDONLY, 0644);
+			// if(cmd->in_fd < 0)
+			// 	cmd->err = errno;
 			(*cmdline) = (*cmdline)->next;
 		}
 		else if ((*cmdline)->type == APPEND)
 		{
 			(*cmdline) = (*cmdline)->next;
 			cmd->out_fd = open((*cmdline)->str, O_CREAT | O_APPEND, 0644);
+			// if(cmd->out_fd < 0)
+			// 	cmd->err = errno;
+			(*cmdline) = (*cmdline)->next;
+		}
+		else if((*cmdline)->type == HERDOC)
+		{
+			(*cmdline) = (*cmdline)->next;
+			parse_hd((*cmdline)->str);
 			(*cmdline) = (*cmdline)->next;
 		}
 		else if ((*cmdline)->type == WORD)
@@ -354,12 +380,12 @@ void	parse(t_lexer *cmdline, char **env)
 	while(cmd)
 		add_scmd(&scmd, collect_scmds(&cmd));
 
-	
+
 	// while (scmd)
 	// {
 	// 	i = 0;
 	// 	printf("--\n");
-	// 	while (scmd->str[i]){
+	// 	while (scmd->str[i]){  
 	// 		printf("=%s=\n", scmd->str[i]);
 	// 		i++;
 	// 	}
