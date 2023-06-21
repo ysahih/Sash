@@ -358,29 +358,40 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 	return (cmd);
 }
 
-void	parse(t_lexer *cmdline, char **env)
+void	parse(t_all *all, t_lexer *cmdline, char **env)
 {
 	t_simple_cmd 	*scmd;
 	t_lexer 		*cmd;
 	t_var			*var;
+	t_var			*exp;
 
 	int i = 0;
 	scmd = NULL;
 	var = NULL;
+	exp = NULL;
 	while (env[i])
 	{
 		lst_var(&var, ft_split(env[i]));
+		lst_var(&exp, ft_split(env[i]));                                                                    
 		i++;
 	}
 	cmd = rm_quote(cmdline);
 	cmd = expand_var(cmd, var);
 	cmd = merge_word(cmd);
 	cmd = rm_space(cmd);
-
+	cmd = rm_space(cmd);
 	while(cmd)
 		add_scmd(&scmd, collect_scmds(&cmd));
+<<<<<<< HEAD
 
 
+=======
+	all->cmd = scmd;
+	all->env = var;
+	all->exp = exp;
+	sort_env(all->exp);
+	// printf("%s\n",)
+>>>>>>> dev/exec
 	// while (scmd)
 	// {
 	// 	i = 0;
