@@ -55,6 +55,10 @@ bool	analyze_quote(t_lexer **node, int flag)
 		return false ;
 	return true;
 }
+void	ft_print(char *s)
+{
+	printf("sash: syntax error near unexpected token `%s'\n", s);
+}
 
 bool	analyze_syntax(t_lexer *cmd)
 {
@@ -77,6 +81,10 @@ bool	analyze_syntax(t_lexer *cmd)
 				cmd = cmd->next;
 			if (!cmd->next || cmd->next->type > DQUOTE || cmd->next->type < WORD)
 			{
+				if (cmd->next)
+					ft_print(cmd->next->str);
+				else
+					ft_print("newline");
 				return false;
 			}
 		}
