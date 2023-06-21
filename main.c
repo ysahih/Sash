@@ -1,10 +1,10 @@
 #include "minishell.h"
 
-void	builtin_cmds(char *s)
-{
-	if (!strcmp(s, "exit"))
-		exit(0); 
-}
+// void	builtin_cmds(char *s)
+// {
+// 	if (!strcmp(s, "exit"))
+// 		exit(0); 
+// }
 
 // bool	is_digit(char c)
 // {
@@ -339,6 +339,26 @@ void	builtin_cmds(char *s)
 // 	return true;
 // }
 
+void	handle_INT(int sig)
+{
+	(void)sig;
+	rl_catch_signals = 0;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
+void	handle_QUIT()
+{
+	
+}
+void	sig_handler(void)
+{
+	signal(SIGINT, handle_INT);
+	signal(SIGQUIT, SIG_IGN);
+}
+
 int	main(int ac, char **av, char **env)
 {
 	char	*line;
@@ -350,16 +370,19 @@ int	main(int ac, char **av, char **env)
 		return (printf("program does not accept agruments"), 0);
 	while (true)
 	{
+		sig_handler();
+		rl_catch_signals = 0;
 		line = readline("sash$ ");
 		if (!line)
 			break ;
+		if (*line)
+			add_history(line);
 		cmd = tokenize(line);
 		if (!analyze_syntax(cmd))
 		{
 			write (1, "syntax error\n", 13);
+			continue ;
 		}
 		parse(cmd, env);
-		if (*line)
-			add_history(line);
 	}
 }
