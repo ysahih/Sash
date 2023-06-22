@@ -6,18 +6,20 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 15:25:49 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/20 13:54:35 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/06/22 14:04:00 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"../minishell.h"
 
-void	env(t_var *env)
+void	env(t_all *all)
 {
-    while (env)
+    t_var   *var;
+
+    var = all->env;
+    while (var)
     {
-        printf("%s", env->key);
-        printf("%s%s\n", env->key, env->val);
-        env = env->next;
+        printf("%s=%s\n", var->key, var->val);
+        var = var->next;
     }
 }

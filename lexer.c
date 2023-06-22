@@ -139,7 +139,7 @@ t_lexer	*tokenize(char *line)
 	{
 		if (*line == ' ')
 		{
-			create_node(&node, " ", SPACE);
+			create_node(&node, " ", WSPACE);
 			while (*line == ' ')
 				line++;
 		}
