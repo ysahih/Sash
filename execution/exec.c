@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/21 14:57:26 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/06/22 17:47:20 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	exec(t_all *all)
 	while (tmp)
 	{
 		if (!ft_strncmp(tmp->str[0], "env", 255))
-			env(all->env);
+			env(all);
 		else if (!ft_strncmp(tmp->str[0], "export", 255))
 			export(all);
 		else if (!ft_strncmp(tmp->str[0], "pwd", 255))

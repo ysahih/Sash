@@ -151,7 +151,7 @@ t_lexer	*rm_space(t_lexer *cmd)
 	node = NULL;
 	while (cmd)
 	{
-		if (cmd->type != SPACE)
+		if (cmd->type != WSPACE)
 			create_node(&node, cmd->str, cmd->type);
 		cmd = cmd->next;
 	}
@@ -367,16 +367,16 @@ void	parse(t_all *all, t_lexer *cmdline, char **env)
 
 	int i = 0;
 	scmd = NULL;
-	var = NULL;
-	exp = NULL;
-	while (env[i])
-	{
-		lst_var(&var, ft_split(env[i]));
-		lst_var(&exp, ft_split(env[i]));                                                                    
-		i++;
-	}
+	// var = NULL;
+	// exp = NULL;
+	// while (env[i])
+	// {
+	// 	lst_var(&var, ft_split(env[i]));
+	// 	lst_var(&exp, ft_split(env[i]));                                                                    
+	// 	i++;
+	// }
 	cmd = rm_quote(cmdline);
-	cmd = expand_var(cmd, var);
+	cmd = expand_var(cmd, all->env);
 	cmd = merge_word(cmd);
 	cmd = rm_space(cmd);
 	cmd = rm_space(cmd);
@@ -385,16 +385,16 @@ void	parse(t_all *all, t_lexer *cmdline, char **env)
 
 
 	all->cmd = scmd;
-	all->env = var;
-	all->exp = exp;
-	sort_env(all->exp);
+	// all->env = var;
+	// all->exp = exp;
+	// sort_env(all->exp);
 	// printf("%s\n"
 	// while (scmd)
 	// {
 	// 	i = 0;
 	// 	printf("--\n");
 	// 	while (scmd->str[i]){  
-	// 		printf("=%s=\n", scmd->str[i]);
+// 		printf("=%s=\n", scmd->str[i]);
 	// 		i++;
 	// 	}
 	// 	printf("--\n");
