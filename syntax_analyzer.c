@@ -2,15 +2,15 @@
 
 bool	pipe_checker(t_lexer *cmd, int i)
 {
-	if (i && cmd->type == SPACE && cmd->next == NULL)
+	if (i && cmd->type == WSPACE && cmd->next == NULL)
 		return false;
-	if (!i && cmd->type == SPACE && cmd->previous == NULL)
+	if (!i && cmd->type == WSPACE && cmd->previous == NULL)
 		return false;
 	else if (cmd->next && cmd->previous)
 	{
-		if (i && cmd->type == SPACE && cmd->next)
+		if (i && cmd->type == WSPACE && cmd->next)
 			cmd = cmd->next;
-		else if (!i && cmd->type == SPACE && cmd->previous)
+		else if (!i && cmd->type == WSPACE && cmd->previous)
 			cmd = cmd->previous;
 	}
 	if (i)
@@ -67,7 +67,7 @@ bool	analyze_syntax(t_lexer *cmd)
 	flag = true;
 	while (cmd)
 	{
-		if (cmd->type == SPACE && cmd->next)
+		if (cmd->type == WSPACE && cmd->next)
 			cmd = cmd->next;
 		if (cmd->type == PIPE)
 		{
@@ -77,7 +77,7 @@ bool	analyze_syntax(t_lexer *cmd)
 		}
 		if (cmd->type >= OUTRED && cmd->type <=  HERDOC)
 		{
-			if (cmd->next && cmd->next->type == SPACE)
+			if (cmd->next && cmd->next->type == WSPACE)
 				cmd = cmd->next;
 			if (!cmd->next || cmd->next->type > DQUOTE || cmd->next->type < WORD)
 			{
