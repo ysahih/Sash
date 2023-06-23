@@ -342,10 +342,10 @@
 void	handle_INT(int sig)
 {
 	(void)sig;
-	rl_catch_signals = 0;
+	// rl_catch_signals = 0;
 	printf("\n");
 	rl_on_new_line();
-	rl_replace_line("", 0);
+	// rl_replace_line("", 0);
 	rl_redisplay();
 }
 
@@ -364,15 +364,24 @@ int	main(int ac, char **av, char **env)
 	char	*line;
 	// char	**cpy;
 	t_lexer	*cmd;
-	t_all	all;
+	t_all	*all;
+	int		i;
 
 	// cpy = env;
+	i = 0;
 	if (ac != 1 || av[1])
 		return (printf("program does not accept agruments"), 0);
+	all= malloc(sizeof(t_all));
+	while (env[i])
+	{
+		lst_var(&all->env, ft_split(env[i]));
+		lst_var(&all->exp, ft_split(env[i]));                                                                    
+		i++;
+	}
 	while (true)
 	{
 		sig_handler();
-		rl_catch_signals = 0;
+		// rl_catch_signals = 0;
 		line = readline("sash$ ");
 		// printf("%s\n", line);
 		if (!line)
@@ -385,9 +394,9 @@ int	main(int ac, char **av, char **env)
 			write (1, "syntax error\n", 13);
 			continue ;
 		}
-		parse(&all, cmd, env);
+		parse(all, cmd, env);
 		if (*line)
 			add_history(line);
-		exec(&all);
+		exec(all);
 	}
 }
