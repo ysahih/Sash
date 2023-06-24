@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/22 17:47:20 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/06/24 13:28:07 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	exec(t_all *all)
 	
 	i = 0;
 	tmp = all->cmd;
+	if (!*(tmp->str))
+		return (0);
 	while (tmp)
 	{
 		if (!ft_strncmp(tmp->str[0], "env", 255))
