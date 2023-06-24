@@ -99,7 +99,7 @@ typedef struct s_list
 }					t_list;         
 
 //parse
-void	parse(t_all *all, t_lexer *cmdline, char **env);
+void	parse(t_all *all, t_lexer *cmdline);
 
 //utils
 int		ft_strncmp(char *st1, char *st2, size_t n);

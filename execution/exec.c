@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/24 14:12:14 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/06/24 15:29:19 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	exec(t_all *all)
 			pwd(all);
 		else if (!strncmp(tmp->str[0], "echo", 255))
 			echo(tmp);
+		else if (!strcmp(tmp->str[0], "exit"))
+			exit (0);
 		// if (!ft_strncmp(cmd->str, "cd", 255))
 		// {
 		// 	// puts("here");

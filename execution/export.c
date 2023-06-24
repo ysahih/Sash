@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 16:28:32 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/24 15:26:08 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/06/24 15:29:09 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_var	*sort_env(t_var *lst)
     char *value;
 	t_var *p;
 	t_var *p1;
-	t_var *tmp;
+	// t_var *tmp;
 
     p = lst;
     while (p)

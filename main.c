@@ -364,20 +364,25 @@ int	main(int ac, char **av, char **env)
 	char	*line;
 	// char	**cpy;
 	t_lexer	*cmd;
-	t_all	*all;
+	t_all	all;
 	int		i;
 
 	// cpy = env;
 	i = 0;
 	if (ac != 1 || av[1])
 		return (printf("program does not accept agruments"), 0);
-	all= malloc(sizeof(t_all));
+	// all = malloc(sizeof(t_all));
+
+	all.env = NULL;
+	all.exp = NULL;
+
 	while (env[i])
 	{
-		lst_var(&all->env, ft_split(env[i]));
-		lst_var(&all->exp, ft_split(env[i]));                                                                    
+		lst_var(&all.env, ft_split(env[i]));
+		lst_var(&all.exp, ft_split(env[i]));
 		i++;
 	}
+
 	while (true)
 	{
 		sig_handler();
@@ -394,9 +399,9 @@ int	main(int ac, char **av, char **env)
 			write (1, "syntax error\n", 13);
 			continue ;
 		}
-		parse(all, cmd, env);
-		if (*line)
-			add_history(line);
-		exec(all);
+		parse(&all, cmd);
+		// if (*line)
+		// 	add_history(line);
+		exec(&all);
 	}
 }

@@ -316,6 +316,10 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 			*cmdline = (*cmdline)->next;
 			break ;
 		}
+		else if ((*cmdline)->type < 0)
+		{
+			(*cmdline) = (*cmdline)->next;
+		}
 		else if ((*cmdline)->type == OUTRED)
 		{
 			(*cmdline) = (*cmdline)->next;
@@ -353,19 +357,18 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 			(*cmdline) = (*cmdline)->next;
 		}
 	}
-
 	cmd->str[i] = NULL;
 	return (cmd);
 }
 
-void	parse(t_all *all, t_lexer *cmdline, char **env)
+void	parse(t_all *all, t_lexer *cmdline)
 {
 	t_simple_cmd 	*scmd;
 	t_lexer 		*cmd;
-	t_var			*var;
-	t_var			*exp;
+	// t_var			*var;
+	// t_var			*exp;
 
-	int i = 0;
+	// int i = 0;
 	scmd = NULL;
 	// var = NULL;
 	// exp = NULL;
