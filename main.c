@@ -383,11 +383,11 @@ int	main(int ac, char **av, char **env)
 		sig_handler();
 		// rl_catch_signals = 0;
 		line = readline("sash$ ");
+		// printf("line ...... {%s}\n", line);
+		// line = NULL;
 		// printf("%s\n", line);
 		if (!line)
 			break ;
-		if (*line)
-			add_history(line);
 		cmd = tokenize(line);
 		if (!analyze_syntax(cmd))
 		{
