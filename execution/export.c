@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 16:28:32 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/22 20:55:38 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/06/24 13:26:07 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,14 @@ void	add_exen_back(t_var **exen, t_var *new)
 	tmp = *exen;
 	if (tmp)
 	{
+		k = check_char(tmp, new->key);
+		if (k != NULL)
+		{
+			if (!ft_strncmp(k->val, new->val, 255))
+			{
+				return ;
+			}
+		}
 		k = ft_last(tmp);
 		k->next = new;
 	}
@@ -142,43 +150,27 @@ void	add_exen_back(t_var **exen, t_var *new)
 		*exen = new;
 }
 
-// char	*ft_strjoin(char *s1, char *s2)
-// {
-// 	int		i;
-// 	int		j;
-// 	size_t	len1;
-// 	size_t	len2;
-// 	char	*p;	
-
-// 	if (!s1 || !s2)
-// 		return (NULL);
-// 	i = 0;
-// 	len1 = ft_strlen(s1);
-// 	len2 = ft_strlen(s2);
-// 	p = malloc((len1 + len2 + 1) * sizeof(char));
-// 	if (!p)
-// 		return (NULL);
-// 	j = 0;
-// 	while (s1[i])
-// 	{
-// 		p[j++] = s1[i++];
-// 	}
-// 	i = 0;
-// 	while (s2[i])
-// 	{
-// 		p[j++] = s2[i++];
-// 	}
-// 	return (p);
-// }
+t_var	*check_char(t_var	*env, char	*str)
+{
+	while (env)
+	{
+		if (!ft_strncmp(env->key, str, 255))
+			return (env);
+		env = env->next;
+	}
+	return (NULL);
+}
 
 void    export(t_all *all)
 {
     t_simple_cmd    *p;
     t_var           *tmp_ex;
     t_var           *tmp_en;
-    t_var           *new_val;
+    char           *new_val;
+    char           *new_key;
     int i;
     int k;
+    int j;
 
     p = all->cmd;
     tmp_ex = all->exp;
@@ -209,37 +201,62 @@ void    export(t_all *all)
             while(p->str[i])
             {   
                 k = ft_strchr(p->str[i], '=');
+                j = ft_strchr(p->str[i], '+');
                 if (k != -1)
                 {
-                    if (p->str[i][k+1] == '\0' && p->str[i][k-1] == '+')
+                    if (p->str[i][k+1] == '\0')
                     {
-                        tmp_ex->key = ft_substr(p->str[i], 0, k-1);
-                        tmp_ex->val = ft_strdup("");
+						if (j != -1 && p->str[i][k-1] == '+')
+						{
+                        	tmp_ex->key = ft_substr(p->str[i], 0, j);
+                        	tmp_ex->val = ft_strdup("");
+						}
+						else
+						{
+                        	tmp_ex->key = ft_substr(p->str[i], 0, k);
+                        	tmp_ex->val = ft_strdup("");
+						}
                         add_exen_back(&all->exp ,lstnew_exen(tmp_ex->key, tmp_ex->val));
                         add_exen_back(&all->env ,lstnew_exen(tmp_ex->key, tmp_ex->val));
                         all->exp = sort_env(all->exp);
                     }
-                    else if (p->str[i][k+1] == '\0')
-                    {
-                        tmp_ex->key = ft_substr(p->str[i], 0, k);
-                        tmp_ex->val = ft_strdup("");
-                        add_exen_back(&all->exp ,lstnew_exen(tmp_ex->key, tmp_ex->val));
-                        add_exen_back(&all->env ,lstnew_exen(tmp_ex->key, tmp_ex->val));
-                        all->exp = sort_env(all->exp);
-                    }
-                    else if (p->str[i][k + 1] != '\0')
+                    else if (p->str[i][k + 1] != '\0' && p->str[i][k-1] != '+')
                     {
                         tmp_ex->key = ft_substr(p->str[i], 0, k);
                         tmp_ex->val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);
                         add_exen_back(&all->exp ,lstnew_exen(tmp_ex->key, tmp_ex->val));
                         add_exen_back(&all->env ,lstnew_exen(tmp_ex->key, tmp_ex->val));
                         all->exp = sort_env(all->exp);
+						return ;
                     }
+					else if (p->str[i][k+1] != '\0' && p->str[i][k - 1] == '+')
+					{
+						if (p->str[i][k+1] != '\0' && p->str[i][k - 1] == '+')
+						{
+							new_key = ft_substr(p->str[i], 0, k-1);
+							new_val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);
+							tmp_en = check_char(all->env, new_key);
+							tmp_ex = check_char(all->exp, new_key);
+							if (tmp_ex != NULL)
+							{
+								tmp_ex->val = ft_strjoin(tmp_ex->val, new_val);
+								tmp_en->val = ft_strjoin(tmp_en->val, new_val);
+							}
+							else
+							{
+								tmp_ex->val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);
+								tmp_en->val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);
+							}
+							add_exen_back(&all->env ,lstnew_exen(tmp_en->key, tmp_en->val));
+							add_exen_back(&all->exp ,lstnew_exen(tmp_ex->key, tmp_ex->val));
+							all->exp = sort_env(all->exp);
+						}
+					}
                 }
                 else
                 {
-                    tmp_ex->key = p->str[i];
-                    add_exen_back(&all->exp, lstnew_exen(tmp_ex->key, NULL));
+                    // tmp_ex->key = p->str[i];
+                    add_exen_back(&all->exp, lstnew_exen(p->str[i], NULL));
                     all->exp = sort_env(all->exp);
                 }
                 i++;
