@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/24 13:28:07 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/06/24 14:02:15 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	exec(t_all *all)
 	t_simple_cmd *tmp;
 	
 	i = 0;
+	if (!(all->cmd))
+		return (0);
 	tmp = all->cmd;
 	if (!*(tmp->str))
 		return (0);
@@ -31,6 +33,8 @@ int	exec(t_all *all)
 			pwd(all);
 		else if (!strncmp(tmp->str[0], "echo", 255))
 			echo(tmp);
+		else if (!strcmp(tmp->str[0], "exit"))
+			exit (0);
 		// if (!ft_strncmp(cmd->str, "cd", 255))
 		// {
 		// 	// puts("here");
