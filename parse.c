@@ -357,7 +357,6 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 			(*cmdline) = (*cmdline)->next;
 		}
 	}
-
 	cmd->str[i] = NULL;
 	return (cmd);
 }
