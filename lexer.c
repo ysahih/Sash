@@ -152,6 +152,11 @@ t_lexer	*tokenize(char *line)
 			tokenize_dquote(&node, &line);
 		else if (*line == '\'')
 			tokenize_squote(&node, &line);
+		else if (*line == '*')
+		{
+			create_node(&node, "*", -1);
+			line++;
+		}
 		else if (*line == '>'|| *line == '<')
 			tokenize_red(&node, &line);
 		else if (*line == '$' && *(line + 1) && valid_var(*(line + 1)))
@@ -159,8 +164,8 @@ t_lexer	*tokenize(char *line)
 		else
 			tokenize_word(&node, &line);
 	}
-	// t_lexer	 *tmp = node;
-	// // puts("ls");
+	t_lexer	 *tmp = node;
+	// puts("ls");
 	// while (tmp)
 	// {
 	// 	printf("|%s|-%d\n", tmp->str, tmp->type);
