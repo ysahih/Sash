@@ -17,6 +17,8 @@ file
 *.gch
 *.pch
 
+sash
+
 # Libraries
 *.lib
 *.a

@@ -14,14 +14,16 @@ execution/env.c\
 execution/export.c\
 execution/pwd.c\
 execution/echo.c\
+execution/unset.c\
 
 RM = rm -rf
 CC = cc
 OBJS = $(SRCS:%.c=%.o)
 B_OBJS = $(B_SRCS:%.c=%.o)
-CFLAGS = -Wall -Wextra -Werror -I/Users/ysahih/Desktop/readline/include 
+CFLAGS = -Wall -Wextra -Werror 
+# -I/Users/ysahih/Desktop/readline/include 
  
-RLFLAGS = -L/Users/ysahih/Desktop/readline/lib -lreadline -lhistory 
+# RLFLAGS = -L/Users/ysahih/Desktop/readline/lib -lreadline -lhistory 
 # -fsanitize=address -g
 
 all : $(NAME)

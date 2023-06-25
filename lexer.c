@@ -164,7 +164,7 @@ t_lexer	*tokenize(char *line)
 		else
 			tokenize_word(&node, &line);
 	}
-	t_lexer	 *tmp = node;
+	// t_lexer	 *tmp = node;
 	// puts("ls");
 	// while (tmp)
 	// {

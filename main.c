@@ -400,8 +400,8 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		}
 		parse(&all, cmd);
-		// if (*line)
-		// 	add_history(line);
+		if (*line)
+			add_history(line);
 		exec(&all);
 	}
 }
