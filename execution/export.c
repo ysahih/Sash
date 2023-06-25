@@ -160,12 +160,12 @@ t_var	*check_char(t_var	*env, char	*str)
 	return (NULL);
 }
 
-int	isalpha(int c)
-{
-	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
-		return (1);
-	return (0);
-}
+// bool	is_alpha(int c)
+// {
+// 	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
+// 		return (1);
+// 	return (0);
+// }
 
 void    export(t_all *all)
 {
@@ -208,11 +208,10 @@ void    export(t_all *all)
             i = 1;
             while(p->str[i])
             {
-				if (isalpha(p->str[i][0]) != 1 && p->str[i][0] != '_')
+				if (is_alpha(p->str[i][0]) != 1 && p->str[i][0] != '_')
 				{
-					printf("sash$ ");
-					printf("%s:", p->str[i]);
-					printf(" command not found\n");
+					printf("sash: export: ");
+					printf("`%s': not a valid identifier\n", p->str[i]);
 				}
                 k = ft_strchr(p->str[i], '=');
                 j = ft_strchr(p->str[i], '+');
@@ -224,9 +223,7 @@ void    export(t_all *all)
                     if (p->str[i][k+1] == '\0')
                     {
 						if (tmp_ex == NULL)	
-						{
-							// tmp_ex->val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);
-							// tmp_en->val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+						{                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
                     		add_exen_back(&all->exp ,lstnew_exen(key, ft_strdup("")));
                     		add_exen_back(&all->env ,lstnew_exen(key, ft_strdup("")));
 						}
@@ -239,7 +236,7 @@ void    export(t_all *all)
                     else if (p->str[i][k + 1] != '\0' && p->str[i][k-1] != '+')
                     {
 						key = ft_substr(p->str[i], 0, k);
-						val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+						val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 						if (tmp_ex == NULL)
 						{
                     		add_exen_back(&all->exp ,lstnew_exen(key, val));
@@ -247,7 +244,7 @@ void    export(t_all *all)
 						}
 						else
 						{
-							tmp_en->val = val;
+							add_exen_back(&all->env ,lstnew_exen(key, val));
 							tmp_ex->val = val;
 						}
                     }
@@ -277,9 +274,13 @@ void    export(t_all *all)
                 }
                 else
                 {
-                    // tmp_ex->key = p->str[i];
-                    add_exen_back(&all->exp, lstnew_exen(p->str[i], NULL));
-                    all->exp = sort_env(all->exp);
+                    tmp_ex = check_char(all->exp, key);
+					tmp_en = check_char(all->env, key);
+					if (tmp_ex != NULL)
+					{
+						add_exen_back(&all->exp, lstnew_exen(p->str[i], NULL));
+                    	all->exp = sort_env(all->exp);
+					}
                 }
                 i++;
             }
@@ -324,7 +325,7 @@ void    export(t_all *all)
 //                 tmp_ex = tmp_ex->next;
 //             }
 //         }
-// 		if (isalpha(p->str[1][0]) != 1 || p->str[1][0] == '_')
+// 		if (is_alpha(p->str[1][0]) != 1 || p->str[1][0] == '_')
 // 		{
 // 			printf("sash$ ");
 // 			printf("%s:", p->str[1]);

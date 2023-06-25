@@ -1,6 +1,7 @@
 #ifndef MINISHELL
 #define MINISHELL
 # include <stdio.h>
+# include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <string.h>
