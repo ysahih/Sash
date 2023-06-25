@@ -102,7 +102,7 @@ typedef struct s_list
 void	parse(t_all *all, t_lexer *cmdline);
 
 //utils
-int		ft_strncmp(char *st1, char *st2, size_t n);
+int		ft_strncmp(char *st1, char *st2);
 int		ft_strchr(char *str, int ch);
 char	*ft_substr(char *s, int start, int len);
 char	*ft_strdup(char *str);
@@ -121,6 +121,7 @@ void	env(t_all *all);
 void	export(t_all *all);
 void    pwd(t_all   *all);
 void    echo(t_simple_cmd  *all);
+// void    unset(t_all *all);
 // int		cd(char *str);
 
 

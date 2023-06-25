@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/24 15:29:19 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/06/25 11:56:18 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,19 @@ int	exec(t_all *all)
 		return (0);
 	while (tmp)
 	{
-		if (!ft_strncmp(tmp->str[0], "env", 255))
+		if (!ft_strncmp(tmp->str[0], "env"))
 			env(all);
-		else if (!ft_strncmp(tmp->str[0], "export", 255))
+		else if (!ft_strncmp(tmp->str[0], "export"))
 			export(all);
-		else if (!ft_strncmp(tmp->str[0], "pwd", 255))
+		else if (!ft_strncmp(tmp->str[0], "pwd"))
 			pwd(all);
-		else if (!strncmp(tmp->str[0], "echo", 255))
+		else if (!ft_strncmp(tmp->str[0], "echo"))
 			echo(tmp);
-		else if (!strcmp(tmp->str[0], "exit"))
+		// else if (!ft_strncmp(tmp->str[0] , "unset"))
+		// 	unset(all);
+		else if (!ft_strncmp(tmp->str[0], "exit"))
 			exit (0);
-		// if (!ft_strncmp(cmd->str, "cd", 255))
+		// if (!ft_strncmp(cmd->str, "cd"))
 		// {
 		// 	// puts("here");
 		// 	// if (!cmd->next->next->str) {
