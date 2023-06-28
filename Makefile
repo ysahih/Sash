@@ -15,6 +15,8 @@ execution/export.c\
 execution/pwd.c\
 execution/echo.c\
 execution/unset.c\
+execution/cd.c\
+execution/exit.c\
 
 RM = rm -rf
 CC = cc

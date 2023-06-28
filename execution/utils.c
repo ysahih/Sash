@@ -6,13 +6,13 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:03:37 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/25 11:51:22 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/06/26 18:45:37 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_strncmp(char *st1, char *st2)
+int	ft_strcmp(char *st1, char *st2)
 {
 	size_t			i;
 
