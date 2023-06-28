@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 08:26:22 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/25 11:48:28 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/06/26 18:45:37 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void    pwd(t_all   *all)
     var = all->env;
     while (var)
     {
-        if (!ft_strncmp(var->key, "PWD"))
+        if (!ft_strcmp(var->key, "PWD"))
         {
             printf("%s\n", var->val);
             return ;
