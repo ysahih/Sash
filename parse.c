@@ -236,8 +236,8 @@ void	lst_var(t_var **var, char **s)
 	if (!var || !s || !*s)
 		return ;
 	tmp = malloc(sizeof(t_var));
-	tmp->key = s[0];
-	tmp->val = s[1];
+	tmp->key = ft_strdup(s[0]);
+	tmp->val = ft_strdup(s[1]);
 	tmp->next = NULL;
 	if (*var == NULL)
 	{
