@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/30 19:51:10 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/06/30 22:29:19 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,10 +169,10 @@ void    one_cmd_nb(t_all *all, t_simple_cmd *p)
 	char *join;
  	t_var	*key;
 
-	p = all->cmd;
 	i = fork();
 	if (i == 0)
 	{
+		puts("hna");
 		k = my_env(all);
 		key = check_char(all->env, "PATH");
 		if (key)
@@ -181,6 +181,7 @@ void    one_cmd_nb(t_all *all, t_simple_cmd *p)
 			i = 0;
 			if (!strchr(p->str[0], '/'))
 			{
+				puts("hna1");
 				while (path[i])
 				{
 					join = ft_strjoin(path[i], "/");
@@ -189,9 +190,13 @@ void    one_cmd_nb(t_all *all, t_simple_cmd *p)
 						execve(join, p->str, k);
 					i++;
 				}
+				puts("hna2");
 			}
 			else
+			{
+				puts("hna3");
 				execve(p->str[0], p->str, k);
+			}
 			ftputstr("sash: ");
 			ftputstr(p->str[0]);
 			ftputstr(": ");
@@ -202,6 +207,5 @@ void    one_cmd_nb(t_all *all, t_simple_cmd *p)
 		int stat;
 		wait(&stat);
 	}
-	// else
-		
+	// else		
 }
