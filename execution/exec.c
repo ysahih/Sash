@@ -6,24 +6,18 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/28 21:33:21 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/06/30 19:51:49 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	exec(t_all *all)
+void	one_cmd(t_all *all)
 {
-	int i;
-	t_simple_cmd *tmp;
-	
-	i = 0;
-	if (!all->cmd)
-		return (0);
+	t_simple_cmd	*tmp;
+
 	tmp = all->cmd;
-	if (!*(tmp->str))
-		return (0);
-	while (tmp)
+	if (!tmp->next)
 	{
 		if (!ft_strcmp(tmp->str[0], "env"))
 			env(all);
@@ -39,7 +33,36 @@ int	exec(t_all *all)
 			ex_it (all);
 		else if (!ft_strcmp(tmp->str[0], "cd"))
 			cd (all);
-		tmp = tmp->next;
+		else
+			one_cmd_nb(all, tmp);
 	}
+}
+
+// void	many_cmds(t_all	*all)
+// {
+// 	t_simple_cmd	*tmp;
+
+// 	tmp = all->cmd;
+// 	while (tmp)
+// 	{
+		
+// 	}
+// }
+
+int	exec(t_all *all)
+{
+	int i;
+	t_simple_cmd *tmp;
+	
+	i = 0;
+	if (!all->cmd)
+		return (0);
+	tmp = all->cmd;
+	if (!*(tmp->str))
+		return (0);
+	if (!tmp->next)
+		one_cmd(all);
+	// else
+	// 	many_cmds(all);
 	return (0);
 }
