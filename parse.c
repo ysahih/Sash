@@ -60,6 +60,7 @@ char	**ft_split(char *str)
 	return (s);
 }
 
+
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*p;

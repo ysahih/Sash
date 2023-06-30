@@ -17,6 +17,7 @@ execution/echo.c\
 execution/unset.c\
 execution/cd.c\
 execution/exit.c\
+execution/not_builtin.c\
 
 RM = rm -rf
 CC = cc
