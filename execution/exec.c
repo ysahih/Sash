@@ -6,17 +6,14 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/30 19:51:49 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/06/30 22:33:11 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	one_cmd(t_all *all)
+void	one_cmd(t_all *all, t_simple_cmd *tmp)
 {
-	t_simple_cmd	*tmp;
-
-	tmp = all->cmd;
 	if (!tmp->next)
 	{
 		if (!ft_strcmp(tmp->str[0], "env"))
@@ -38,16 +35,39 @@ void	one_cmd(t_all *all)
 	}
 }
 
-// void	many_cmds(t_all	*all)
-// {
-// 	t_simple_cmd	*tmp;
+void	many_cmds(t_all	*all, t_simple_cmd	*tmp)
+{
+	int i;
+	int f;
+	int fd[2];
 
-// 	tmp = all->cmd;
-// 	while (tmp)
-// 	{
-		
-// 	}
-// }
+	while (tmp)
+	{
+		if(tmp->next)
+			pipe(fd);
+		if (!ft_strcmp(tmp->str[0], "cd") ||  !ft_strcmp(tmp->str[0], "exit") || !ft_strcmp(tmp->str[0], "pwd") || !ft_strcmp(tmp->str[0], "env")\
+		|| !ft_strcmp(tmp->str[0], "unset") || !ft_strcmp(tmp->str[0], "export") || !ft_strcmp(tmp->str[0], "echo"))
+		{
+			f = fork();
+			if (f == 0)
+			{
+				one_cmd(all, tmp);
+				// exit ()
+			}
+			else
+				wait(&i);
+		}
+		else 
+		{
+			puts("pahh1");
+			one_cmd_nb(all, tmp);
+			puts("pahh2");
+		}
+		tmp = tmp->next;
+	}
+	dup2(fd[0], 0);
+	dup2(fd[1], 1);
+}
 
 int	exec(t_all *all)
 {
@@ -61,8 +81,8 @@ int	exec(t_all *all)
 	if (!*(tmp->str))
 		return (0);
 	if (!tmp->next)
-		one_cmd(all);
-	// else
-	// 	many_cmds(all);
+		one_cmd(all, tmp);
+	else
+		many_cmds(all, tmp);
 	return (0);
 }
