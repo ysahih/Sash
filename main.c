@@ -359,6 +359,31 @@ void	sig_handler(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
+void	set_env(t_all *all, char **env)
+{
+	int	i;
+	char	path[800];
+
+	i = 0;
+	all->env = NULL;
+	all->exp = NULL;
+	if (!*env)
+	{
+		add_exen_back(&all->exp ,lstnew_exen(ft_strdup("OLDPWD"), NULL));
+		add_exen_back(&all->exp ,lstnew_exen(ft_strdup("PWD"), ft_strdup(getcwd(path, 800))));
+		add_exen_back(&all->exp ,lstnew_exen(ft_strdup("SHLVL"), ft_strdup("1")));
+		add_exen_back(&all->env ,lstnew_exen(ft_strdup("PWD"), ft_strdup(getcwd(path, 800))));
+		add_exen_back(&all->env ,lstnew_exen(ft_strdup("SHLVL"), ft_strdup("1")));
+		add_exen_back(&all->env ,lstnew_exen(ft_strdup("_"), ft_strdup("/usr/bin/env")));
+	}
+	while (env[i])
+	{
+		lst_var(&all->env, ft_split(env[i]));
+		lst_var(&all->exp, ft_split(env[i]));
+		i++;
+	}
+}
+
 int	main(int ac, char **av, char **env)
 {
 	char	*line;
@@ -373,16 +398,23 @@ int	main(int ac, char **av, char **env)
 		return (printf("program does not accept agruments"), 0);
 	// all = malloc(sizeof(t_all));
 
-	all.env = NULL;
-	all.exp = NULL;
-
-	while (env[i])
-	{
-		lst_var(&all.env, ft_split(env[i]));
-		lst_var(&all.exp, ft_split(env[i]));
-		i++;
-	}
-
+	// all.env = NULL;
+	// all.exp = NULL;
+	// if (!*env)
+	// {
+	// 	add_exen_back(&all.exp ,lstnew_exen(ft_strdup("OLDPWD"), NULL));
+	// 	add_exen_back(&all.exp ,lstnew_exen(ft_strdup("PWD"), ft_strdup(getcwd(path, 800))));
+	// 	add_exen_back(&all.exp ,lstnew_exen(ft_strdup("SHLVL"), ft_strdup("1")));
+	// 	add_exen_back(&all.env ,lstnew_exen(ft_strdup("PWD"), ft_strdup(getcwd(path, 800))));
+	// 	add_exen_back(&all.env ,lstnew_exen(ft_strdup("SHLVL"), ft_strdup("1")));
+	// }
+	// while (env[i])
+	// {
+	// 	lst_var(&all.env, ft_split(env[i]));
+	// 	lst_var(&all.exp, ft_split(env[i]));
+	// 	i++;
+	// }
+	set_env(&all, env);
 	while (true)
 	{
 		sig_handler();

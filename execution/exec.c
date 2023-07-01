@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/30 22:33:11 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/01 18:39:57 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,15 +59,25 @@ void	many_cmds(t_all	*all, t_simple_cmd	*tmp)
 		}
 		else 
 		{
-			puts("pahh1");
+			puts("aaa");
+			if (!tmp->next)
+			{
+				dup2(fd[1], 1);
+				close(fd[0]);
+				close(fd[1]);
+			}
 			one_cmd_nb(all, tmp);
-			puts("pahh2");
 		}
-		if 
+		if (tmp->next)
+		{
+			dup2(fd[0], 0);
+			close(fd[0]);
+			close(fd[1]);
+		}
+		else
+			close(0);
 		tmp = tmp->next;
 	}
-	dup2(fd[0], 0);
-	dup2(fd[1], 1);
 }
 
 int	exec(t_all *all)

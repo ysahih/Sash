@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/30 22:29:19 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/01 19:08:21 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ char	**my_env(t_all *all)
 
 	i = 0;
 	len = 0;
-	p = all->exp;
+	p = all->env;
 	while (p)
 	{
 		len++;
@@ -118,7 +118,7 @@ char	**my_env(t_all *all)
 	// if (!tmp)
 	// 	retun (NULL);
 	i = 0;
-	p = all->exp;
+	p = all->env;
 	while (p)
 	{
 		tmp[i] = ft_strjoin_n(p->key , "=");
@@ -188,18 +188,35 @@ void    one_cmd_nb(t_all *all, t_simple_cmd *p)
 						execve(join, p->str, k);
 					i++;
 				}
+				ftputstr("sash: ");
+				ftputstr(p->str[0]);
+				ftputstr(": command not found\n");
+				exit(127);
 			}
 			else
 				execve(p->str[0], p->str, k);
-			ftputstr("sash: ");
-			ftputstr(p->str[0]);
-			ftputstr(": ");
-			perror("");
-			exit (0);
 		}
-	} else {
-		int stat;
-		wait(&stat);
+		else
+		{
+			execve(p->str[0], p->str, k);
+			perror("");
+			// ftputstr("sash: ");
+			// ftputstr(p->str[0]);
+			// ftputstr(": command not found\n");
+			// exit(127);
+		}
 	}
+	else
+	{
+		while (1)
+		{
+			int stat;
+			if (wait(&stat))
+			{
+				// printf("stat : %d\n", stat);
+				break ;
+			}
+		}
+	} 
 	// else		
 }

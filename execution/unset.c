@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 21:07:40 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/29 20:17:25 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/01 18:23:06 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ t_var    *unset_env(char *str, t_var **env)
 	t_var   		*tmp;
 
 	exist_key_env = check_exist_key(*env, str);
+	if(!exist_key_env)
+		return (*env);
 	if (exist_key_env == *env)
 	{
 		*env = (*env)->next;
@@ -122,6 +124,8 @@ t_var    *unset_exp(char *str, t_var **exp)
 	t_var   		*tmp;
 
 	exist_key_exp = check_exist_key(*exp, str);
+	if (!exist_key_exp)
+		return (*exp);
 	if (exist_key_exp == *exp)
 	{
 		*exp = (*exp)->next;
@@ -141,7 +145,6 @@ void    unset(t_simple_cmd *p, t_var **env, t_var **exp)
 	int i;
 
 	i = 1;
-	// (void)exp;
 	while (p->str[i])
 	{
 		*env = unset_env(p->str[i], env);
