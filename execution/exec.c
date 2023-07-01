@@ -52,7 +52,7 @@ void	many_cmds(t_all	*all, t_simple_cmd	*tmp)
 			if (f == 0)
 			{
 				one_cmd(all, tmp);
-				// exit ()
+				exit (0);
 			}
 			else
 				wait(&i);
@@ -63,6 +63,7 @@ void	many_cmds(t_all	*all, t_simple_cmd	*tmp)
 			one_cmd_nb(all, tmp);
 			puts("pahh2");
 		}
+		if 
 		tmp = tmp->next;
 	}
 	dup2(fd[0], 0);

@@ -116,6 +116,7 @@ void	lst_var(t_var **var, char **s);
 char	**ft_split(char *str);
 char	*ft_strjoin(char *s1, char *s2);
 t_var	*check_char(t_var	*env, char	*str);
+void	ftputstr(char *str);
 
 //builtins cmds
 void	env(t_all *all);
