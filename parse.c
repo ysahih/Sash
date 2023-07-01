@@ -387,8 +387,6 @@ void	parse(t_all *all, t_lexer *cmdline)
 	cmd = rm_space(cmd);
 	while(cmd)
 		add_scmd(&scmd, collect_scmds(&cmd));
-
-
 	all->cmd = scmd;
 	// all->env = var;
 	// all->exp = exp;
