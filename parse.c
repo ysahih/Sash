@@ -60,7 +60,6 @@ char	**ft_split(char *str)
 	return (s);
 }
 
-
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*p;
@@ -86,7 +85,6 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s2[j])
 		p[i++] = s2[j++];
 	p[i] = '\0';
-	free (s1);
 	return (p);
 }
 
@@ -114,21 +112,26 @@ t_lexer	*rm_quote(t_lexer *cmdline)
 t_lexer	*merge_word(t_lexer *cmd)
 {
 	t_lexer	*node;
-	t_lexer	*tmp;
+	// t_lexer	*tmp;
+	char 	*str;
 
+	str = NULL;
 	node = NULL;
 	if (!cmd)
 		return NULL;
 	while (cmd)
 	{
-		if (cmd->next && cmd->type == WORD && cmd->next->type == WORD)
+		while (cmd && cmd->type == WORD)
 		{
-			create_node(&node, ft_strjoin(cmd->str, cmd->next->str) , WORD);
-			cmd = cmd->next->next;
+			str = ft_strjoin(str, cmd->str);
+			cmd = cmd->next;
 		}
+		create_node(&node, str, WORD);
+		str = NULL;
 		if (!cmd)
 			break ;
-		else
+		else 
+		// if (cmd->type != WORD)
 		{
 			create_node(&node, cmd->str, cmd->type);
 			cmd = cmd->next;
@@ -136,12 +139,12 @@ t_lexer	*merge_word(t_lexer *cmd)
 	}
 	if (cmd)
 		create_node(&node, cmd->str, cmd->type);
-	while (cmd)
-	{
-		tmp = cmd->next;
-		free(cmd);
-		cmd = tmp;
-	}
+	// while (cmd)
+	// {
+	// 	tmp = cmd->next;
+	// 	free(cmd);
+	// 	cmd = tmp;
+	// }
 	return (node);
 }
 
@@ -237,8 +240,8 @@ void	lst_var(t_var **var, char **s)
 	if (!var || !s || !*s)
 		return ;
 	tmp = malloc(sizeof(t_var));
-	tmp->key = ft_strdup(s[0]);
-	tmp->val = ft_strdup(s[1]);
+	tmp->key = s[0];
+	tmp->val = s[1];
 	tmp->next = NULL;
 	if (*var == NULL)
 	{
@@ -292,15 +295,19 @@ t_lexer *expand_var(t_lexer *cmdline, t_var *var)
 
 void	parse_hd(char *str)
 {
-	char *line;
-
+	char	*line;
+	// int		i;
+	
+	// line = malloc(sizeof(char *) * 100);
+	// i = 0;
 	while (true)
 	{
 		line = readline("> ");
 		if (!line || strcmp(line, str) == 0)
 			break ;
+		// i++;
 	}
-	
+
 }
 t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 {
@@ -363,6 +370,7 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 	return (cmd);
 }
 
+
 void	parse(t_all *all, t_lexer *cmdline)
 {
 	t_simple_cmd 	*scmd;
@@ -370,23 +378,25 @@ void	parse(t_all *all, t_lexer *cmdline)
 	// t_var			*var;
 	// t_var			*exp;
 
-	// int i = 0;
+	// int i;
 	scmd = NULL;
 	// var = NULL;
 	// exp = NULL;
 	// while (env[i])
 	// {
 	// 	lst_var(&var, ft_split(env[i]));
-	// 	lst_var(&exp, ft_split(env[i]));                                                                    
+	// 	lst_var(&exp, ft_split(env[i]));
 	// 	i++;
 	// }
 	cmd = rm_quote(cmdline);
 	cmd = expand_var(cmd, all->env);
 	cmd = merge_word(cmd);
 	cmd = rm_space(cmd);
-	cmd = rm_space(cmd);
+	// cmd = rm_space(cmd);
 	while(cmd)
 		add_scmd(&scmd, collect_scmds(&cmd));
+
+
 	all->cmd = scmd;
 	// all->env = var;
 	// all->exp = exp;
@@ -397,7 +407,7 @@ void	parse(t_all *all, t_lexer *cmdline)
 	// 	i = 0;
 	// 	printf("--\n");
 	// 	while (scmd->str[i]){  
-// 		printf("=%s=\n", scmd->str[i]);
+	// 	printf("=%s=\n", scmd->str[i]);
 	// 		i++;
 	// 	}
 	// 	printf("--\n");
