@@ -11,10 +11,11 @@
 # include <fcntl.h>
 # include <errno.h>
 
+int	g_rd;
+
 enum	pipe {BEFORE, AFTER};
 enum	operator {WSPACE, PIPE, VAR, WORD, SQUOTE, DQUOTE, OUTRED, INRED, APPEND, HERDOC};
 				// 0      1     2     3     4       5      6                        9
-
 
 // # define SC  " \t\n!%*\"'+,-./\\:;<=>?@[]~^`|$"
 // # define NOTWORD " \t\r\n\"'\v\f|<>$/"
@@ -133,4 +134,6 @@ void    one_cmd_nb(t_all *all, t_simple_cmd	*p);
 // execution
 int		exec(t_all *all);
 
+void	sig_handler();
+void	handle_INT(int sig);
 #endif
