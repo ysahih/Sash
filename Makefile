@@ -14,6 +14,10 @@ execution/env.c\
 execution/export.c\
 execution/pwd.c\
 execution/echo.c\
+execution/unset.c\
+execution/cd.c\
+execution/exit.c\
+execution/not_builtin.c\
 
 RM = rm -rf
 CC = cc
@@ -27,7 +31,7 @@ RLFLAGS = -L/Users/ysahih/Desktop/readline/lib -lreadline -lhistory
 all : $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(RLFLAGS)  $^ -o $(NAME) -lreadline
+	$(CC) $(RLFLAGS)  $^ -o $(NAME) 
 
 %.o: %.c $(HDR)
 	$(CC) $(CFLAGS) -c $< -o $@

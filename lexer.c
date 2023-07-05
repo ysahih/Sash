@@ -74,6 +74,7 @@ void	tokenize_dquote(t_lexer **node, char **s)
 			*s = &tmp[i];
 		}
 	}
+	
 }
 
 void	tokenize_squote(t_lexer **node, char **s)
@@ -164,7 +165,7 @@ t_lexer	*tokenize(char *line)
 		else
 			tokenize_word(&node, &line);
 	}
-	t_lexer	 *tmp = node;
+	// t_lexer	 *tmp = node;
 	// puts("ls");
 	// while (tmp)
 	// {
