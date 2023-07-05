@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 16:28:32 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/24 15:29:09 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/01 17:58:04 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_var	*sort_env(t_var *lst)
         p1 = p->next;
         while (p1)
 	    {
-	    	if (ft_strncmp(p->key, p1->key, 255) > 0)
+	    	if (ft_strcmp(p->key, p1->key) > 0)
 	    	{
 	    		key = p->key;
                 value = p->val;
@@ -137,7 +137,7 @@ void	add_exen_back(t_var **exen, t_var *new)
 		k = check_char(tmp, new->key);
 		if (k != NULL)
 		{
-			if (!ft_strncmp(k->val, new->val, 255))
+			if (!ft_strcmp(k->val, new->val))
 			{
 				return ;
 			}
@@ -153,7 +153,7 @@ t_var	*check_char(t_var	*env, char	*str)
 {
 	while (env)
 	{
-		if (!ft_strncmp(env->key, str, 255))
+		if (!ft_strcmp(env->key, str))
 			return (env);
 		env = env->next;
 	}
@@ -176,101 +176,117 @@ void    export(t_all *all)
     p = all->cmd;
     tmp_ex = all->exp;
     tmp_en = all->env;
-    while (p)
+    if (!p->str[1])
     {
-        if (!p->str[1])
-        {
-    		all->exp = sort_env(all->exp);
-    		tmp_ex = all->exp;
-            while (tmp_ex)
+    	all->exp = sort_env(all->exp);
+    	tmp_ex = all->exp;
+        while (tmp_ex)
+        {  
+            printf ("declare -x ");
+            printf("%s", tmp_ex->key);
+            if (tmp_ex->val)
             {  
-                printf ("declare -x ");
-                printf("%s", tmp_ex->key);
-                if (tmp_ex->val)
-                {  
-                    printf("=\"");
-                    printf("%s", tmp_ex->val);
-                    printf("\"");
-                }
-                printf("\n");
-                tmp_ex = tmp_ex->next;
+                printf("=\"");
+                printf("%s", tmp_ex->val);
+                printf("\"");
             }
+            printf("\n");
+            tmp_ex = tmp_ex->next;
         }
-        else
-        {
-            i = 1;
-            while(p->str[i])
-            {   
-                k = ft_strchr(p->str[i], '=');
-                j = ft_strchr(p->str[i], '+');
-                if (k != -1)
+    }
+    else
+    {
+        i = 1;
+        while(p->str[i])
+        {   
+            k = ft_strchr(p->str[i], '=');
+            j = ft_strchr(p->str[i], '+');
+            if (k != -1)
+            {
+				key = ft_substr(p->str[i], 0, k);
+				tmp_ex = check_char(all->exp, key);
+				tmp_en = check_char(all->env, key);
+                if (p->str[i][k+1] == '\0')
+                {
+					if (tmp_ex == NULL)
+					{                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                		add_exen_back(&all->exp ,lstnew_exen(key, ft_strdup("")));
+                		add_exen_back(&all->env ,lstnew_exen(ft_strdup(key), ft_strdup("")));
+					}
+					else
+					{
+						tmp_ex->val = ft_strdup("");
+						if (!tmp_en)
+							add_exen_back(&all->env ,lstnew_exen(key, tmp_ex->val));
+						else
+							tmp_en->val = ft_strdup("");
+							
+					}
+				}
+                else if (p->str[i][k + 1] != '\0' && p->str[i][k-1] != '+')
                 {
 					key = ft_substr(p->str[i], 0, k);
-					tmp_ex = check_char(all->exp, key);
-					tmp_en = check_char(all->env, key);
-                    if (p->str[i][k+1] == '\0')
-                    {
-						if (tmp_ex == NULL)	
-						{
-							// tmp_ex->val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);
-							// tmp_en->val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-                    		add_exen_back(&all->exp ,lstnew_exen(key, ft_strdup("")));
-                    		add_exen_back(&all->env ,lstnew_exen(key, ft_strdup("")));
-						}
-						else
-						{
-							tmp_ex->val = ft_strdup("");
-							add_exen_back(&all->env ,lstnew_exen(key, tmp_ex->val));
-						}
-					}
-                    else if (p->str[i][k + 1] != '\0' && p->str[i][k-1] != '+')
-                    {
-						key = ft_substr(p->str[i], 0, k);
-						val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-						if (tmp_ex == NULL)
-						{
-                    		add_exen_back(&all->exp ,lstnew_exen(key, val));
-                    		add_exen_back(&all->env ,lstnew_exen(key, val));
-						}
-						else
-						{
-							tmp_en->val = val;
-							tmp_ex->val = val;
-						}
-                    }
-					else if (p->str[i][k+1] != '\0' && p->str[i][k - 1] == '+')
+					val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);  
+					tmp_ex = check_char(all->exp, key);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+					tmp_en = check_char(all->env, key);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+					if (tmp_ex == NULL)
 					{
-						if (p->str[i][k+1] != '\0' && p->str[i][k - 1] == '+')
-						{
-							new_key = ft_substr(p->str[i], 0, k-1);
-							new_val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);
-							tmp_en = check_char(all->env, new_key);
-							tmp_ex = check_char(all->exp, new_key);
-							if (tmp_ex != NULL)
-							{
-								tmp_ex->val = ft_strjoin(tmp_ex->val, new_val);
-								tmp_en->val = ft_strjoin(tmp_en->val, new_val);
-							}
-							else
-							{
-								tmp_ex->val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);
-								tmp_en->val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-							}
-							add_exen_back(&all->env ,lstnew_exen(tmp_en->key, tmp_en->val));
-							add_exen_back(&all->exp ,lstnew_exen(tmp_ex->key, tmp_ex->val));
-							all->exp = sort_env(all->exp);
-						}
+                		add_exen_back(&all->exp ,lstnew_exen(key, val));
+                		add_exen_back(&all->env ,lstnew_exen(ft_strdup(key), ft_strdup(val)));
+					}
+					else
+					{
+						if (!tmp_en)
+                			add_exen_back(&all->env ,lstnew_exen(ft_strdup(key), ft_strdup(val)));
+						else
+							tmp_en->val = val;
+						tmp_ex->val = ft_strdup(val);
 					}
                 }
-                else
-                {
-                    // tmp_ex->key = p->str[i];
-                    add_exen_back(&all->exp, lstnew_exen(p->str[i], NULL));
-                    all->exp = sort_env(all->exp);
-                }
-                i++;
+				else if (p->str[i][k+1] != '\0' && p->str[i][k - 1] == '+')
+				{
+					new_key = ft_substr(p->str[i], 0, k-1);
+					new_val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);
+					tmp_en = check_char(all->env, new_key);
+					tmp_ex = check_char(all->exp, new_key);
+					if (tmp_ex != NULL)
+					{
+						tmp_ex->val = ft_strjoin(tmp_ex->val, new_val);
+						if (tmp_en)
+							tmp_en->val = ft_strjoin(tmp_en->val, new_val);
+						else
+							add_exen_back(&all->env ,lstnew_exen(ft_strdup(new_key), ft_strdup(new_val)));
+					}
+					else
+					{
+						tmp_ex->val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);
+						if (tmp_en)
+							tmp_en->val = ft_substr(p->str[i], k+1, ft_strlen(p->str[i])-k);
+						else
+							add_exen_back(&all->env ,lstnew_exen(ft_strdup(new_key), ft_strdup(new_val)));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+					}
+					all->exp = sort_env(all->exp);
+				}
+				else if (p->str[i][k+1] == '\0' && p->str[i][k - 1] == '+')
+				{
+					new_key = ft_substr(p->str[i], 0, k-1);
+					tmp_ex = check_char(all->exp, new_key);
+					if (!tmp_ex)
+					{
+						add_exen_back(&all->env ,lstnew_exen(new_key, ft_strdup("")));
+						add_exen_back(&all->exp ,lstnew_exen(ft_strdup(new_key), ft_strdup("")));
+						all->exp = sort_env(all->exp);
+					}
+				}
             }
+            else
+            {
+				tmp_ex = check_char(all->exp, p->str[i]);
+				if (!tmp_ex)
+                	add_exen_back(&all->exp, lstnew_exen(p->str[i], NULL));
+                all->exp = sort_env(all->exp);
+            }
+            i++;
         }
-        p = p->next;
     }
 }

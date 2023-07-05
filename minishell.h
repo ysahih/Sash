@@ -1,19 +1,21 @@
 #ifndef MINISHELL
 #define MINISHELL
 # include <stdio.h>
+# include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <string.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdbool.h>
-#include <fcntl.h>
-#include <errno.h>
+# include <fcntl.h>
+# include <errno.h>
+
+int	g_rd;
 
 enum	pipe {BEFORE, AFTER};
 enum	operator {WSPACE, PIPE, VAR, WORD, SQUOTE, DQUOTE, OUTRED, INRED, APPEND, HERDOC};
 				// 0      1     2     3     4       5      6                        9
-
 
 // # define SC  " \t\n!%*\"'+,-./\\:;<=>?@[]~^`|$"
 // # define NOTWORD " \t\r\n\"'\v\f|<>$/"
@@ -102,7 +104,7 @@ typedef struct s_list
 void	parse(t_all *all, t_lexer *cmdline);
 
 //utils
-int		ft_strncmp(char *st1, char *st2, size_t n);
+int		ft_strcmp(char *st1, char *st2);
 int		ft_strchr(char *str, int ch);
 char	*ft_substr(char *s, int start, int len);
 char	*ft_strdup(char *str);
@@ -115,16 +117,23 @@ void	lst_var(t_var **var, char **s);
 char	**ft_split(char *str);
 char	*ft_strjoin(char *s1, char *s2);
 t_var	*check_char(t_var	*env, char	*str);
+void	ftputstr(char *str);
 
 //builtins cmds
 void	env(t_all *all);
 void	export(t_all *all);
 void    pwd(t_all   *all);
 void    echo(t_simple_cmd  *all);
+void    unset(t_simple_cmd *p, t_var **env, t_var **exp);
+void	cd(t_all *all);
+void	ex_it(t_all *all);
+void    one_cmd_nb(t_all *all, t_simple_cmd	*p);
 // int		cd(char *str);
 
 
 // execution
 int		exec(t_all *all);
 
+void	sig_handler();
+void	handle_INT(int sig);
 #endif
