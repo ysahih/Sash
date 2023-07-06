@@ -2,40 +2,40 @@
 
 
 
-void	handle_INT(int sig)
-{
-	(void)sig;
-		// rl_done = 0;
-	// if (rl_catch_signals == 0)
-	// {
-		// rl_catch_signals = 0;
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	// }
-	// else
-	// {
-		// g_interrupte = 1;
-		// rl_catch_signals = 0;
-		// printf("\n");
-		// rl_on_new_line();
-		// rl_replace_line("", 0);
-		// rl_redisplay();
-		// return ;
-	// }
+// void	handle_INT(int sig)
+// {
+// 	(void)sig;
+// 		// rl_done = 0;
+// 	// if (rl_catch_signals == 0)
+// 	// {
+// 		// rl_catch_signals = 0;
+// 		printf("\n");
+// 		rl_on_new_line();
+// 		rl_replace_line("", 0);
+// 		rl_redisplay();
+// 	// }
+// 	// else
+// 	// {
+// 		// g_interrupte = 1;
+// 		// rl_catch_signals = 0;
+// 		// printf("\n");
+// 		// rl_on_new_line();
+// 		// rl_replace_line("", 0);
+// 		// rl_redisplay();
+// 		// return ;
+// 	// }
 	
-}
+// }
 
-void	handle_QUIT()
-{
+// void	handle_QUIT()
+// {
 	
-}
-void	sig_handler()
-{
-	signal(SIGINT, handle_INT);
-	signal(SIGQUIT, SIG_IGN);
-}
+// }
+// void	sig_handler()
+// {
+// 	signal(SIGINT, handle_INT);
+// 	signal(SIGQUIT, SIG_IGN);
+// }
 
 void	set_env(t_all *all, char **env)
 {
@@ -81,8 +81,8 @@ int	main(int ac, char **av, char **env)
 	set_env(&all, env);
 	while (true)
 	{
-		rl_catch_signals = 0;
-		sig_handler();
+		// rl_catch_signals = 0;
+		// sig_handler();
 		line = readline("sash$ ");
 		if (!line)
 			break ;

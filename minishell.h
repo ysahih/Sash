@@ -128,6 +128,7 @@ void    unset(t_simple_cmd *p, t_var **env, t_var **exp);
 void	cd(t_all *all);
 void	ex_it(t_all *all);
 void    one_cmd_nb(t_all *all, t_simple_cmd	*p);
+void    one_cmd_nob(t_all *all, t_simple_cmd *p);
 // int		cd(char *str);
 
 

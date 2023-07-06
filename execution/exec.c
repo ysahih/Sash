@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/01 18:39:57 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/06 19:42:31 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,61 +31,77 @@ void	one_cmd(t_all *all, t_simple_cmd *tmp)
 		else if (!ft_strcmp(tmp->str[0], "cd"))
 			cd (all);
 		else
-			one_cmd_nb(all, tmp);
+			one_cmd_nob(all, tmp);
 	}
 }
 
-void	many_cmds(t_all	*all, t_simple_cmd	*tmp)
+void    many_cmds(t_all    *all, t_simple_cmd    *tmp)
 {
-	int i;
-	int f;
-	int fd[2];
+    int i;
+    int f;
+    int fd[2];
+	int	f_d;
 
-	while (tmp)
+	t_simple_cmd *t = tmp;
+    while (tmp)
+    {
+        if(tmp->next)
+            pipe(fd);
+        i = fork();
+        if (i == 0)
+        {
+			dup2(f_d, 0);
+            if (tmp->next)
+            {
+                dup2(fd[1], 1);
+            }
+            close(fd[1]);
+            close(fd[0]);
+            if (!ft_strcmp(tmp->str[0], "cd") ||  !ft_strcmp(tmp->str[0], "exit") || !ft_strcmp(tmp->str[0], "pwd") || !ft_strcmp(tmp->str[0], "env")\
+            || !ft_strcmp(tmp->str[0], "unset") || !ft_strcmp(tmp->str[0], "export") || !ft_strcmp(tmp->str[0], "echo"))
+                one_cmd(all, tmp);
+            else 
+            {
+                one_cmd_nb(all, tmp);
+            }
+            if (tmp->next)
+            {
+                dup2(fd[0], 0);
+                close(fd[1]);
+                close(fd[0]);
+            }
+            else
+                close(0);
+        }
+        else
+        {
+            // wait(&f);
+            // dup2(fd[0], 0);
+            close(fd[1]);
+			f_d = fd[0];
+            // close(fd[0]);
+        }
+        tmp = tmp->next;
+    }
+	while (t)
 	{
-		if(tmp->next)
-			pipe(fd);
-		if (!ft_strcmp(tmp->str[0], "cd") ||  !ft_strcmp(tmp->str[0], "exit") || !ft_strcmp(tmp->str[0], "pwd") || !ft_strcmp(tmp->str[0], "env")\
-		|| !ft_strcmp(tmp->str[0], "unset") || !ft_strcmp(tmp->str[0], "export") || !ft_strcmp(tmp->str[0], "echo"))
-		{
-			f = fork();
-			if (f == 0)
-			{
-				one_cmd(all, tmp);
-				exit (0);
+		// int f;
+          if (!(!ft_strcmp(t->str[0], "cd") ||  !ft_strcmp(t->str[0], "exit") || !ft_strcmp(t->str[0], "pwd") || !ft_strcmp(t->str[0], "env")\
+            || !ft_strcmp(t->str[0], "unset") || !ft_strcmp(t->str[0], "export") || !ft_strcmp(t->str[0], "echo"))) {
+				wait(&f);
 			}
-			else
-				wait(&i);
-		}
-		else 
-		{
-			puts("aaa");
-			if (!tmp->next)
-			{
-				dup2(fd[1], 1);
-				close(fd[0]);
-				close(fd[1]);
-			}
-			one_cmd_nb(all, tmp);
-		}
-		if (tmp->next)
-		{
-			dup2(fd[0], 0);
-			close(fd[0]);
-			close(fd[1]);
-		}
-		else
-			close(0);
-		tmp = tmp->next;
+		t = t->next;
 	}
 }
 
 int	exec(t_all *all)
 {
 	int i;
+	int	fd;
 	t_simple_cmd *tmp;
 	
 	i = 0;
+	fd = dup(0);
 	if (!all->cmd)
 		return (0);
 	tmp = all->cmd;
@@ -95,5 +111,8 @@ int	exec(t_all *all)
 		one_cmd(all, tmp);
 	else
 		many_cmds(all, tmp);
+	dup2(fd, 0);
 	return (0);
 }
+
+    // wait(&f);llainaal zok mok
