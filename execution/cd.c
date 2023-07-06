@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 19:39:14 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/01 22:02:09 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/06 19:15:44 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int cd_home(t_all *all)
 	{
 		node = check_char(all->env, "HOME");
 		if (!node)
-			printf("sash: cd: HOME not set\n");
+			return (printf("sash: cd: HOME not set\n"));
 		else
 			err = chdir(node->val);
 	}
@@ -68,7 +68,7 @@ int cd_home(t_all *all)
 				pwd->val = ft_strdup(node->val);
 			}
 			else
-				printf("sash: cd: PWD not set\n");
+				return (printf("sash: cd: PWD not set\n"));
 		}
 	}
 	else
@@ -90,7 +90,7 @@ int cd_swap(t_all *all)
 	{
 		old_pwd = check_char(all->env, "OLDPWD");
 		if (!old_pwd)
-			printf("bash: cd: OLDPWD not set\n");
+			return (printf("bash: cd: OLDPWD not set\n"));
 		else
 			err = chdir(old_pwd->val);
 	}
@@ -98,7 +98,7 @@ int cd_swap(t_all *all)
 	{
 		pwd = check_char(all->env, "PWD");
 		if (!pwd)
-			printf("bash: cd: PWD not set\n");
+			return (printf("bash: cd: PWD not set\n"));
 		else
 		{
 			val = ft_strdup(pwd->val);
@@ -134,7 +134,7 @@ int cd_else(t_all *all)
 			old_pwd->val = val;
 		}
 		else
-			printf("sash: cd: PWD not set\n");
+			return (printf("sash: cd: PWD not set\n"));
 	}
 	else
 		cd_error(p->str[1], p->str[1]);

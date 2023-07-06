@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/01 19:08:21 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/06 19:30:31 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,31 +142,13 @@ void	ftputstr(char *str)
 	}
 }
 
-// char	*joinpath(t_all	*all)
-// {
-// 	char **path
-	
-// 	path = ft_split_path(key->val);
-// 	i = 0;
-// 	if (!strchr(p->str[0], '/'))
-// 	{
-// 		while (path[i])
-// 		{
-// 			join = ft_strjoin(path[i], "/");
-// 			join = ft_strjoin(join, p->str[0]);
-// 			if (access(join, R_OK) == 0)
-// 				execve(join, p->str, k);
-// 			i++;
-// 		}
-// 	}
-// }
-
-void    one_cmd_nb(t_all *all, t_simple_cmd *p)
+void    one_cmd_nob(t_all *all, t_simple_cmd *p)
 {
 	int 	i;
+	int 	f;
 	char	**path;
 	char	**k;
-	char *join;
+	char 	*join;
  	t_var	*key;
 
 	i = fork();
@@ -200,23 +182,68 @@ void    one_cmd_nb(t_all *all, t_simple_cmd *p)
 		{
 			execve(p->str[0], p->str, k);
 			perror("");
-			// ftputstr("sash: ");
-			// ftputstr(p->str[0]);
-			// ftputstr(": command not found\n");
-			// exit(127);
+		}	
+	}
+	else
+		wait(&f);
+}
+
+void    one_cmd_nb(t_all *all, t_simple_cmd *p)
+{
+	int 	i;
+	char	**path;
+	char	**k;
+	char *join;
+ 	t_var	*key;
+
+	k = my_env(all);
+	key = check_char(all->env, "PATH");
+	if (key)
+	{
+		path = ft_split_path(key->val);
+		i = 0;
+		if (!strchr(p->str[0], '/'))
+		{
+			while (path[i])
+			{
+				join = ft_strjoin(path[i], "/");
+				join = ft_strjoin(join, p->str[0]);
+				if (access(join, R_OK) == 0)
+					execve(join, p->str, k);
+				i++;
+			}
+			ftputstr("sash: ");
+			ftputstr(p->str[0]);
+			ftputstr(": command not found\n");
+			exit(127);
 		}
+		else
+			execve(p->str[0], p->str, k);
 	}
 	else
 	{
-		while (1)
-		{
-			int stat;
-			if (wait(&stat))
-			{
-				// printf("stat : %d\n", stat);
-				break ;
-			}
-		}
-	} 
-	// else		
+		execve(p->str[0], p->str, k);
+		perror("");
+	}
 }
+// char	*joinpath(t_all	*all)
+// {
+// 	char **path
+	
+// 	path = ft_split_path(key->val);
+// 	i = 0;
+// 	if (!strchr(p->str[0], '/'))
+// 	{
+// 		while (path[i])
+// 		{
+// 			join = ft_strjoin(path[i], "/");
+// 			join = ft_strjoin(join, p->str[0]);
+// 			if (access(join, R_OK) == 0)
+// 				execve(join, p->str, k);
+// 			i++;
+// 		}
+// 	}
+// }
+
+
+

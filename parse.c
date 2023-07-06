@@ -293,17 +293,17 @@ t_lexer *expand_var(t_lexer *cmdline, t_var *var)
 	return (node);
 }
 
-int	event(void)
-{
-	return (0);
-}
+// int	event(void)
+// {
+// 	return (0);
+// }
 
-void	hd_sig(int sig)
-{
-	(void)sig;
-	g_rd = 1;
-	rl_done = 1;
-}
+// void	hd_sig(int sig)
+// {
+// 	(void)sig;
+// 	g_rd = 1;
+// 	rl_done = 1;
+// }
 
 void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 {
@@ -314,8 +314,8 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 	{
 		(*scmd)->err = errno;
 	}
-	rl_event_hook = event;
-	signal(SIGINT, hd_sig);
+	// rl_event_hook = event;
+	// signal(SIGINT, hd_sig);
 	while(true)
 	{
 		line = readline("> ");
@@ -374,12 +374,12 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 				cmd->err = errno;
 			(*cmdline) = (*cmdline)->next;
 		}
-		else if((*cmdline)->type == HERDOC)
-		{
-			(*cmdline) = (*cmdline)->next;
-			parse_hd(&cmd, cmdline);
-			(*cmdline) = (*cmdline)->next;
-		}
+		// else if((*cmdline)->type == HERDOC)
+		// {
+		// 	(*cmdline) = (*cmdline)->next;
+		// 	parse_hd(&cmd, cmdline);
+		// 	(*cmdline) = (*cmdline)->next;
+		// }
 		else if ((*cmdline)->type == WORD)
 		{
 			cmd->str[i] = (*cmdline)->str;
