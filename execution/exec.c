@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/06 19:42:31 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/06 19:57:45 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,12 @@ void    many_cmds(t_all    *all, t_simple_cmd    *tmp)
                 close(fd[1]);
                 close(fd[0]);
             }
-            else
+            else {
                 close(0);
+				// dup(fd[0]);
+				// close(fd[0]);
+				// close(fd[1]);
+			}
         }
         else
         {
@@ -79,7 +83,8 @@ void    many_cmds(t_all    *all, t_simple_cmd    *tmp)
             // dup2(fd[0], 0);
             close(fd[1]);
 			f_d = fd[0];
-            // close(fd[0]);
+			if (tmp && !tmp->next)
+            	close(fd[0]);
         }
         tmp = tmp->next;
     }
