@@ -39,7 +39,8 @@
 
 void	set_env(t_all *all, char **env)
 {
-	int	i;
+	t_var	*oldpwd;
+	int		i;
 	char	path[800];
 
 	i = 0;
@@ -53,6 +54,7 @@ void	set_env(t_all *all, char **env)
 		add_exen_back(&all->env ,lstnew_exen(ft_strdup("PWD"), ft_strdup(getcwd(path, 800))));
 		add_exen_back(&all->env ,lstnew_exen(ft_strdup("SHLVL"), ft_strdup("1")));
 		add_exen_back(&all->env ,lstnew_exen(ft_strdup("_"), ft_strdup("/usr/bin/env")));
+		return ;
 	}
 	while (env[i])
 	{
@@ -60,6 +62,10 @@ void	set_env(t_all *all, char **env)
 		lst_var(&all->exp, ft_split(env[i]));
 		i++;
 	}
+	all->env = unset_env("OLDPWD", &all->env);
+	oldpwd = check_char(all->exp, "OLDPWD");
+	free(oldpwd->val);
+	oldpwd->val = NULL;
 }
 
 
@@ -69,12 +75,11 @@ int	main(int ac, char **av, char **env)
 	char	*line;
 	// char	**cpy;
 	t_lexer	*cmd;
+	t_simple_cmd	*cp;
 	t_all	all;
-	int		i;
 
 	// cpy = env;
-	g_rd = 0;
-	i = 0;
+	// g_rd = 0;
 	if (ac != 1 || av[1])
 		return (printf("program does not accept agruments"), 0);
 
@@ -96,6 +101,12 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		}
 		parse(&all, cmd);
+		cp = all.cmd;
+		while (cp)
+		{
+			printf("in : %d\nout : %d\nerr : %d\n", cp->in_fd, cp->out_fd, cp->err);
+			cp = cp->next;
+		}
 		exec(&all);
 	}
 }

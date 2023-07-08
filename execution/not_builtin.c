@@ -154,6 +154,8 @@ void    one_cmd_nob(t_all *all, t_simple_cmd *p)
 	i = fork();
 	if (i == 0)
 	{
+		dup2(p->in_fd, 0);
+		dup2(p->out_fd, 1);
 		k = my_env(all);
 		key = check_char(all->env, "PATH");
 		if (key)

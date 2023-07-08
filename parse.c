@@ -318,12 +318,12 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 	// signal(SIGINT, hd_sig);
 	while(true)
 	{
-		line = readline("> ");
-		if (!line || strcmp(line, (*cmdline)->str) == 0 || g_rd)
-		{
-			g_rd = 0;
-			break ;
-		}
+		// line = readline("> ");
+		// if (!line || strcmp(line, (*cmdline)->str) == 0 || g_rd)
+		// {
+		// 	g_rd = 0;
+		// 	break ;
+		// }
 		write(fd[1], line, ft_strlen(line));
 		write(fd[1], "\n", 1);
 	}
