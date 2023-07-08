@@ -101,12 +101,12 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		}
 		parse(&all, cmd);
-		cp = all.cmd;
-		while (cp)
-		{
-			printf("in : %d\nout : %d\nerr : %d\n", cp->in_fd, cp->out_fd, cp->err);
-			cp = cp->next;
-		}
+		// cp = all.cmd;
+		// while (cp)
+		// {
+		// 	printf("in : %d\nout : %d\nerr : %d\n", cp->in_fd, cp->out_fd, cp->err);
+		// 	cp = cp->next;
+		// }
 		exec(&all);
 	}
 }
