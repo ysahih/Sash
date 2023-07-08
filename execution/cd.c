@@ -52,14 +52,12 @@ int cd_home(t_all *all)
 		err = chdir(node->val);
 	if (err == 0)
 	{
-		puts("here1");
 		oldpwd_en = check_char(all->env, "OLDPWD");
 		pwd_en = check_char(all->env, "PWD");
 		oldpwd_ex = check_char(all->exp, "OLDPWD");
 		pwd_ex = check_char(all->exp, "PWD");
 		if (pwd_en && pwd_ex)
 		{
-			puts("here2");
 			//env
 			if (!oldpwd_en)
 				add_exen_back(&all->env ,lstnew_exen(ft_strdup("OLDPWD"), ft_strdup(pwd_en->val)));
@@ -74,10 +72,8 @@ int cd_home(t_all *all)
 		}
 		if (pwd_en && pwd_ex)
 		{
-			puts("here3");
 			if (pwd_en->val && pwd_ex->val)
 			{
-				puts("here4");
 				//env
 				free(pwd_en->val);
 				pwd_en->val = ft_strdup(node->val);
@@ -205,6 +201,8 @@ int curr_cd(t_all *all)
 			add_exen_back(&all->env ,lstnew_exen(ft_strdup("OLDPWD"), ft_strdup(pwd)));
 		if (!oldpwd_ex)
 			add_exen_back(&all->exp ,lstnew_exen(ft_strdup("OLDPWD"), ft_strdup(pwd)));
+		else
+			oldpwd_ex->val = ft_strdup(pwd);
 	}
     return (0);
 }
@@ -258,10 +256,8 @@ int cd_prvs(t_all *all)
 	}
 	if (chdir("..") == 0)
 	{
-		puts("here1");
 		if (pwd_en && pwd_en->val)
 		{
-			puts("here2");
 			if (oldpwd_en)
 			{
 				free(oldpwd_en->val);
@@ -271,14 +267,16 @@ int cd_prvs(t_all *all)
 			}
 			else
 			{
-				add_exen_back(&all->env ,lstnew_exen(ft_strdup("OLDPWD"), ft_strdup("")));
+				add_exen_back(&all->env ,lstnew_exen(ft_strdup("OLDPWD"), ft_strdup(pwd_en->val)));
+				free (pwd_en->val);
+				pwd_en->val = ft_strdup(getcwd(path, 800));
 			}
 		}
 		if (pwd_ex && pwd_ex->val)
 		{
-			puts("here3");
-			free(oldpwd_ex->val);
-			oldpwd_ex->val = ft_strdup(val);
+			if (oldpwd_ex->val)
+				free(oldpwd_ex->val);
+			oldpwd_ex->val = ft_strdup(pwd_ex->val);
 			free (pwd_ex->val);
 			pwd_ex->val = ft_strdup(getcwd(path, 800));
 		}

@@ -56,12 +56,12 @@ void    many_cmds(t_all    *all, t_simple_cmd    *tmp)
 					dup2(tmp->out_fd, 1);
 				
             }
+            close(fd[1]);
+            close(fd[0]);
 			if (tmp->in_fd == 0)
             	dup2(fd[0], 0);
 			else
 				dup2(tmp->in_fd, 0);
-            close(fd[1]);
-            close(fd[0]);
             if (!ft_strcmp(tmp->str[0], "cd") ||  !ft_strcmp(tmp->str[0], "exit") || !ft_strcmp(tmp->str[0], "pwd") || !ft_strcmp(tmp->str[0], "env")\
             || !ft_strcmp(tmp->str[0], "unset") || !ft_strcmp(tmp->str[0], "export") || !ft_strcmp(tmp->str[0], "echo"))
                 one_cmd(all, tmp);
