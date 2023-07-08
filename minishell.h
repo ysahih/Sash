@@ -11,7 +11,7 @@
 # include <fcntl.h>
 # include <errno.h>
 
-int	g_rd;
+// int	g_rd;
 
 enum	pipe {BEFORE, AFTER};
 enum	operator {WSPACE, PIPE, VAR, WORD, SQUOTE, DQUOTE, OUTRED, INRED, APPEND, HERDOC};
@@ -124,6 +124,7 @@ void	env(t_all *all);
 void	export(t_all *all);
 void    pwd(t_all   *all);
 void    echo(t_simple_cmd  *all);
+t_var	*unset_env(char *str, t_var **env);
 void    unset(t_simple_cmd *p, t_var **env, t_var **exp);
 void	cd(t_all *all);
 void	ex_it(t_all *all);

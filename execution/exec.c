@@ -14,25 +14,22 @@
 
 void	one_cmd(t_all *all, t_simple_cmd *tmp)
 {
-	if (!tmp->next)
-	{
-		if (!ft_strcmp(tmp->str[0], "env"))
-			env(all);
-		else if (!ft_strcmp(tmp->str[0], "export"))
-			export(all);
-		else if (!ft_strcmp(tmp->str[0], "pwd"))
-			pwd(all);
-		else if (!ft_strcmp(tmp->str[0], "echo"))
-			echo(tmp);
-		else if (!ft_strcmp(tmp->str[0] , "unset"))
-			unset(tmp, &all->env, &all->exp);
-		else if (!ft_strcmp(tmp->str[0], "exit"))
-			ex_it (all);
-		else if (!ft_strcmp(tmp->str[0], "cd"))
-			cd (all);
-		else
-			one_cmd_nob(all, tmp);
-	}
+	if (!ft_strcmp(tmp->str[0], "env"))
+		env(all);
+	else if (!ft_strcmp(tmp->str[0], "export"))
+		export(all);
+	else if (!ft_strcmp(tmp->str[0], "pwd"))
+		pwd(all);
+	else if (!ft_strcmp(tmp->str[0], "echo"))
+		echo(tmp);
+	else if (!ft_strcmp(tmp->str[0] , "unset"))
+		unset(tmp, &all->env, &all->exp);
+	else if (!ft_strcmp(tmp->str[0], "exit"))
+		ex_it (all);
+	else if (!ft_strcmp(tmp->str[0], "cd"))
+		cd (all);
+	else
+		one_cmd_nob(all, tmp);
 }
 
 void    many_cmds(t_all    *all, t_simple_cmd    *tmp)
@@ -53,8 +50,16 @@ void    many_cmds(t_all    *all, t_simple_cmd    *tmp)
 			dup2(f_d, 0);
             if (tmp->next)
             {
-                dup2(fd[1], 1);
+				if (tmp->out_fd == 1)
+                	dup2(fd[1], 1);
+				else
+					dup2(tmp->out_fd, 1);
+				
             }
+			if (tmp->in_fd == 0)
+            	dup2(fd[0], 0);
+			else
+				dup2(tmp->in_fd, 0);
             close(fd[1]);
             close(fd[0]);
             if (!ft_strcmp(tmp->str[0], "cd") ||  !ft_strcmp(tmp->str[0], "exit") || !ft_strcmp(tmp->str[0], "pwd") || !ft_strcmp(tmp->str[0], "env")\
@@ -66,15 +71,16 @@ void    many_cmds(t_all    *all, t_simple_cmd    *tmp)
             }
             if (tmp->next)
             {
-                dup2(fd[0], 0);
+				
+                // dup2(fd[0], 0);
                 close(fd[1]);
                 close(fd[0]);
             }
             else {
                 close(0);
 				// dup(fd[0]);
-				// close(fd[0]);
-				// close(fd[1]);
+				close(fd[0]);
+				close(fd[1]);
 			}
         }
         else
