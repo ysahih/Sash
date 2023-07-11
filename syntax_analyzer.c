@@ -30,8 +30,6 @@ bool	pipe_analyze(t_lexer *cmd)
 		flag *= pipe_checker(cmd->next, 1);
 		flag *= pipe_checker(cmd->previous, 0);
 	}
-	// printf("%d\n", flag);
-
 	if (!flag){
 		write (1, "error\n", 6);
 		return false;

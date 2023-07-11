@@ -74,7 +74,6 @@ void	tokenize_dquote(t_lexer **node, char **s)
 			*s = &tmp[i];
 		}
 	}
-	
 }
 
 void	tokenize_squote(t_lexer **node, char **s)
