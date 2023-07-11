@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 16:28:32 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/01 17:58:04 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/11 17:55:54 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,13 @@ t_var	*check_char(t_var	*env, char	*str)
 	return (NULL);
 }
 
+// int	isalpha(int c)
+// {
+// 	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
+// 		return (1);
+// 	return (0);
+// }
+
 void    export(t_all *all)
 {
     t_simple_cmd    *p;
@@ -198,7 +205,13 @@ void    export(t_all *all)
     {
         i = 1;
         while(p->str[i])
-        {   
+        {  
+			if (is_alpha(p->str[i][0]) != 1 && p->str[i][0] != '_')
+			{
+				printf("sash$ ");
+				printf("%s:", p->str[i]);
+				printf(" command not found\n");
+			}
             k = ft_strchr(p->str[i], '=');
             j = ft_strchr(p->str[i], '+');
             if (k != -1)
