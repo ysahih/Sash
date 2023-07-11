@@ -2,18 +2,14 @@
 
 
 
-// void	handle_INT(int sig)
-// {
-// 	(void)sig;
-// 		// rl_done = 0;
-// 	// if (rl_catch_signals == 0)
-// 	// {
-// 		// rl_catch_signals = 0;
-// 		printf("\n");
-// 		rl_on_new_line();
-// 		rl_replace_line("", 0);
-// 		rl_redisplay();
-// 	// }
+void	handle_INT(int sig)
+{
+	(void)sig;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
 // 	// else
 // 	// {
 // 		// g_interrupte = 1;
@@ -31,11 +27,12 @@
 // {
 	
 // }
-// void	sig_handler()
-// {
-// 	signal(SIGINT, handle_INT);
-// 	signal(SIGQUIT, SIG_IGN);
-// }
+void	sig_handler()
+{
+	rl_catch_signals = 0;
+	signal(SIGINT, handle_INT);
+	signal(SIGQUIT, SIG_IGN);
+}
 
 void	set_env(t_all *all, char **env)
 {
@@ -75,19 +72,19 @@ int	main(int ac, char **av, char **env)
 	char	*line;
 	// char	**cpy;
 	t_lexer	*cmd;
-	t_simple_cmd	*cp;
+	// t_simple_cmd	*cp;
 	t_all	all;
 
 	// cpy = env;
-	// g_rd = 0;
+	g_rd = 0;
 	if (ac != 1 || av[1])
 		return (printf("program does not accept agruments"), 0);
 
 	set_env(&all, env);
 	while (true)
 	{
-		// rl_catch_signals = 0;
-		// sig_handler();
+	
+		sig_handler();
 		line = readline("sash$ ");
 		if (!line)
 			break ;
