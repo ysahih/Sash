@@ -25,13 +25,13 @@ OBJS = $(SRCS:%.c=%.o)
 B_OBJS = $(B_SRCS:%.c=%.o)
 CFLAGS = -Wall -Wextra -Werror -I/Users/ysahih/Desktop/readline/include
  
-RLFLAGS = -L/Users/ysahih/Desktop/readline/lib -lhistory
+RLFLAGS = -L/Users/ysahih/Desktop/readline/lib 
 # -fsanitize=address -g
 
 all : $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(RLFLAGS) $^ -o $(NAME) -lreadline
+	$(CC) $(RLFLAGS) $^ -o $(NAME) -lreadline -lhistory
 
 %.o: %.c $(HDR)
 	$(CC) $(CFLAGS) -c $< -o $@

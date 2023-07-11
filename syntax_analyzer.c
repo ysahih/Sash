@@ -17,6 +17,10 @@ bool	pipe_checker(t_lexer *cmd, int i)
 		return (cmd->type >= VAR && cmd->type <= HERDOC);
 	return (cmd->type >= VAR && cmd->type <= DQUOTE);
 }
+void	print_err(char *s)
+{
+	printf("sash: syntax error near unexpected token `%s'\n", s);
+}
 
 bool	pipe_analyze(t_lexer *cmd)
 {
@@ -30,8 +34,9 @@ bool	pipe_analyze(t_lexer *cmd)
 		flag *= pipe_checker(cmd->next, 1);
 		flag *= pipe_checker(cmd->previous, 0);
 	}
-	if (!flag){
-		write (1, "error\n", 6);
+	if (!flag)
+	{
+		print_err("|");
 		return false;
 	}
 	return true;
@@ -53,53 +58,44 @@ bool	analyze_quote(t_lexer **node, int flag)
 		return false ;
 	return true;
 }
-void	print_err(char *s)
+
+bool	red_analyze(t_lexer *cmd)
 {
-	printf("sash: syntax error near unexpected token `%s'\n", s);
+	if (cmd->next && cmd->next->type == WSPACE)
+		cmd = cmd->next;
+	if (!cmd->next || cmd->next->type > DQUOTE || cmd->next->type < WORD)
+	{
+		if (cmd->next)
+			print_err(cmd->next->str);
+		else
+			print_err("newline");
+		return (false);
+	}
+	return (true);
 }
 
 bool	analyze_syntax(t_lexer *cmd)
 {
-	bool flag;
-
-	flag = true;
+	if (!cmd)
+		return (false);
 	while (cmd)
 	{
 		if (cmd->type == WSPACE && cmd->next)
 			cmd = cmd->next;
 		if (cmd->type == PIPE)
-		{
-			flag *= pipe_analyze(cmd);
-			if (!flag)
+			if (!pipe_analyze(cmd))
 				return false;
-		}
 		if (cmd->type >= OUTRED && cmd->type <=  HERDOC)
-		{
-			if (cmd->next && cmd->next->type == WSPACE)
-				cmd = cmd->next;
-			if (!cmd->next || cmd->next->type > DQUOTE || cmd->next->type < WORD)
-			{
-				if (cmd->next)
-					print_err(cmd->next->str);
-				else
-					print_err("newline");
-				return false;
-			}
-		}
+			if (!red_analyze(cmd))
+				return (false);
 		if (cmd->type == SQUOTE || cmd->type == DQUOTE )
 		{
 			if (cmd->type == SQUOTE)
-			{
-				flag *= analyze_quote(&cmd, SQUOTE);
-				if (!flag)
+				if (!analyze_quote(&cmd, SQUOTE))
 					return false;
-			}
 			if (cmd->type == DQUOTE)
-			{
-				flag *= analyze_quote(&cmd, DQUOTE);
-				if (!flag)
+				if (!analyze_quote(&cmd, DQUOTE))
 					return false;
-			}
 		}
 		cmd = cmd->next;
 	}

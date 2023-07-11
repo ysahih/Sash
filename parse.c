@@ -399,16 +399,12 @@ void	parse(t_all *all, t_lexer *cmdline)
 	t_lexer 		*cmd;
 
 	scmd = NULL;
-
 	cmd = rm_quote(cmdline);
 	cmd = expand_var(cmd, all->env);
 	cmd = merge_word(cmd);
 	cmd = rm_space(cmd);
-
 	while(cmd)
 		add_scmd(&scmd, collect_scmds(&cmd));
-
-
 	all->cmd = scmd;
 
 	// while (scmd)
