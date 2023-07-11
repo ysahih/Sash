@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 16:28:32 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/06 14:32:23 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/11 17:55:54 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ void    export(t_all *all)
         i = 1;
         while(p->str[i])
         {  
-			if (isalpha(p->str[i][0]) != 1 && p->str[i][0] != '_')
+			if (is_alpha(p->str[i][0]) != 1 && p->str[i][0] != '_')
 			{
 				printf("sash$ ");
 				printf("%s:", p->str[i]);

@@ -11,7 +11,9 @@
 # include <fcntl.h>
 # include <errno.h>
 
-// int	g_rd;
+
+
+int	g_rd;
 
 enum	pipe {BEFORE, AFTER};
 enum	operator {WSPACE, PIPE, VAR, WORD, SQUOTE, DQUOTE, OUTRED, INRED, APPEND, HERDOC};

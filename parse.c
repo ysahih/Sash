@@ -293,17 +293,17 @@ t_lexer *expand_var(t_lexer *cmdline, t_var *var)
 	return (node);
 }
 
-// int	event(void)
-// {
-// 	return (0);
-// }
+int	event(void)
+{
+	return (0);
+}
 
-// void	hd_sig(int sig)
-// {
-// 	(void)sig;
-// 	g_rd = 1;
-// 	rl_done = 1;
-// }
+void	hd_sig(int sig)
+{
+	(void)sig;
+	g_rd = 1;
+	rl_done = 1;
+}
 
 void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 {
@@ -314,30 +314,55 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 	{
 		(*scmd)->err = errno;
 	}
-	// rl_event_hook = event;
-	// signal(SIGINT, hd_sig);
+	rl_event_hook = event;
+	signal(SIGINT, hd_sig);
+	(*cmdline) = (*cmdline)->next;
 	while(true)
 	{
-		// line = readline("> ");
-		// if (!line || strcmp(line, (*cmdline)->str) == 0 || g_rd)
-		// {
-		// 	g_rd = 0;
-		// 	break ;
-		// }
+		line = readline("> ");
+		if (!line || strcmp(line, (*cmdline)->str) == 0 || g_rd)
+		{
+			g_rd = 0;
+			break ;
+		}
 		write(fd[1], line, ft_strlen(line));
 		write(fd[1], "\n", 1);
 	}
+	(*cmdline) = (*cmdline)->next;
 	(*scmd)->in_fd = fd[0];
+}
+
+
+void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd, int red)
+{
+	(*cmdline) = (*cmdline)->next;
+	if (red == OUTRED)
+	{
+		(*cmd)->out_fd = open((*cmdline)->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		if((*cmd)->out_fd < 0)
+			(*cmd)->err = errno;
+	}
+	else if (red == INRED)
+	{
+		(*cmd)->in_fd = open((*cmdline)->str, O_RDONLY, 0644);
+		if((*cmd)->in_fd < 0)
+			(*cmd)->err = errno;
+	}
+	else if (red == APPEND)
+	{
+		(*cmd)->out_fd = open((*cmdline)->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
+		if((*cmd)->out_fd < 0)
+			(*cmd)->err = errno;
+	}
+	(*cmdline) = (*cmdline)->next;
 }
 
 t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 {
-
 	t_simple_cmd	*cmd;
 	int				i;
 
 	i = 0;
-
 	cmd = create_scmd(*cmdline);
 	while (*cmdline)
 	{
@@ -347,39 +372,15 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 			break ;
 		}
 		else if ((*cmdline)->type < 0)
-		{
 			(*cmdline) = (*cmdline)->next;
-		}
 		else if ((*cmdline)->type == OUTRED)
-		{
-			(*cmdline) = (*cmdline)->next;
-			cmd->out_fd = open((*cmdline)->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			if(cmd->out_fd < 0)
-				cmd->err = errno;
-			(*cmdline) = (*cmdline)->next;
-		}
+			parse_red(cmdline, &cmd, OUTRED);
 		else if ((*cmdline)->type == INRED)
-		{
-			(*cmdline) = (*cmdline)->next;
-			cmd->in_fd = open((*cmdline)->str, O_RDONLY, 0644);
-			if(cmd->in_fd < 0)
-				cmd->err = errno;
-			(*cmdline) = (*cmdline)->next;
-		}
+			parse_red(cmdline, &cmd, INRED);
 		else if ((*cmdline)->type == APPEND)
-		{
-			(*cmdline) = (*cmdline)->next;
-			cmd->out_fd = open((*cmdline)->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
-			if(cmd->out_fd < 0)
-				cmd->err = errno;
-			(*cmdline) = (*cmdline)->next;
-		}
-		// else if((*cmdline)->type == HERDOC)
-		// {
-		// 	(*cmdline) = (*cmdline)->next;
-		// 	parse_hd(&cmd, cmdline);
-		// 	(*cmdline) = (*cmdline)->next;
-		// }
+			parse_red(cmdline, &cmd, APPEND);
+		else if((*cmdline)->type == HERDOC)
+			parse_hd(&cmd, cmdline);
 		else if ((*cmdline)->type == WORD)
 		{
 			cmd->str[i] = (*cmdline)->str;
