@@ -101,6 +101,7 @@ typedef struct s_list
 }					t_list;         
 
 //parse
+int		alpha(int c);
 void	parse(t_all *all, t_lexer *cmdline);
 
 //utils
@@ -125,6 +126,7 @@ void	export(t_all *all);
 void    pwd(t_all   *all);
 void    echo(t_simple_cmd  *all);
 t_var	*unset_env(char *str, t_var **env);
+t_var	*unset_exp(char *str, t_var **exp);
 void    unset(t_simple_cmd *p, t_var **env, t_var **exp);
 void	cd(t_all *all);
 void	ex_it(t_all *all);

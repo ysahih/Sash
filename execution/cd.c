@@ -158,12 +158,22 @@ int cd_else(t_all *all)
 		oldpwd_ex = check_char(all->exp, "OLDPWD");
 		if (pwd_en && pwd_ex)
 		{
+			puts("j");
 			//env
 			val = ft_strdup(pwd_en->val);
 			free(pwd_en->val);
+			puts("h");
 			pwd_en->val = ft_strdup(getcwd(path, 800));
-			free(oldpwd_en->val);
-			oldpwd_en->val = ft_strdup(val);
+			puts("h2");
+			if (oldpwd_en)
+			{
+				free(oldpwd_en->val);
+				oldpwd_en->val = ft_strdup(val);
+			}
+			else
+				add_exen_back(&all->env ,lstnew_exen(ft_strdup("OLDPWD"), ft_strdup(val)));
+			puts("h3");
+			puts("h4");
 			//exp
 			free(pwd_ex->val);
 			pwd_ex->val = ft_strdup(getcwd(path, 800));
@@ -205,6 +215,11 @@ int curr_cd(t_all *all)
 			add_exen_back(&all->env ,lstnew_exen(ft_strdup("OLDPWD"), ft_strdup(pwd)));
 		if (!oldpwd_ex)
 			add_exen_back(&all->exp ,lstnew_exen(ft_strdup("OLDPWD"), ft_strdup(pwd)));
+		else
+		{
+			free(oldpwd_ex->val);
+			oldpwd_ex->val = ft_strdup(pwd);
+		}
 	}
     return (0);
 }
@@ -233,7 +248,7 @@ int cd_prvs(t_all *all)
     t_var   		*oldpwd_ex;
 	t_var   		*pwd_en;
     t_var   		*oldpwd_en;
-    char    		path[800];
+    char    		path[801];
     char    		*val;
 
 	p = all->cmd;
@@ -241,8 +256,8 @@ int cd_prvs(t_all *all)
 	oldpwd_en = check_char(all->env, "OLDPWD");
 	pwd_ex = check_char(all->exp, "PWD");
 	oldpwd_ex = check_char(all->exp, "OLDPWD");
-	val = getcwd(path, 800);
-	if (!ft_strcmp(val, "/System/Volumes/Data"))
+	// val = getcwd(path, 800);
+	if (!ft_strcmp(getcwd(path, 800), "/System/Volumes/Data"))
 	{
 		if (pwd_en && pwd_en->val)
 		{
@@ -256,6 +271,7 @@ int cd_prvs(t_all *all)
 		}
 		return (0);
 	}
+	puts("here0");
 	if (chdir("..") == 0)
 	{
 		puts("here1");
@@ -264,23 +280,34 @@ int cd_prvs(t_all *all)
 			puts("here2");
 			if (oldpwd_en)
 			{
+				puts("20");
 				free(oldpwd_en->val);
-				oldpwd_en->val = ft_strdup(val);
-				free (pwd_en->val);
-				pwd_en->val = ft_strdup(getcwd(path, 800));
+				oldpwd_en->val = ft_strdup(pwd_en->val);
 			}
 			else
 			{
-				add_exen_back(&all->env ,lstnew_exen(ft_strdup("OLDPWD"), ft_strdup("")));
+				puts("21");
+				add_exen_back(&all->env ,lstnew_exen(ft_strdup("OLDPWD"), ft_strdup(pwd_en->val)));
 			}
+			// printf("before : {%s}\n", pwd_en->val);
+			// free (pwd_en->val);
+			// val = getcwd(path, 800);
+			// printf("middle : {%s}\n",path);
+			free (pwd_en->val);
+			pwd_en->val = ft_strdup(getcwd(path, 800));
+			// printf("after : {%s}\n", pwd_en->val);
 		}
 		if (pwd_ex && pwd_ex->val)
 		{
 			puts("here3");
 			free(oldpwd_ex->val);
-			oldpwd_ex->val = ft_strdup(val);
-			free (pwd_ex->val);
-			pwd_ex->val = ft_strdup(getcwd(path, 800));
+			oldpwd_ex->val = ft_strdup(pwd_ex->val);
+			val = getcwd(path, 800);
+			// free(pwd_ex->val);
+			// pwd_ex->val = val;
+			unset_exp("PWD", &all->exp);
+			add_exen_back(&all->exp ,lstnew_exen(ft_strdup("PWD"), ft_strdup(val)));
+			// printf("pwd : {%s}\n", pwd_ex->val);
 		}
 	}
 	else
