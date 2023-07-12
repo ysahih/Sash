@@ -5,9 +5,10 @@
 void	handle_INT(int sig)
 {
 	(void)sig;
+
 	printf("\n");
-	rl_on_new_line();
 	rl_replace_line("", 0);
+	rl_on_new_line();
 	rl_redisplay();
 }
 // 	// else
@@ -70,12 +71,10 @@ void	set_env(t_all *all, char **env)
 int	main(int ac, char **av, char **env)
 {
 	char	*line;
-	// char	**cpy;
 	t_lexer	*cmd;
 	// t_simple_cmd	*cp;
 	t_all	all;
 
-	// cpy = env;
 	g_rd = 0;
 	if (ac != 1 || av[1])
 		return (printf("program does not accept agruments"), 0);
@@ -87,16 +86,17 @@ int	main(int ac, char **av, char **env)
 		sig_handler();
 		line = readline("sash$ ");
 		if (!line)
-			break ;
+			break;
 		if (*line)
 			add_history(line);
-		cmd = tokenize(line);
-
-		if (!analyze_syntax(cmd))
+		else
 		{
-			write (1, "syntax error\n", 13);
-			continue ;
+			free(line);
+			continue;
 		}
+		cmd = tokenize(line);
+		if (!analyze_syntax(cmd))
+			continue ;
 		parse(&all, cmd);
 		// cp = all.cmd;
 		// while (cp)

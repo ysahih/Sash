@@ -17,6 +17,7 @@ bool	pipe_checker(t_lexer *cmd, int i)
 		return (cmd->type >= VAR && cmd->type <= HERDOC);
 	return (cmd->type >= VAR && cmd->type <= DQUOTE);
 }
+
 void	print_err(char *s)
 {
 	printf("sash: syntax error near unexpected token `%s'\n", s);
@@ -48,14 +49,19 @@ bool	analyze_quote(t_lexer **node, int flag)
 
 	cmd = *node;
 	if (!cmd->next)
+	{
+		printf("sash: syntax error: unexpected end of file\n");
 		return false ;
+	}
 	cmd = cmd->next;
 	while(cmd && cmd->type != flag)
 		cmd = cmd->next;
-
 	*node = cmd;
 	if (!cmd)
+	{
+		printf("sash: syntax error: unexpected end of file\n");
 		return false ;
+	}
 	return true;
 }
 
