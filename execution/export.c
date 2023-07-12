@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 16:28:32 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/06 14:32:23 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/11 19:40:26 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,12 +160,12 @@ t_var	*check_char(t_var	*env, char	*str)
 	return (NULL);
 }
 
-// int	isalpha(int c)
-// {
-// 	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
-// 		return (1);
-// 	return (0);
-// }
+int	isalpha(int c)
+{
+	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
+		return (1);
+	return (0);
+}
 
 void    export(t_all *all)
 {
@@ -179,25 +179,31 @@ void    export(t_all *all)
     int i;
     int k;
     int j;
+	int flag;
 
-    p = all->cmd;
+	flag = -1;
+	p = all->cmd;
     tmp_ex = all->exp;
     tmp_en = all->env;
+	if (all->cmd->out_fd == 1)
+		flag = 1;
+	else
+		flag = all->cmd->out_fd;
     if (!p->str[1])
     {
     	all->exp = sort_env(all->exp);
     	tmp_ex = all->exp;
         while (tmp_ex)
         {  
-            printf ("declare -x ");
-            printf("%s", tmp_ex->key);
+            ft_putstr_fd ("declare -x ", flag);
+            ft_putstr_fd(tmp_ex->key, flag);
             if (tmp_ex->val)
             {  
-                printf("=\"");
-                printf("%s", tmp_ex->val);
-                printf("\"");
+                ft_putstr_fd("=\"", flag);
+                ft_putstr_fd(tmp_ex->val, flag);
+                ft_putstr_fd("\"", flag);
             }
-            printf("\n");
+            ft_putstr_fd("\n", flag);
             tmp_ex = tmp_ex->next;
         }
     }

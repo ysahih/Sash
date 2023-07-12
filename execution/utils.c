@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:03:37 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/26 18:45:37 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/11 19:30:43 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,3 +34,18 @@ int	ft_strcmp(char *st1, char *st2)
 	}
 	return (0);
 }
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	int		i;
+
+	if (!s)
+		return ;
+	i = 0;
+	while (s[i])
+	{
+		write(fd, &s[i], 1);
+		i++;
+	}
+}
+
