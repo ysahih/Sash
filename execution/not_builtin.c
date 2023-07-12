@@ -16,7 +16,7 @@ int	count_path(char *str)
 {
 	int	i;
 	int	count;
-	
+
 	i = 0;
 	count = 0;
 	while (str[i])
@@ -71,85 +71,42 @@ char	**ft_split_path(char *str)
 	return (s);
 }
 
-char	*ft_strjoin_n(char *s1, char *s2)
+void	check_path(t_var *key, char **k, t_simple_cmd *p)
 {
-	char	*p;
 	int		i;
-	int		j;
-
-	if (!s1 && !s2)
-		return (0);
-	if(!s1)
-		return (s2);
-	if(!s2)
-		return (s1);
-	p = (char *)malloc (ft_strlen (s1) + ft_strlen (s2) + 1);
-	if (!p)
-		return (0);
-	i = 0;
-	while (s1[i])
-	{
-		p[i] = s1[i];
-		i++;
-	}
-	j = 0;
-	while (s2[j])
-		p[i++] = s2[j++];
-	p[i] = '\0';
-	return (p);
-}
-
-char	**my_env(t_all *all)
-{
-	t_var	*p;
-	int	i;
-	int	len;
-	char **tmp;
-
-	i = 0;
-	len = 0;
-	p = all->env;
-	while (p)
-	{
-		len++;
-		p = p->next;
-	}
-	tmp = malloc(sizeof(char *) *len+1);
-	// if (!tmp)
-	// 	retun (NULL);
-	i = 0;
-	p = all->env;
-	while (p)
-	{
-		tmp[i] = ft_strjoin_n(p->key , "=");
-		tmp[i] = ft_strjoin(tmp[i] , p->val);
-		i++;
-		p = p->next;
-	}
-	tmp[i] = NULL;
-	return (tmp);
-}
-
-void	ftputstr(char *str)
-{
-	int i;
-
-	i =0;
-	while (str[i])
-	{
-		write (2, &str[i], 1);
-		i++;
-	}
-}
-
-void    one_cmd_nob(t_all *all, t_simple_cmd *p)
-{
-	int 	i;
-	int 	f;
+	char	*join;
 	char	**path;
+
+	path = ft_split_path(key->val);
+	if (!strchr(p->str[0], '/'))
+	{
+		i = 0;
+		while (path[i])
+		{
+			join = ft_strjoin(path[i], "/");
+			join = ft_strjoin(join, p->str[0]);
+			if (access(join, R_OK) == 0)
+				execve(join, p->str, k);
+			i++;
+		}
+		cmd_not_found(p);
+	}
+	execve(p->str[0], p->str, k);
+}
+
+void	cmd_not_found(t_simple_cmd *p)
+{
+	ft_putstr_fd("sash: ", 2);
+	ft_putstr_fd(p->str[0], 2);
+	ft_putstr_fd(": command not found\n", 2);
+	exit(127);
+}
+
+void	one_cmd_nob(t_all *all, t_simple_cmd *p)
+{
+	int		i;
 	char	**k;
-	char 	*join;
- 	t_var	*key;
+	t_var	*key;
 
 	i = fork();
 	if (i == 0)
@@ -159,93 +116,24 @@ void    one_cmd_nob(t_all *all, t_simple_cmd *p)
 		k = my_env(all);
 		key = check_char(all->env, "PATH");
 		if (key)
-		{
-			path = ft_split_path(key->val);
-			i = 0;
-			if (!strchr(p->str[0], '/'))
-			{
-				while (path[i])
-				{
-					join = ft_strjoin(path[i], "/");
-					join = ft_strjoin(join, p->str[0]);
-					if (access(join, R_OK) == 0)
-						execve(join, p->str, k);
-					i++;
-				}
-				ftputstr("sash: ");
-				ftputstr(p->str[0]);
-				ftputstr(": command not found\n");
-				exit(127);
-			}
-			else
-				execve(p->str[0], p->str, k);
-		}
-		else
-		{
-			execve(p->str[0], p->str, k);
-			perror("");
-		}	
+			check_path(key, k, p);
+		execve(p->str[0], p->str, k);
+		perror("");
 	}
 	else
-		wait(&f);
+		wait(&i);
 }
 
-void    one_cmd_nb(t_all *all, t_simple_cmd *p)
+void	one_cmd_nb(t_all *all, t_simple_cmd *p)
 {
-	int 	i;
-	char	**path;
+	int		i;
 	char	**k;
-	char *join;
- 	t_var	*key;
+	t_var	*key;
 
 	k = my_env(all);
 	key = check_char(all->env, "PATH");
 	if (key)
-	{
-		path = ft_split_path(key->val);
-		i = 0;
-		if (!strchr(p->str[0], '/'))
-		{
-			while (path[i])
-			{
-				join = ft_strjoin(path[i], "/");
-				join = ft_strjoin(join, p->str[0]);
-				if (access(join, R_OK) == 0)
-					execve(join, p->str, k);
-				i++;
-			}
-			ftputstr("sash: ");
-			ftputstr(p->str[0]);
-			ftputstr(": command not found\n");
-			exit(127);
-		}
-		else
-			execve(p->str[0], p->str, k);
-	}
-	else
-	{
-		execve(p->str[0], p->str, k);
-		perror("");
-	}
+		check_path(key, k, p);
+	execve(p->str[0], p->str, k);
+	perror("");
 }
-// char	*joinpath(t_all	*all)
-// {
-// 	char **path
-	
-// 	path = ft_split_path(key->val);
-// 	i = 0;
-// 	if (!strchr(p->str[0], '/'))
-// 	{
-// 		while (path[i])
-// 		{
-// 			join = ft_strjoin(path[i], "/");
-// 			join = ft_strjoin(join, p->str[0]);
-// 			if (access(join, R_OK) == 0)
-// 				execve(join, p->str, k);
-// 			i++;
-// 		}
-// 	}
-// }
-
-
-

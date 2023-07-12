@@ -100,6 +100,15 @@ typedef struct s_list
 	struct s_list	*next;
 }					t_list;         
 
+typedef struct s_pwd
+{
+	t_var			*node;
+	t_var			*pwd_en;
+	t_var			*oldpwd_en;
+	t_var			*pwd_ex;
+	t_var			*oldpwd_ex;
+}	t_pwd;
+
 //parse
 int		alpha(int c);
 void	parse(t_all *all, t_lexer *cmdline);
@@ -119,6 +128,7 @@ char	**ft_split(char *str);
 char	*ft_strjoin(char *s1, char *s2);
 t_var	*check_char(t_var	*env, char	*str);
 void	ftputstr(char *str);
+void	ft_putstr_fd(char *s, int fd);
 
 //builtins cmds
 void	env(t_all *all);
@@ -134,6 +144,7 @@ void    one_cmd_nb(t_all *all, t_simple_cmd	*p);
 void    one_cmd_nob(t_all *all, t_simple_cmd *p);
 void	ft_putstr_fd(char *s, int fd);
 int		alpha(int c);
+char	**my_env(t_all *all);
 // int		cd(char *str);
 
 
