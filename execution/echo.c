@@ -94,7 +94,7 @@ void	only_echo(t_simple_cmd *p, int flag)
 void	echo(t_simple_cmd *a)
 {
 	t_simple_cmd	*p;
-	int flag;
+	int				flag;
 
 	p = a;
 	flag = p->out_fd;

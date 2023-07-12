@@ -10,26 +10,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../minishell.h"
+#include "../minishell.h"
 
 void	env(t_all *all)
 {
-    t_var   *var;
-    int     flag;
+	t_var	*var;
+	int		flag;
 
-    flag = -1;
-    var = all->env;
-    if (all->cmd->out_fd == 1)
-        flag = 1;
-    else
-        flag = all->cmd->out_fd;
-    while (var)
-    {
-        // printf("%s=%s\n", var->key, var->val);
-        ft_putstr_fd(var->key, flag);
-        ft_putstr_fd("=", flag);
-        ft_putstr_fd(var->val, flag);
-        ft_putstr_fd("\n", flag);
-        var = var->next;
-    }
+	flag = -1;
+	var = all->env;
+	if (all->cmd->out_fd == 1)
+		flag = 1;
+	else
+		flag = all->cmd->out_fd;
+	while (var)
+	{
+		ft_putstr_fd(var->key, flag);
+		ft_putstr_fd("=", flag);
+		ft_putstr_fd(var->val, flag);
+		ft_putstr_fd("\n", flag);
+		var = var->next;
+	}
 }

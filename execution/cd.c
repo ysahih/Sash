@@ -14,342 +14,331 @@
 
 void	cd_error(char *path, char *str)
 {
-	ftputstr("sash: ");
+	ft_putstr_fd("sash: ", 2);
 	if (access(path, F_OK) == -1)
 	{
-		ftputstr("cd: ");
-		ftputstr(str);
-		ftputstr(": ");
-		ftputstr("no such file or directory\n");
+		ft_putstr_fd("cd: ", 2);
+		ft_putstr_fd(str, 2);
+		ft_putstr_fd(": ", 2);
+		ft_putstr_fd("no such file or directory\n", 2);
 	}
 	else if (access(path, R_OK) == -1)
-		ftputstr("Permission denied\n");
+		ft_putstr_fd("Permission denied\n", 2);
 	else
 	{
-		ftputstr("cd: ");
-		ftputstr(str);
-		ftputstr(": ");
-		ftputstr("Not a directory\n");
+		ft_putstr_fd("cd: ", 2);
+		ft_putstr_fd(str, 2);
+		ft_putstr_fd(": ", 2);
+		ft_putstr_fd("Not a directory\n", 2);
 	}
 }
 
-int cd_home(t_all *all)
+int	home_success(t_all *all, t_pwd *pwd)
+{
+	if (pwd->pwd_en && pwd->pwd_ex)
+	{
+		if (!pwd->oldpwd_en)
+			add_exen_back(&all->env, lstnew_exen(ft_strdup("OLDPWD"), \
+			ft_strdup(pwd->pwd_en->val)));
+		else
+		{
+			free(pwd->oldpwd_en->val);
+			pwd->oldpwd_en->val = ft_strdup(pwd->pwd_en->val);
+		}
+		free (pwd->oldpwd_ex->val);
+		pwd->oldpwd_ex->val = ft_strdup(pwd->pwd_ex->val);
+	}
+	if (pwd->pwd_en && pwd->pwd_ex)
+	{
+		if (pwd->pwd_en->val && pwd->pwd_ex->val)
+		{
+			free(pwd->pwd_en->val);
+			pwd->pwd_en->val = pwd->node->val;
+			free(pwd->pwd_ex->val);
+			pwd->pwd_ex->val = ft_strdup(pwd->node->val);
+		}
+		else
+			return (ft_putstr_fd("sash: cd: PWD not set\n", 2), 0);
+	}
+}
+
+int	cd_home(t_all *all)
 {
 	t_simple_cmd	*p;
-	t_var			*node;
-	t_var			*pwd_en;
-	t_var			*oldpwd_en;
-	t_var			*pwd_ex;
-	t_var			*oldpwd_ex;
+	t_pwd			pwd;
 	int				err;
 
 	p = all->cmd;
 	err = -1;
-	node = check_char(all->exp, "HOME");
-	if (!node)
-		return (printf("sash: cd: HOME not set\n"));
+	pwd.node = check_char(all->exp, "HOME");
+	if (!pwd.node)
+		return (ft_putstr_fd("sash: cd: HOME not set\n", 2), 0);
 	else
-		err = chdir(node->val);
+		err = chdir(pwd.node->val);
 	if (err == 0)
 	{
-		puts("here1");
-		oldpwd_en = check_char(all->env, "OLDPWD");
-		pwd_en = check_char(all->env, "PWD");
-		oldpwd_ex = check_char(all->exp, "OLDPWD");
-		pwd_ex = check_char(all->exp, "PWD");
-		if (pwd_en && pwd_ex)
-		{
-			puts("here2");
-			//env
-			if (!oldpwd_en)
-				add_exen_back(&all->env ,lstnew_exen(ft_strdup("OLDPWD"), ft_strdup(pwd_en->val)));
-			else
-			{
-				free(oldpwd_en->val);
-				oldpwd_en->val = ft_strdup(pwd_en->val);
-			}
-			//exp
-			free (oldpwd_ex->val);
-			oldpwd_ex->val = ft_strdup(pwd_ex->val);
-		}
-		if (pwd_en && pwd_ex)
-		{
-			puts("here3");
-			if (pwd_en->val && pwd_ex->val)
-			{
-				puts("here4");
-				//env
-				free(pwd_en->val);
-				pwd_en->val = node->val;
-				//exp
-				free(pwd_ex->val);
-				pwd_ex->val = ft_strdup(node->val);
-			}
-			else
-				return (printf("sash: cd: PWD not set\n"));
-		}
+		pwd.oldpwd_en = check_char(all->env, "OLDPWD");
+		pwd.pwd_en = check_char(all->env, "PWD");
+		pwd.oldpwd_ex = check_char(all->exp, "OLDPWD");
+		pwd.pwd_ex = check_char(all->exp, "PWD");
+		home_success(all, &pwd);
 	}
 	else
-		cd_error(node->val, p->str[1]);
+		cd_error(pwd.node->val, p->str[1]);
 	return (0);
 }
 
-int cd_swap(t_all *all)
+int	swap_success(t_all *all, t_pwd *pwd)
+{
+	char	*val;
+
+	if (!pwd->pwd_en | ! pwd->pwd_ex)
+		return (ft_putstr_fd("sash: cd: PWD not set\n", 2), 0);
+	else
+	{
+		val = ft_strdup(pwd->pwd_en->val);
+		free(pwd->pwd_en->val);
+		pwd->pwd_en->val = ft_strdup(pwd->oldpwd_en->val);
+		free(pwd->oldpwd_en->val);
+		pwd->oldpwd_en->val = ft_strdup(val);
+		free(pwd->pwd_ex->val);
+		pwd->pwd_ex->val = ft_strdup(pwd->oldpwd_ex->val);
+		free(pwd->oldpwd_ex->val);
+		pwd->oldpwd_ex->val = ft_strdup(val);
+		free(val);
+	}
+}
+
+int	cd_swap(t_all *all)
 {
 	t_simple_cmd	*p;
-	t_var			*pwd_en;
-	t_var			*oldpwd_en;
-	t_var			*pwd_ex;
-	t_var			*oldpwd_ex;
+	t_pwd			pwd;
 	char			*val;
 	int				err;
 
 	p = all->cmd;
 	err = -1;
-	oldpwd_en = check_char(all->env, "OLDPWD");
-	oldpwd_ex = check_char(all->exp, "OLDPWD");
-	if (!oldpwd_en || !oldpwd_ex)
-		return (printf("sash: cd: OLDPWD not set\n"));
+	pwd.oldpwd_en = check_char(all->env, "OLDPWD");
+	pwd.oldpwd_ex = check_char(all->exp, "OLDPWD");
+	if (!pwd.oldpwd_en || !pwd.oldpwd_ex)
+		return (ft_putstr_fd("sash: cd: OLDPWD not set\n", 2), 0);
 	else
-		err = chdir(oldpwd_en->val);
+		err = chdir(pwd.oldpwd_en->val);
 	if (err == 0)
 	{
-		pwd_en = check_char(all->env, "PWD");
-		pwd_ex = check_char(all->exp, "PWD");
-		if (!pwd_en | ! pwd_ex)
-			return (printf("sash: cd: PWD not set\n"));
-		else
-		{
-			//env
-			val = ft_strdup(pwd_en->val);
-			free(pwd_en->val);
-			pwd_en->val = ft_strdup(oldpwd_en->val);
-			free(oldpwd_en->val);
-			oldpwd_en->val = ft_strdup(val);
-			//exp
-			free(pwd_ex->val);
-			pwd_ex->val = ft_strdup(oldpwd_ex->val);
-			free(oldpwd_ex->val);
-			oldpwd_ex->val = ft_strdup(val);
-			free(val);
-		}
+		pwd.pwd_en = check_char(all->env, "PWD");
+		pwd.pwd_ex = check_char(all->exp, "PWD");
+		swap_success(all, &pwd);
 	}
 	else
-		cd_error(oldpwd_en->val, p->str[1]);
+		cd_error(pwd.oldpwd_en->val, p->str[1]);
 	return (0);
 }
 
-int cd_else(t_all *all)
+int	else_success(t_all *all, t_pwd *pwd, char *path)
+{
+	char	*val;
+
+	if (pwd->pwd_en && pwd->pwd_ex)
+	{
+		val = ft_strdup(pwd->pwd_en->val);
+		free(pwd->pwd_en->val);
+		pwd->pwd_en->val = NULL;
+		pwd->pwd_en->val = ft_strdup(getcwd(path, 800));
+		if (pwd->oldpwd_en)
+		{
+			free(pwd->oldpwd_en->val);
+			pwd->oldpwd_en->val = NULL;
+			pwd->oldpwd_en->val = ft_strdup(val);
+		}
+		else
+			add_exen_back(&all->env, lstnew_exen(ft_strdup("OLDPWD"), \
+			ft_strdup(val)));
+		free(pwd->pwd_ex->val);
+		pwd->pwd_ex->val = NULL;
+		pwd->pwd_ex->val = ft_strdup(getcwd(path, 800));
+		free(pwd->oldpwd_ex->val);
+		pwd->oldpwd_ex->val = NULL;
+		return (pwd->oldpwd_ex->val = ft_strdup(val), free(val), 0);
+	}
+	return (ft_putstr_fd("sash: cd: PWD not set\n", 2), 0);
+}
+
+int	cd_else(t_all *all)
 {
 	t_simple_cmd	*p;
-	t_var			*pwd_en;
-	t_var			*oldpwd_en;
-	t_var			*pwd_ex;
-	t_var			*oldpwd_ex;
+	t_pwd			pwd;
 	char			*val;
 	char			path[800];
 
 	p = all->cmd;
 	if (chdir(p->str[1]) == 0)
 	{
-		pwd_en = check_char(all->env, "PWD");
-		oldpwd_en = check_char(all->env, "OLDPWD");
-		pwd_ex = check_char(all->exp, "PWD");
-		oldpwd_ex = check_char(all->exp, "OLDPWD");
-		if (pwd_en && pwd_ex)
-		{
-			puts("j");
-			//env
-			val = ft_strdup(pwd_en->val);
-			free(pwd_en->val);
-			puts("h");
-			pwd_en->val = ft_strdup(getcwd(path, 800));
-			puts("h2");
-			if (oldpwd_en)
-			{
-				free(oldpwd_en->val);
-				oldpwd_en->val = ft_strdup(val);
-			}
-			else
-				add_exen_back(&all->env ,lstnew_exen(ft_strdup("OLDPWD"), ft_strdup(val)));
-			puts("h3");
-			puts("h4");
-			//exp
-			free(pwd_ex->val);
-			pwd_ex->val = ft_strdup(getcwd(path, 800));
-			free(oldpwd_ex->val);
-			oldpwd_ex->val = ft_strdup(val);
-			free(val);
-		}
-		else
-			return (printf("sash: cd: PWD not set\n"));
+		pwd.pwd_en = check_char(all->env, "PWD");
+		pwd.oldpwd_en = check_char(all->env, "OLDPWD");
+		pwd.pwd_ex = check_char(all->exp, "PWD");
+		pwd.oldpwd_ex = check_char(all->exp, "OLDPWD");
+		else_success(all, &pwd, path);
 	}
 	else
 		cd_error(p->str[1], p->str[1]);
 	return (0);
 }
 
-
-int curr_cd(t_all *all)
+int	curr_success(t_all *all, t_pwd *pd, char *pwd)
 {
-	int				i;
-	char			*pwd;
-   	char			path[800];
-	t_var			*oldpwd_en;
-	t_var			*oldpwd_ex;
+	if (!pd->oldpwd_en)
+		add_exen_back(&all->env, lstnew_exen(ft_strdup("OLDPWD"), \
+		ft_strdup(pwd)));
+	else
+	{
+		free(pd->oldpwd_en->val);
+		pd->oldpwd_en->val = NULL;
+		pd->oldpwd_en->val = ft_strdup(pwd);
+	}
+	if (!pd->oldpwd_ex)
+		add_exen_back(&all->exp, lstnew_exen(ft_strdup("OLDPWD"), \
+		ft_strdup(pwd)));
+	else
+	{
+		free(pd->oldpwd_ex->val);
+		pd->oldpwd_ex->val = NULL;
+		pd->oldpwd_ex->val = ft_strdup(pwd);
+	}
+}
 
-    pwd = getcwd(path, 800);
+int	curr_cd(t_all *all)
+{
+	int		i;
+	char	*pwd;
+	char	path[800];
+	t_pwd	pd;
+
+	pwd = getcwd(path, 800);
 	if (!pwd)
 	{
-		ftputstr("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
+		ft_putstr_fd("cd: error retrieving current directory: ", 2);
+		ft_putstr_fd("getcwd: cannot access parent directories: ", 2);
+		ft_putstr_fd("No such file or directory\n", 2);
 		return (0);
 	}
 	i = chdir(pwd);
-    if(i < 0)
+	if (i < 0)
 		cd_error(pwd, "");
 	else
 	{
-		oldpwd_en = check_char(all->env, "OLDPWD");
-		oldpwd_ex = check_char(all->exp, "OLDPWD");
-		if (!oldpwd_en)
-			add_exen_back(&all->env ,lstnew_exen(ft_strdup("OLDPWD"), ft_strdup(pwd)));
-		else
-		{
-			free(oldpwd_en->val);
-			oldpwd_en->val = NULL;
-			oldpwd_en->val = ft_strdup(pwd);
-		}
-		if (!oldpwd_ex)
-			add_exen_back(&all->exp ,lstnew_exen(ft_strdup("OLDPWD"), ft_strdup(pwd)));
-		else
-		{
-			free(oldpwd_ex->val);
-			oldpwd_ex->val = NULL;
-			oldpwd_ex->val = ft_strdup(pwd);
-		}
+		pd.oldpwd_en = check_char(all->env, "OLDPWD");
+		pd.oldpwd_ex = check_char(all->exp, "OLDPWD");
+		curr_success(all, &pd, pwd);
 	}
-    return (0);
+	return (0);
 }
 
-int ft_strrchr(char *str, char c)
+int	ft_strrchr(char *str, char c)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (str[i])
-        i++;
-    i--;
-    while (i >= 0)
-    {
-        if (str[i] == c)
-            return (i);
-        i--;
-    }
-    return (0);
+	i = 0;
+	while (str[i])
+		i++;
+	i--;
+	while (i >= 0)
+	{
+		if (str[i] == c)
+			return (i);
+		i--;
+	}
+	return (0);
 }
 
-int cd_prvs(t_all *all)
+int	prvs_to_home(t_pwd *pwd, char *val)
+{
+	if (pwd->pwd_en && pwd->pwd_en->val)
+	{
+		free(pwd->pwd_en->val);
+		pwd->pwd_en->val = NULL;
+		pwd->pwd_en->val = ft_strdup("/");
+		free(pwd->oldpwd_en->val);
+		pwd->oldpwd_en->val = NULL;
+		pwd->oldpwd_en->val = ft_strdup(val);
+	}
+	if (pwd->pwd_ex && pwd->pwd_ex->val)
+	{
+		free(pwd->pwd_ex->val);
+		pwd->pwd_ex->val = NULL;
+		pwd->pwd_ex->val = ft_strdup("/");
+		free(pwd->oldpwd_ex->val);
+		pwd->oldpwd_ex->val = NULL;
+		pwd->oldpwd_ex->val = ft_strdup(val);
+	}
+	chdir("..");
+	return (0);
+}
+
+int	prvs_succes(t_all *all, t_pwd *pwd, char *val, char *path)
+{
+	if (pwd->pwd_en && pwd->pwd_en->val)
+	{
+		if (pwd->oldpwd_en)
+		{
+			free(pwd->oldpwd_en->val);
+			pwd->oldpwd_en->val = NULL;
+			pwd->oldpwd_en->val = ft_strdup(pwd->pwd_en->val);
+		}
+		else
+			add_exen_back(&all->env, lstnew_exen(ft_strdup("OLDPWD"), \
+			ft_strdup(pwd->pwd_en->val)));
+		val = getcwd(path, 800);
+		free (pwd->pwd_en->val);
+		pwd->pwd_en->val = NULL;
+		pwd->pwd_en->val = ft_strdup(val);
+	}
+	if (pwd->pwd_ex && pwd->pwd_ex->val)
+	{
+		free(pwd->oldpwd_ex->val);
+		pwd->oldpwd_ex->val = NULL;
+		pwd->oldpwd_ex->val = ft_strdup(pwd->pwd_ex->val);
+		val = getcwd(path, 800);
+		unset_exp("PWD", &all->exp);
+		add_exen_back(&all->exp, lstnew_exen(ft_strdup("PWD"), ft_strdup(val)));
+	}
+}
+
+int	cd_prvs(t_all *all)
 {
 	t_simple_cmd	*p;
-    t_var   		*pwd_ex;
-    t_var   		*oldpwd_ex;
-	t_var   		*pwd_en;
-    t_var   		*oldpwd_en;
-    char    		path[801];
-    char    		*val;
+	t_pwd			pwd;
+	char			path[801];
+	char			*val;
 
 	p = all->cmd;
-	pwd_en = check_char(all->env, "PWD");
-	oldpwd_en = check_char(all->env, "OLDPWD");
-	pwd_ex = check_char(all->exp, "PWD");
-	oldpwd_ex = check_char(all->exp, "OLDPWD");
+	pwd.pwd_en = check_char(all->env, "PWD");
+	pwd.oldpwd_en = check_char(all->env, "OLDPWD");
+	pwd.pwd_ex = check_char(all->exp, "PWD");
+	pwd.oldpwd_ex = check_char(all->exp, "OLDPWD");
 	val = getcwd(path, 800);
-	printf("kharya : {%s}\n", val);
 	if (!ft_strcmp(val, "/Users"))
-	{
-		puts("k");
-		if (pwd_en && pwd_en->val)
-		{
-			free(pwd_en->val);
-			pwd_en->val = NULL;
-			pwd_en->val = ft_strdup("/");
-			free(oldpwd_en->val);
-			oldpwd_en->val = NULL;
-			oldpwd_en->val = ft_strdup(val);
-		}
-		if (pwd_ex && pwd_ex->val)
-		{
-			free(pwd_ex->val);
-			pwd_ex->val = NULL;
-			pwd_ex->val = ft_strdup("/");
-			free(oldpwd_ex->val);
-			oldpwd_ex->val = NULL;
-			oldpwd_ex->val = ft_strdup(val);
-		}
-		chdir("..");
-		return (0);
-	}
-	puts("here0");
+		prvs_to_home(&pwd, val);
 	if (chdir("..") == 0)
-	{
-		puts("here1");
-		if (pwd_en && pwd_en->val)
-		{
-			puts("here2");
-			if (oldpwd_en)
-			{
-				puts("20");
-				free(oldpwd_en->val);
-				oldpwd_en->val = NULL;
-				oldpwd_en->val = ft_strdup(pwd_en->val);
-				printf("old ; {%s}\n", oldpwd_en->val);
-			}
-			else
-			{
-				puts("21");
-				add_exen_back(&all->env ,lstnew_exen(ft_strdup("OLDPWD"), ft_strdup(pwd_en->val)));
-			}
-			// printf("before : {%s}\n", pwd_en->val);
-			// free (pwd_en->val);
-			val = getcwd(path, 800);
-			// printf("middle : {%s}\n",path);
-			free (pwd_en->val);
-			pwd_en->val = NULL;
-			pwd_en->val = ft_strdup(val);
-			// printf("after : {%s}\n", pwd_en->val);
-		}
-		if (pwd_ex && pwd_ex->val)
-		{
-			puts("here3");
-			free(oldpwd_ex->val);
-			oldpwd_ex->val = NULL;
-			oldpwd_ex->val = ft_strdup(pwd_ex->val);
-			val = getcwd(path, 800);
-			// free(pwd_ex->val);z
-			// pwd_ex->val = val;
-			unset_exp("PWD", &all->exp);
-			add_exen_back(&all->exp ,lstnew_exen(ft_strdup("PWD"), ft_strdup(val)));
-			// printf("pwd : {%s}\n", pwd_ex->val);
-		}
-	}
+		prvs_succes(all, &pwd, val, path);
 	else
 		perror("cd");
-    return (0);
+	return (0);
 }
 
-void	cd(t_all*all)
+void	cd(t_all *all)
 {
-	t_simple_cmd *p;
+	t_simple_cmd	*p;
 
 	p = all->cmd;
 	if (!p->str[1] || (p->str[1] && !ft_strcmp(p->str[1], "~")))
 		cd_home(all);
-	else if(!ft_strcmp(p->str[1], "-"))
+	else if (!ft_strcmp(p->str[1], "-"))
 		cd_swap(all);
-    else if (!ft_strcmp(p->str[1], "."))
-        curr_cd(all);
-    else if (!ft_strcmp(p->str[1], ".."))
-        cd_prvs(all);
+	else if (!ft_strcmp(p->str[1], "."))
+		curr_cd(all);
+	else if (!ft_strcmp(p->str[1], ".."))
+		cd_prvs(all);
 	else
 		cd_else(all);
 }
