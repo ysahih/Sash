@@ -45,18 +45,12 @@ int	arg(char *str)
 	return (0);
 }
 
-void	exist_arg(t_all *all, t_simple_cmd *p)
+void	exist_arg(t_simple_cmd *p, int flag)
 {
 	int	i;
 	int	j;
-	int	flag;
 
-	i = 1;
-	flag = -1;
-	if (all->cmd->out_fd == 1)
-		flag = 1;
-	else
-		flag = all->cmd->out_fd; 
+	i = 1; 
 	if (arg(p->str[i]) == 1)
 	{
 		while (p->str[i] && arg(p->str[i]) == 1)
@@ -76,19 +70,13 @@ void	exist_arg(t_all *all, t_simple_cmd *p)
 	}
 }
 
-void	only_echo(t_all	*all, t_simple_cmd *p)
+void	only_echo(t_simple_cmd *p, int flag)
 {
 	int	j;
 	int	i;
-	int	flag;
 
 	j = 1;
 	i = 1;
-	flag = -1;
-	if (p->out_fd == 1)
-		flag = 1;
-	else
-		flag = p                                                                                                                        ->out_fd;
 	if (arg(p->str[i]) == 0)
 	{
 		while (p->str[j])
@@ -106,15 +94,10 @@ void	only_echo(t_all	*all, t_simple_cmd *p)
 void	echo(t_simple_cmd *a)
 {
 	t_simple_cmd	*p;
-	t_all 			*all;
 	int flag;
 
 	p = a;
-	flag = -1;
-	if (all->cmd->out_fd == 1)
-		flag = 1;
-	else
-		flag = all->cmd->out_fd;
+	flag = p->out_fd;
 	while (p)
 	{
 		if (!p->str[1])
@@ -122,8 +105,8 @@ void	echo(t_simple_cmd *a)
 			ft_putstr_fd("\n", flag);
 			return ;
 		}
-		only_echo(all, p);
-		exist_arg(all, p);
+		only_echo(p, flag);
+		exist_arg(p, flag);
 		p = p->next;
 	}
 }

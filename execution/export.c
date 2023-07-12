@@ -160,7 +160,7 @@ t_var	*check_char(t_var	*env, char	*str)
 	return (NULL);
 }
 
-int	isalpha(int c)
+int	alpha(int c)
 {
 	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
 		return (1);
