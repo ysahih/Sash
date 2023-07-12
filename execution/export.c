@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 16:28:32 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/11 19:40:26 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/12 13:44:08 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,7 @@ void    export(t_all *all)
         i = 1;
         while(p->str[i])
         {  
-			if (isalpha(p->str[i][0]) != 1 && p->str[i][0] != '_')
+			if (alpha(p->str[i][0]) != 1 && p->str[i][0] != '_')
 			{
 				printf("sash$ ");
 				printf("%s:", p->str[i]);
