@@ -130,6 +130,7 @@ void	cd(t_all *all);
 void	ex_it(t_all *all);
 void    one_cmd_nb(t_all *all, t_simple_cmd	*p);
 void    one_cmd_nob(t_all *all, t_simple_cmd *p);
+void	ft_putstr_fd(char *s, int fd);
 // int		cd(char *str);
 
 
