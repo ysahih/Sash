@@ -69,7 +69,7 @@ bool	red_analyze(t_lexer *cmd)
 {
 	if (cmd->next && cmd->next->type == WSPACE)
 		cmd = cmd->next;
-	if (!cmd->next || cmd->next->type > DQUOTE || cmd->next->type < WORD)
+	if (!cmd->next || cmd->next->type > DQUOTE || cmd->next->type < VAR)
 	{
 		if (cmd->next)
 			print_err(cmd->next->str);

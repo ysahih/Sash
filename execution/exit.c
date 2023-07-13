@@ -32,33 +32,33 @@ int	ft_atoi(const char *str)
 	while (str[i] >= '0' && str[i] <= '9')
 		n = (n * 10) + str[i++] - 48;
 	if ((str[i] < 48 || str[i] > 57) && str[i])
-    {
+	{
 		printf("exit\nsash: exit: %s: numeric argument required\n", str);
-        exit(255);
-    }
+		exit(255);
+	}
 	return (n * s);
 }
 
-void    ex_it(t_all  *all)
+void	ex_it(t_all *all)
 {
-    t_simple_cmd    *p;
-    int             nbr;
+	t_simple_cmd	*p;
+	int				nbr;
 
-    p = all->cmd;
-    if (!p->str[1])
-    {
-        printf("exit\n");
-        exit(0);
-    }
-    if (ft_atoi(p->str[1]) && p->str[2])
-    {
-        printf("exit\nsash: exit: too many arguments\n");
-        exit(1);
-    }
-    nbr = ft_atoi(p->str[1]);
-    if (!p->str[2] && p->str[1])
-    {
-        printf("exit\n");
-        exit(nbr);
-    }
+	p = all->cmd;
+	if (!p->str[1])
+	{
+		printf("exit\n");
+		exit(0);
+	}
+	if (ft_atoi(p->str[1]) && p->str[2])
+	{
+		printf("exit\nsash: exit: too many arguments\n");
+		exit(1);
+	}
+	nbr = ft_atoi(p->str[1]);
+	if (!p->str[2] && p->str[1])
+	{
+		printf("exit\n");
+		exit(nbr);
+	}
 }
