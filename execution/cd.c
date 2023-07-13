@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 19:39:14 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/12 14:36:20 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/12 20:28:14 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int	home_success(t_all *all, t_pwd *pwd)
 		else
 			return (ft_putstr_fd("sash: cd: PWD not set\n", 2), 0);
 	}
+	return (0);
 }
 
 int	cd_home(t_all *all)
@@ -107,6 +108,7 @@ int	swap_success(t_all *all, t_pwd *pwd)
 		pwd->oldpwd_ex->val = ft_strdup(val);
 		free(val);
 	}
+	return (0);
 }
 
 int	cd_swap(t_all *all)
@@ -205,6 +207,7 @@ int	curr_success(t_all *all, t_pwd *pd, char *pwd)
 		pd->oldpwd_ex->val = NULL;
 		pd->oldpwd_ex->val = ft_strdup(pwd);
 	}
+	return (0);
 }
 
 int	curr_cd(t_all *all)
@@ -302,6 +305,7 @@ int	prvs_succes(t_all *all, t_pwd *pwd, char *val, char *path)
 		unset_exp("PWD", &all->exp);
 		add_exen_back(&all->exp, lstnew_exen(ft_strdup("PWD"), ft_strdup(val)));
 	}
+	return (0);
 }
 
 int	cd_prvs(t_all *all)
@@ -317,6 +321,13 @@ int	cd_prvs(t_all *all)
 	pwd.pwd_ex = check_char(all->exp, "PWD");
 	pwd.oldpwd_ex = check_char(all->exp, "OLDPWD");
 	val = getcwd(path, 800);
+	if (!val)
+	{
+		ft_putstr_fd("cd: error retrieving current directory: ", 2);
+		ft_putstr_fd("getcwd: cannot access parent directories: ", 2);
+		ft_putstr_fd("No such file or directory\n", 2);
+		return (0);
+	}
 	if (!ft_strcmp(val, "/Users"))
 		prvs_to_home(&pwd, val);
 	if (chdir("..") == 0)

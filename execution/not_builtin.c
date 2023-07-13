@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/06 19:30:31 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/13 13:47:20 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,14 @@ char	**ft_split_path(char *str)
 	return (s);
 }
 
+void	cmd_not_found(t_simple_cmd *p)
+{
+	ft_putstr_fd("sash: ", 2);
+	ft_putstr_fd(p->str[0], 2);
+	ft_putstr_fd(": command not found\n", 2);
+	exit(127);
+}
+
 void	check_path(t_var *key, char **k, t_simple_cmd *p)
 {
 	int		i;
@@ -94,34 +102,119 @@ void	check_path(t_var *key, char **k, t_simple_cmd *p)
 	execve(p->str[0], p->str, k);
 }
 
-void	cmd_not_found(t_simple_cmd *p)
+static	int	ft_count(int n)
 {
-	ft_putstr_fd("sash: ", 2);
-	ft_putstr_fd(p->str[0], 2);
-	ft_putstr_fd(": command not found\n", 2);
-	exit(127);
+	int	i;
+
+	i = 0;
+	if (n == 0)
+		return (1);
+	if (n < 0)
+	{
+		i++;
+		n *= -1;
+	}
+	while (n)
+	{
+		n = n / 10;
+		i++;
+	}
+	return (i);
 }
+
+char	*ft_itoa(int n)
+{
+	char	*p;
+	int		i;
+
+	if (n == -2147483648)
+		return (ft_strdup("-2147483648"));
+	if (n == 0)
+		return (ft_strdup("0"));
+	i = ft_count(n);
+	p = malloc(sizeof(char) * i + 1);
+	if (!p)
+		return (NULL);
+	--i;
+	if (n < 0)
+	{
+		p[0] = '-';
+		n *= -1;
+	}
+	while (n)
+	{
+		p[i] = (n % 10) + 48;
+		n = n / 10;
+		i--;
+	}
+	return (p);
+}
+
+
+int	my_atoi(char *str)
+{
+	int	i;
+	int	s;
+	int	n;
+
+	s = 1;
+	i = 0;
+	n = 0;
+	while ((str[i] >= 9 && str[i] <= 13) || (str[i] == ' '))
+	{
+		i++;
+	}
+	if (str[i] == '+' || str[i] == '-')
+	{
+		if (str[i] == '-')
+			(s *= -1);
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		n = (n * 10) + str[i] - 48;
+		i++;
+	}
+	return (n * s);
+}
+
 
 void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 {
 	int		i;
+	int		j;
 	char	**k;
+	int		new;
 	t_var	*key;
+	t_var	*shelvl;
 
 	i = fork();
+	j = 1;
+	// (char *)shelvl;
 	if (i == 0)
-	{
+	
+		if (!ft_strcmp(p->str[0], "./sash"))
+		{
+			shelvl = (check_char(all->env, "SHLVL"));
+			printf("{%s}\n", shelvl->val);
+			new = my_atoi(shelvl->val);
+			printf("{%d}\n", new);
+			new++;
+			free (shelvl->val);
+			shelvl->val = NULL;
+			shelvl->val = ft_itoa(new);
+			printf("SHLVL 1: {%s}\n", shelvl->val);
+		}
+		k = my_env(all);
 		dup2(p->in_fd, 0);
 		dup2(p->out_fd, 1);
-		k = my_env(all);
 		key = check_char(all->env, "PATH");
 		if (key)
 			check_path(key, k, p);
 		execve(p->str[0], p->str, k);
 		perror("");
-	}
-	else
-		wait(&i);
+	
+	wait(&i);
 }
 
 void	one_cmd_nb(t_all *all, t_simple_cmd *p)
@@ -137,3 +230,31 @@ void	one_cmd_nb(t_all *all, t_simple_cmd *p)
 	execve(p->str[0], p->str, k);
 	perror("");
 }
+
+// void chelvl(t_all *all, t_simple_cmd *p)
+// {
+// 	int 	i;
+// 	int 	j;
+// 	t_var	*chelvl;
+// 	char	**k;
+
+// 	i = 1;
+// 	k = my_env(all);
+// 	j = fork();
+// 	if (!ft_strcmp(p->str[0], "./sash"))
+// 	{
+// 		j = fork();
+// 		if (j == 0)
+// 		{
+// 			chelvl = check_char(all->env, "SHLVL");
+// 			if (chelvl)
+// 			{	
+// 				chelvl->val = i;
+// 				i++;
+// 			}
+// 			execve(p->str[0], p->str, k);
+// 			perror("");
+// 		}
+		
+// 	}
+// }
