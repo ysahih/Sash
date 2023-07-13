@@ -132,10 +132,10 @@ char	*ft_itoa(int n)
 	if (n == 0)
 		return (ft_strdup("0"));
 	i = ft_count(n);
-	p = malloc(sizeof(char) * i + 1);
+	p = malloc(sizeof(char) * (i + 1));
 	if (!p)
 		return (NULL);
-	--i;
+	p[i--] = '\0';
 	if (n < 0)
 	{
 		p[0] = '-';
@@ -147,6 +147,7 @@ char	*ft_itoa(int n)
 		n = n / 10;
 		i--;
 	}
+	printf("[[%s]]\n", p);
 	return (p);
 }
 
@@ -182,30 +183,42 @@ int	my_atoi(char *str)
 void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 {
 	int		i;
-	int		j;
 	char	**k;
+	char	*str;
 	int		new;
 	t_var	*key;
-	t_var	*shelvl;
+	t_var	*shelvl_ex;
+	t_var	*shelvl_en;
 
 	i = fork();
-	j = 1;
 	// (char *)shelvl;
 	if (i == 0)
-	
+	{
 		if (!ft_strcmp(p->str[0], "./sash"))
 		{
-			shelvl = (check_char(all->env, "SHLVL"));
-			printf("{%s}\n", shelvl->val);
-			new = my_atoi(shelvl->val);
+			shelvl_en = check_char(all->env, "SHLVL");
+			shelvl_ex = check_char(all->exp, "SHLVL");
+			printf("{%s}\n", shelvl_en->val);
+			new = my_atoi(shelvl_en->val);
 			printf("{%d}\n", new);
 			new++;
-			free (shelvl->val);
-			shelvl->val = NULL;
-			shelvl->val = ft_itoa(new);
-			printf("SHLVL 1: {%s}\n", shelvl->val);
+			free (shelvl_en->val);
+			free (shelvl_ex->val);
+			str = ft_itoa(new);
+			shelvl_en->val = NULL;
+			shelvl_en->val = ft_strdup(str);
+			shelvl_ex->val = NULL;
+			shelvl_ex->val = ft_strdup(str);
+			// free(str);
+			printf("SHLVL 1: {%s}\n", str);
 		}
 		k = my_env(all);
+		// int i = 0;
+		// while (k[i])
+		// {
+		// 	printf("k[%d] = {%s}\n", i, k[i]);
+		// 	i++;
+		// }
 		dup2(p->in_fd, 0);
 		dup2(p->out_fd, 1);
 		key = check_char(all->env, "PATH");
@@ -213,7 +226,7 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 			check_path(key, k, p);
 		execve(p->str[0], p->str, k);
 		perror("");
-	
+	}
 	wait(&i);
 }
 
