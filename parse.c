@@ -321,7 +321,7 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 		// line = readline("> ");
 		// if (!line || strcmp(line, (*cmdline)->str) == 0 || g_rd)
 		// {
-		// 	g_rd = 0;
+		// 	// g_rd = 0;
 		// 	break ;
 		// }
 		write(fd[1], line, ft_strlen(line));
