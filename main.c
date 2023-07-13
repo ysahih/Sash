@@ -6,9 +6,9 @@ void	handle_INT(int sig)
 {
 	(void)sig;
 
-	printf("\n");
-	rl_replace_line("", 0);
+	write(1, "\n", 1);
 	rl_on_new_line();
+	rl_replace_line("", 0);
 	rl_redisplay();
 }
 // 	// else
@@ -74,15 +74,19 @@ int	main(int ac, char **av, char **env)
 	t_lexer	*cmd;
 	// t_simple_cmd	*cp;
 	t_all	all;
+	pid_t fg_pid; 
+	int status;
 
 	g_rd = 0;
 	if (ac != 1 || av[1])
 		return (printf("program does not accept agruments"), 0);
 
 	set_env(&all, env);
+	// printf("%d", getpid());
 	while (true)
 	{
 	
+		waitpid(fg_pid, &status, 0);
 		sig_handler();
 		line = readline("sash$ ");
 		if (!line)
