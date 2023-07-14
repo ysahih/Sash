@@ -210,8 +210,15 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 			// return ;
 		}
 		k = my_env(all);
-		// dup2(p->in_fd, 0);
-		// dup2(p->out_fd, 1);
+		if (p->in_fd == -1)
+		{
+			ft_putstr_fd("sash : ", 2);
+			ft_putstr_fd(p->str[1], 2);
+			ft_putstr_fd(": No such file or directory\n", 2);
+			exit(1);
+		}
+		dup2(p->in_fd, 0);
+		dup2(p->out_fd, 1);
 		key = check_char(all->env, "PATH");
 		if (key)
 			check_path(key, k, p);
