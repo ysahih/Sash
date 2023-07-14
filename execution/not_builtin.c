@@ -207,18 +207,19 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 			shelvl_en->val = ft_strdup(str);
 			shelvl_ex->val = NULL;
 			shelvl_ex->val = ft_strdup(str);
-			return ;
+			// return ;
 		}
 		k = my_env(all);
-		dup2(p->in_fd, 0);
-		dup2(p->out_fd, 1);
+		// dup2(p->in_fd, 0);
+		// dup2(p->out_fd, 1);
 		key = check_char(all->env, "PATH");
 		if (key)
 			check_path(key, k, p);
 		execve(p->str[0], p->str, k);
 		perror("");
 	}
-	wait(&i);
+	// else
+	// 	wait(&i);
 }
 
 void	one_cmd_nb(t_all *all, t_simple_cmd *p)

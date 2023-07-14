@@ -12,9 +12,9 @@
 # include <errno.h>
 #include <sys/wait.h>
 
+# define PROMPT "sash"
 
-
-int	g_rd;
+// int	g_rd;
 
 enum	pipe {BEFORE, AFTER};
 enum	operator {WSPACE, PIPE, VAR, WORD, SQUOTE, DQUOTE, OUTRED, INRED, APPEND, HERDOC};

@@ -60,10 +60,10 @@ void	set_env(t_all *all, char **env)
 		lst_var(&all->exp, ft_split(env[i]));
 		i++;
 	}
-	all->env = unset_env("OLDPWD", &all->env);
-	oldpwd = check_char(all->exp, "OLDPWD");
-	free(oldpwd->val);
-	oldpwd->val = NULL;
+	// all->env = unset_env("OLDPWD", &all->env);
+	// oldpwd = check_char(all->exp, "OLDPWD");
+	// free(oldpwd->val);
+	// oldpwd->val = NULL;
 }
 
 
@@ -77,7 +77,7 @@ int	main(int ac, char **av, char **env)
 	pid_t fg_pid; 
 	int status;
 
-	g_rd = 0;
+	// g_rd = 0;
 	if (ac != 1 || av[1])
 		return (printf("program does not accept agruments"), 0);
 

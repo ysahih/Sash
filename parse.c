@@ -335,7 +335,7 @@ int	event(void)
 void	hd_sig(int sig)
 {
 	(void)sig;
-	g_rd = 1;
+	// g_rd = 1;
 	rl_done = 1;
 }
 
@@ -358,11 +358,11 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 	while(true)
 	{
 		line = readline("> ");
-		if (!line || strcmp(line, s) == 0 || g_rd)
-		{
-			g_rd = 0;
-			break ;
-		}
+		// if (!line || strcmp(line, s) == 0 || g_rd)
+		// {
+		// 	g_rd = 0;
+		// 	break ;
+		// }
 		write(fd[1], line, ft_strlen(line));
 		write(fd[1], "\n", 1);
 	}
