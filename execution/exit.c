@@ -6,13 +6,13 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 17:41:06 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/12 20:43:23 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/14 08:25:28 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_atoi(const char *str)
+int	ft_atoi(char *str)
 {
 	int		i;
 	int		s;
