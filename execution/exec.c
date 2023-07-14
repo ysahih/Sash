@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/12 20:01:42 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/14 08:39:11 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,49 +62,55 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp)
 		if (i == 0)
 		{
 			dup2(f_d, 0);
-			if (tmp->next)
-			{
-				if (tmp->out_fd == 1)
-					dup2(fd[1], 1);
-				else
-					dup2(tmp->out_fd, 1);
+			close(f_d);
+			if (tmp->next) {
+				dup2(fd[1], tmp->out_fd);
+				close(fd[0]);
+				close(fd[1]);
 			}
-			if (tmp->in_fd == 0)
-				dup2(fd[0], 0);
-			else
-				dup2(tmp->in_fd, 0);
-			close(fd[1]);
-			close(fd[0]);
+			// else {
+			// 	dup2(fd[0], tmp->in_fd);
+			// 	close(fd[1]);
+			// }
+			// {
+			// 	if (tmp->out_fd == 1)
+			// 		dup2(fd[1], 1);
+			// 	else
+			// 		dup2(tmp->out_fd, 1);
+			// }
+			// close(fd[1]);
+			// close(fd[0]);
 			if (is_builting(tmp))
 				one_cmd(all, tmp);
-			else 
-			{
-				one_cmd_nb(all, tmp);
-			}
-			if (tmp->next)
-			{
-				close(fd[1]);
-				close(fd[0]);
-			}
 			else
-			{
-				close(0);
-				close(fd[0]);
-				close(fd[1]);
-			}
+				one_cmd_nb(all, tmp);
+			// if (tmp->next)
+			// {
+			// 	close(fd[1]);
+			// 	close(fd[0]);
+			// }
+			// else
+			// {
+			// 	close(0);
+			// 	close(fd[0]);
+			// 	close(fd[1]);
+			// }
 		}
 		else
 		{
-			close(fd[1]);
-			f_d = fd[0];
-			if (tmp && !tmp->next)
+			if (tmp->next) {
+				dup2(fd[0], f_d);
 				close(fd[0]);
+				close(fd[1]);
+			} else {
+				dup2(0, f_d);
+			}
 		}
 		tmp = tmp->next;
 	}
 	while (t)
 	{
-		if (!is_builting(t))
+		// if (!is_builting(t))
 			wait(&f);
 		t = t->next;
 	}
@@ -117,7 +123,7 @@ int	exec(t_all *all)
 	t_simple_cmd	*tmp;
 
 	i = 0;
-	fd = dup(0);
+	// fd = dup(0);
 	if (!all->cmd)
 		return (0);
 	tmp = all->cmd;
@@ -127,7 +133,6 @@ int	exec(t_all *all)
 		one_cmd(all, tmp);
 	else
 		many_cmds(all, tmp);
-	dup2(fd, 0);
+	// dup2(fd, 0);
 	return (0);
 }
-

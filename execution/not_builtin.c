@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/12 20:04:17 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/14 08:41:47 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,27 +102,123 @@ void	check_path(t_var *key, char **k, t_simple_cmd *p)
 	execve(p->str[0], p->str, k);
 }
 
+static	int	ft_count(int n)
+{
+	int	i;
+
+	i = 0;
+	if (n == 0)
+		return (1);
+	if (n < 0)
+	{
+		i++;
+		n *= -1;
+	}
+	while (n)
+	{
+		n = n / 10;
+		i++;
+	}
+	return (i);
+}
+
+char	*ft_itoa(int n)
+{
+	char	*p;
+	int		i;
+
+	if (n == -2147483648)
+		return (ft_strdup("-2147483648"));
+	if (n == 0)
+		return (ft_strdup("0"));
+	i = ft_count(n);
+	p = malloc(sizeof(char) * (i + 1));
+	if (!p)
+		return (NULL);
+	p[i--] = '\0';
+	if (n < 0)
+	{
+		p[0] = '-';
+		n *= -1;
+	}
+	while (n)
+	{
+		p[i] = (n % 10) + 48;
+		n = n / 10;
+		i--;
+	}
+	return (p);
+}
+
+
+int	my_atoi(char *str)
+{
+	int	i;
+	int	s;
+	int	n;
+
+	s = 1;
+	i = 0;
+	n = 0;
+	while ((str[i] >= 9 && str[i] <= 13) || (str[i] == ' '))
+	{
+		i++;
+	}
+	if (str[i] == '+' || str[i] == '-')
+	{
+		if (str[i] == '-')
+			(s *= -1);
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		n = (n * 10) + str[i] - 48;
+		i++;
+	}
+	return (n * s);
+}
+
 
 void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 {
 	int		i;
 	char	**k;
+	char	*str;
+	int		new;
 	t_var	*key;
+	t_var	*shelvl_ex;
+	t_var	*shelvl_en;
 
 	i = fork();
 	if (i == 0)
 	{
+		if (!ft_strcmp(p->str[0], "./sash"))
+		{
+			shelvl_en = check_char(all->env, "SHLVL");
+			shelvl_ex = check_char(all->exp, "SHLVL");
+			dup2(p->in_fd, 0);
+			dup2(p->out_fd, 1);
+			new = my_atoi(shelvl_en->val);
+			new++;
+			free (shelvl_en->val);
+			free (shelvl_ex->val);
+			str = ft_itoa(new);
+			shelvl_en->val = NULL;
+			shelvl_en->val = ft_strdup(str);
+			shelvl_ex->val = NULL;
+			shelvl_ex->val = ft_strdup(str);
+			return ;
+		}
+		k = my_env(all);
 		dup2(p->in_fd, 0);
 		dup2(p->out_fd, 1);
-		k = my_env(all);
 		key = check_char(all->env, "PATH");
 		if (key)
 			check_path(key, k, p);
 		execve(p->str[0], p->str, k);
 		perror("");
 	}
-	else
-		wait(&i);
+	wait(&i);
 }
 
 void	one_cmd_nb(t_all *all, t_simple_cmd *p)
@@ -138,3 +234,4 @@ void	one_cmd_nb(t_all *all, t_simple_cmd *p)
 	execve(p->str[0], p->str, k);
 	perror("");
 }
+
