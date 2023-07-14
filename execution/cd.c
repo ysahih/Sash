@@ -93,7 +93,7 @@ void	swap_success(t_all *all, t_pwd *pwd)
 {
 	char	*val;
 
-	if (!pwd->pwd_en | ! pwd->pwd_ex)
+	if (!pwd->pwd_en | !pwd->pwd_ex)
 		return (ft_putstr_fd("sash: cd: PWD not set\n", 2));
 	else
 	{
@@ -108,32 +108,32 @@ void	swap_success(t_all *all, t_pwd *pwd)
 		pwd->oldpwd_ex->val = ft_strdup(val);
 		free(val);
 	}
-	return (0);
 }
 
 int	cd_swap(t_all *all)
 {
 	t_simple_cmd	*p;
-	t_pwd			pwd;
+	t_pwd			pd;
 	char			*val;
 	int				err;
 
 	p = all->cmd;
 	err = -1;
-	pwd.oldpwd_en = check_char(all->env, "OLDPWD");
-	pwd.oldpwd_ex = check_char(all->exp, "OLDPWD");
-	if (!pwd.oldpwd_en || !pwd.oldpwd_ex)
+	pd.oldpwd_en = check_char(all->env, "OLDPWD");
+	pd.oldpwd_ex = check_char(all->exp, "OLDPWD");
+	if (!pd.oldpwd_en || !pd.oldpwd_ex)
 		return (ft_putstr_fd("sash: cd: OLDPWD not set\n", 2), 0);
 	else
-		err = chdir(pwd.oldpwd_en->val);
+		err = chdir(pd.oldpwd_en->val);
 	if (err == 0)
 	{
-		pwd.pwd_en = check_char(all->env, "PWD");
-		pwd.pwd_ex = check_char(all->exp, "PWD");
-		swap_success(all, &pwd);
+		pd.pwd_en = check_char(all->env, "PWD");
+		pd.pwd_ex = check_char(all->exp, "PWD");
+		swap_success(all, &pd);
+		pwd(all);
 	}
 	else
-		cd_error(pwd.oldpwd_en->val, p->str[1]);
+		cd_error(pd.oldpwd_en->val, p->str[1]);
 	return (0);
 }
 

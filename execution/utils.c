@@ -85,7 +85,7 @@ char	**my_env(t_all *all)
 
 	i = 0;
 	len = 0;
-	p = all->env;
+	p = all->exp;
 	while (p)
 	{
 		len++;

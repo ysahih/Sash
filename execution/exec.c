@@ -25,7 +25,7 @@ void	one_cmd(t_all *all, t_simple_cmd *tmp)
 	else if (!ft_strcmp(tmp->str[0] , "unset"))
 		unset(tmp, &all->env, &all->exp);
 	else if (!ft_strcmp(tmp->str[0], "exit"))
-		ex_it (all);
+		ex_it(all);
 	else if (!ft_strcmp(tmp->str[0], "cd"))
 		cd (all);
 	else
