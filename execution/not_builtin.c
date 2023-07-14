@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/13 13:47:20 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/14 08:32:16 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,6 @@ char	*ft_itoa(int n)
 		n = n / 10;
 		i--;
 	}
-	printf("[[%s]]\n", p);
 	return (p);
 }
 
@@ -191,16 +190,15 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 	t_var	*shelvl_en;
 
 	i = fork();
-	// (char *)shelvl;
 	if (i == 0)
 	{
 		if (!ft_strcmp(p->str[0], "./sash"))
 		{
 			shelvl_en = check_char(all->env, "SHLVL");
 			shelvl_ex = check_char(all->exp, "SHLVL");
-			printf("{%s}\n", shelvl_en->val);
+			dup2(p->in_fd, 0);
+			dup2(p->out_fd, 1);
 			new = my_atoi(shelvl_en->val);
-			printf("{%d}\n", new);
 			new++;
 			free (shelvl_en->val);
 			free (shelvl_ex->val);
@@ -209,16 +207,9 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 			shelvl_en->val = ft_strdup(str);
 			shelvl_ex->val = NULL;
 			shelvl_ex->val = ft_strdup(str);
-			// free(str);
-			printf("SHLVL 1: {%s}\n", str);
+			return ;
 		}
 		k = my_env(all);
-		// int i = 0;
-		// while (k[i])
-		// {
-		// 	printf("k[%d] = {%s}\n", i, k[i]);
-		// 	i++;
-		// }
 		dup2(p->in_fd, 0);
 		dup2(p->out_fd, 1);
 		key = check_char(all->env, "PATH");
@@ -244,30 +235,3 @@ void	one_cmd_nb(t_all *all, t_simple_cmd *p)
 	perror("");
 }
 
-// void chelvl(t_all *all, t_simple_cmd *p)
-// {
-// 	int 	i;
-// 	int 	j;
-// 	t_var	*chelvl;
-// 	char	**k;
-
-// 	i = 1;
-// 	k = my_env(all);
-// 	j = fork();
-// 	if (!ft_strcmp(p->str[0], "./sash"))
-// 	{
-// 		j = fork();
-// 		if (j == 0)
-// 		{
-// 			chelvl = check_char(all->env, "SHLVL");
-// 			if (chelvl)
-// 			{	
-// 				chelvl->val = i;
-// 				i++;
-// 			}
-// 			execve(p->str[0], p->str, k);
-// 			perror("");
-// 		}
-		
-// 	}
-// }
