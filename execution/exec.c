@@ -68,33 +68,10 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp)
 				close(fd[0]);
 				close(fd[1]);
 			}
-			// else {
-			// 	dup2(fd[0], tmp->in_fd);
-			// 	close(fd[1]);
-			// }
-			// {
-			// 	if (tmp->out_fd == 1)
-			// 		dup2(fd[1], 1);
-			// 	else
-			// 		dup2(tmp->out_fd, 1);
-			// }
-			// close(fd[1]);
-			// close(fd[0]);
 			if (is_builting(tmp))
 				one_cmd(all, tmp);
 			else
 				one_cmd_nb(all, tmp);
-			// if (tmp->next)
-			// {
-			// 	close(fd[1]);
-			// 	close(fd[0]);
-			// }
-			// else
-			// {
-			// 	close(0);
-			// 	close(fd[0]);
-			// 	close(fd[1]);
-			// }
 		}
 		else
 		{
