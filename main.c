@@ -72,7 +72,7 @@ int	main(int ac, char **av, char **env)
 {
 	char	*line;
 	t_lexer	*cmd;
-	t_simple_cmd	*cp;
+	// t_simple_cmd	*cp;
 	t_all	all;
 	pid_t fg_pid; 
 	int status;
@@ -105,8 +105,14 @@ int	main(int ac, char **av, char **env)
 		cp = all.cmd;
 		while (cp)
 		{
+		// 	int i = 0;
 			int i = 0;
 			printf("in : %d\nout : %d\nerr : %d\n", cp->in_fd, cp->out_fd, cp->err);
+		// 	while (cp->str[i])
+		// 	{
+		// 		printf("%s\n", cp->str[i]);
+		// 		i++;
+		// 	}
 			while (cp->str[i])
 			{
 				printf("%s\n", cp->str[i]);
