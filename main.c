@@ -102,18 +102,18 @@ int	main(int ac, char **av, char **env)
 		if (!analyze_syntax(cmd))
 			continue ;
 		parse(&all, cmd);
-		cp = all.cmd;
-		while (cp)
-		{
-			int i = 0;
-			printf("in : %d\nout : %d\nerr : %d\n", cp->in_fd, cp->out_fd, cp->err);
-			while (cp->str[i])
-			{
-				printf("%s\n", cp->str[i]);
-				i++;
-			}
-			cp = cp->next;
-		}
+		// cp = all.cmd;
+		// while (cp)
+		// {
+		// 	int i = 0;
+		// 	printf("in : %d\nout : %d\nerr : %d\n", cp->in_fd, cp->out_fd, cp->err);
+		// 	while (cp->str[i])
+		// 	{
+		// 		printf("%s\n", cp->str[i]);
+		// 		i++;
+		// 	}
+		// 	cp = cp->next;
+		// }
 		exec(&all);
 	}
 }
