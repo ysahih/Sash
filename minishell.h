@@ -16,7 +16,14 @@
 
 // int	g_rd;
 
-enum	pipe {BEFORE, AFTER};
+typedef struct s_global
+{
+	int	rl;
+	int exit_status;
+} t_global;
+t_global	gl;
+
+// enum	pipe {BEFORE, AFTER};
 enum	operator {WSPACE, PIPE, VAR, WORD, SQUOTE, DQUOTE, OUTRED, INRED, APPEND, HERDOC};
 				// 0      1     2     3     4       5      6                        9
 
