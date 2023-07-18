@@ -337,7 +337,7 @@ void	hd_sig(int sig)
 {
 	(void)sig;
 	// gl.rl = 1;
-	rl_done = 1;
+	// rl_done = 1;
 }
 
 void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
@@ -351,7 +351,7 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 		(*scmd)->err = errno;
 		return ;
 	}
-	rl_event_hook = event;
+	// rl_event_hook = event;
 	signal(SIGINT, hd_sig);
 	(*cmdline) = (*cmdline)->next;
 	s = ft_strdup("");
