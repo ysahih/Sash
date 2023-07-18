@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/18 08:57:03 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/18 11:04:43 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp)
 	int				i;
 	int				f;
 	int				fd[2];
-	int				f_d;
 	t_simple_cmd	*t;
 
 	t = tmp;
@@ -61,26 +60,29 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp)
 		i = fork();
 		if (i == 0)
 		{
-			dup2(f_d, 0);
-			close(f_d);
 			if (tmp->next) {
 				dup2(fd[1], tmp->out_fd);
 				close(fd[0]);
 				close(fd[1]);
 			}
 			if (is_builting(tmp))
+			{
+				// gl.exit_status = 
 				one_cmd(all, tmp);
+				exit(0);
+			}
 			else
 				one_cmd_nb(all, tmp);
 		}
 		else
 		{
 			if (tmp->next) {
-				dup2(fd[0], f_d);
+				dup2(fd[0], tmp->in_fd);
 				close(fd[0]);
 				close(fd[1]);
 			} else {
-				dup2(0, f_d);
+				dup2(0, tmp->in_fd);
+				close(0);
 			}
 		}
 		tmp = tmp->next;
@@ -89,6 +91,11 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp)
 	{
 		// if (!is_builting(t))
 		wait(&f);
+		//signals
+		// if (WIFSIGNALED(f) == QUIT)
+			
+		// if (WTERMSIG(f) == TERM)
+		// 	exit = 130;
 		t = t->next;
 	}
 }
@@ -104,6 +111,7 @@ int	exec(t_all *all)
 	if (!all->cmd)
 		return (0);
 	tmp = all->cmd;
+	fd = dup(0);
 	if (!*(tmp->str))
 	{
 		if (tmp->err)
@@ -118,6 +126,6 @@ int	exec(t_all *all)
 		one_cmd(all, tmp);
 	else
 		many_cmds(all, tmp);
-
+	dup2(fd, 0);
 	return (0);
 }

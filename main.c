@@ -10,13 +10,13 @@ void	handle_INT(int sig)
 	waitpid(0, NULL, WNOHANG);
 	write(1, "\n", 1);
 	rl_on_new_line();
-	rl_replace_line("", 0);
+	// rl_replace_line("", 0);
 	rl_redisplay();
 }
 
 void	sig_handler()
 {
-	rl_catch_signals = 0;
+	// rl_catch_signals = 0;
 	signal(SIGINT, handle_INT);
 	signal(SIGQUIT, SIG_IGN);
 }
