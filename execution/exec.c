@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/18 07:52:41 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/18 08:57:03 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	exec(t_all *all)
 	t_simple_cmd	*tmp;
 
 	i = 0;
-	// fd = dup(0);
+	gl.rl = 1;
 	if (!all->cmd)
 		return (0);
 	tmp = all->cmd;

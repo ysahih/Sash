@@ -20,6 +20,7 @@ typedef struct s_global
 {
 	int	rl;
 	int exit_status;
+	int runing;
 } t_global;
 t_global	gl;
 
