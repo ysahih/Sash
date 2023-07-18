@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/14 08:39:11 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/18 07:52:41 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp)
 	while (t)
 	{
 		// if (!is_builting(t))
-			wait(&f);
+		wait(&f);
 		t = t->next;
 	}
 }
@@ -105,11 +105,19 @@ int	exec(t_all *all)
 		return (0);
 	tmp = all->cmd;
 	if (!*(tmp->str))
+	{
+		if (tmp->err)
+		{	
+			ft_putstr_fd("sash : ", 2);
+			ft_putstr_fd(strerror(tmp->err), 2);
+			ft_putstr_fd("\n", 2);
+		}
 		return (0);
+	}
 	if (!tmp->next)
 		one_cmd(all, tmp);
 	else
 		many_cmds(all, tmp);
-	// dup2(fd, 0);
+
 	return (0);
 }

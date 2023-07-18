@@ -4,6 +4,7 @@
         "*.excalidrawlib": "json",
         "__locale": "c",
         "cctype": "c",
-        "locale": "c"
+        "locale": "c",
+        "filesystem": "c"
     }
 }

@@ -20,7 +20,11 @@ bool	pipe_checker(t_lexer *cmd, int i)
 
 void	print_err(char *s)
 {
-	printf("sash: syntax error near unexpected token `%s'\n", s);
+	// printf("sash: syntax error near unexpected token `%s'\n", s);
+	ft_putstr_fd("sash: syntax error near unexpected token '", 2);
+	ft_putstr_fd(s, 2);
+	ft_putstr_fd("'\n", 2);
+	gl.exit_status = 258;
 }
 
 bool	pipe_analyze(t_lexer *cmd)
@@ -50,7 +54,8 @@ bool	analyze_quote(t_lexer **node, int flag)
 	cmd = *node;
 	if (!cmd->next)
 	{
-		printf("sash: syntax error: unexpected end of file\n");
+		ft_putstr_fd("sash: syntax error: unexpected end of file\n", 2);
+		gl.exit_status = 258;
 		return false ;
 	}
 	cmd = cmd->next;
@@ -59,7 +64,8 @@ bool	analyze_quote(t_lexer **node, int flag)
 	*node = cmd;
 	if (!cmd)
 	{
-		printf("sash: syntax error: unexpected end of file\n");
+		ft_putstr_fd("sash: syntax error: unexpected end of file\n", 2);
+		gl.exit_status = 258;
 		return false ;
 	}
 	return true;
@@ -75,6 +81,7 @@ bool	red_analyze(t_lexer *cmd)
 			print_err(cmd->next->str);
 		else
 			print_err("newline");
+	
 		return (false);
 	}
 	return (true);

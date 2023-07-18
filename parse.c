@@ -269,21 +269,22 @@ void	lst_var(t_var **var, char **s)
 char	*find_var(t_var *var, char *str)
 {
 	char	*val;
-	// bool	flag;
+
 
 	val = NULL;
-	// flag = false;
+	// if (str[0] == '?')
+	// {
+	// 	val = ft_strdup();
+	// }
 	while (var)
 	{
 		if (!strcmp(var->key, str))
 		{
 			val = var->val;
-			// flag = true;
 		}
 		var = var->next;
 	}
-	// if (!flag)
-	// 	return NULL;
+
 	return (val);
 }
 
@@ -335,7 +336,7 @@ int	event(void)
 void	hd_sig(int sig)
 {
 	(void)sig;
-	// g_rd = 1;
+	gl.rl = 1;
 	rl_done = 1;
 }
 
@@ -348,6 +349,7 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 	if (pipe(fd) == -1)
 	{
 		(*scmd)->err = errno;
+		return ;
 	}
 	rl_event_hook = event;
 	signal(SIGINT, hd_sig);
@@ -358,11 +360,11 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 	while(true)
 	{
 		line = readline("> ");
-		// if (!line || strcmp(line, s) == 0 || g_rd)
-		// {
-		// 	g_rd = 0;
-		// 	break ;
-		// }
+		if (!line || strcmp(line, s) == 0 || gl.rl)
+		{
+			gl.rl = 0;
+			break ;
+		}
 		write(fd[1], line, ft_strlen(line));
 		write(fd[1], "\n", 1);
 	}
@@ -374,25 +376,33 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd, int red)
 {
 	(*cmdline) = (*cmdline)->next;
-	if (!(*cmdline) || ((*cmdline) && (*cmdline)->type == -2))
-	{
-		printf("sash: : No such file or directory\n");
-		(*cmd)->err = -1;
-		if ((*cmdline))
-			(*cmdline) = (*cmdline)->next;
-		return ;
-	}
+	// if (!(*cmdline) || ((*cmdline) && (*cmdline)->type == -2))
+	// {
+	// 	ft_putstr_fd("sash: : No such file or directory\n", 2);
+	// 	(*cmd)->err = 0;
+	// 	if ((*cmdline))
+	// 		(*cmdline) = (*cmdline)->next;
+	// 	return ;
+	// }
 	if (red == OUTRED)
 	{
 		(*cmd)->out_fd = open((*cmdline)->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if((*cmd)->out_fd < 0)
 			(*cmd)->err = errno;
+
 	}
 	else if (red == INRED)
 	{
 		(*cmd)->in_fd = open((*cmdline)->str, O_RDONLY, 0644);
 		if((*cmd)->in_fd < 0)
+		{
 			(*cmd)->err = errno;
+			// if (errno == 2)
+			// {
+			// 	// ft_putstr_fd("sash: : No such file or directory\n", 2);
+			// 	(*cmd)->err = 0;
+			// }
+		}
 	}
 	else if (red == APPEND)
 	{
@@ -455,7 +465,8 @@ void	parse(t_all *all, t_lexer *cmdline)
 		cmd = cmd->next;
 	if (!cmd || (cmd && cmd->type == WSPACE))
 	{
-		printf("sash: : command not found\n");
+		ft_putstr_fd("sash: : command not found\n", 2);
+		gl.exit_status = 127;
 		while (cmd && cmd->type != PIPE)
 			cmd = cmd->next;
 		if (cmd && cmd->type == PIPE)
@@ -466,17 +477,19 @@ void	parse(t_all *all, t_lexer *cmdline)
 	cmd = rm_space(cmd);
 	while(cmd)
 		add_scmd(&scmd, collect_scmds(&cmd));
+
+
 	all->cmd = scmd;
 
-	// while (cmd)
+	// while (scmd)
 	// {
 		
-	// 	printf("--\n");
+	
 		
-	// 	printf("=%s=\n", cmd->str);
+	// 	printf("=%d=\n", scmd->err);
 			
 		
-	// 	printf("--\n");
-	// 	cmd = cmd->next;
+	
+	// 	scmd = scmd->next;
 	// }
 }

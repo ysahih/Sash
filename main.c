@@ -11,23 +11,7 @@ void	handle_INT(int sig)
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
-// 	// else
-// 	// {
-// 		// g_interrupte = 1;
-// 		// rl_catch_signals = 0;
-// 		// printf("\n");
-// 		// rl_on_new_line();
-// 		// rl_replace_line("", 0);
-// 		// rl_redisplay();
-// 		// return ;
-// 	// }
-	
-// }
 
-// void	handle_QUIT()
-// {
-	
-// }
 void	sig_handler()
 {
 	rl_catch_signals = 0;
@@ -72,21 +56,15 @@ int	main(int ac, char **av, char **env)
 {
 	char	*line;
 	t_lexer	*cmd;
-	// t_simple_cmd	*cp;
 	t_all	all;
-	pid_t fg_pid; 
-	int status;
 
-	// g_rd = 0;
 	if (ac != 1 || av[1])
-		return (printf("program does not accept agruments"), 0);
+		return (printf("program does not accept agruments\n"), 0);
 
 	set_env(&all, env);
-	// printf("%d", getpid());
+
 	while (true)
 	{
-	
-		waitpid(fg_pid, &status, 0);
 		sig_handler();
 		line = readline("sash$ ");
 		if (!line)
@@ -100,26 +78,11 @@ int	main(int ac, char **av, char **env)
 		}
 		cmd = tokenize(line);
 		if (!analyze_syntax(cmd))
-			continue ;
-		parse(&all, cmd);
-		cp = all.cmd;
-		while (cp)
 		{
-		// 	int i = 0;
-			int i = 0;
-			printf("in : %d\nout : %d\nerr : %d\n", cp->in_fd, cp->out_fd, cp->err);
-		// 	while (cp->str[i])
-		// 	{
-		// 		printf("%s\n", cp->str[i]);
-		// 		i++;
-		// 	}
-			while (cp->str[i])
-			{
-				printf("%s\n", cp->str[i]);
-				i++;
-			}
-			cp = cp->next;
+			printf("%d\n", gl.exit_status);
+			continue ;
 		}
+		parse(&all, cmd);
 		exec(&all);
 	}
 }

@@ -169,7 +169,7 @@ t_lexer	*tokenize(char *line)
 			get_token(&node, &line, -1);
 		else if (*line == '>'|| *line == '<')
 			tokenize_red(&node, &line);
-		else if (*line == '$' && *(line + 1) && valid_var(*(line + 1)))
+		else if (*line == '$' && *(line + 1) && (valid_var(*(line + 1) || *(line + 1) == '?')))
 			tokenize_var(&node, &line);
 		else
 			tokenize_word(&node, &line);

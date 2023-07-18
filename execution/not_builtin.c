@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/14 08:41:47 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/18 07:11:32 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,11 @@ int	my_atoi(char *str)
 	return (n * s);
 }
 
+void	sigreset(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
 
 void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 {
@@ -194,6 +199,7 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 	{
 		if (!ft_strcmp(p->str[0], "./sash"))
 		{
+			sigreset();
 			shelvl_en = check_char(all->env, "SHLVL");
 			shelvl_ex = check_char(all->exp, "SHLVL");
 			dup2(p->in_fd, 0);
@@ -210,11 +216,11 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 			// return ;
 		}
 		k = my_env(all);
-		if (p->in_fd == -1)
+		if (p->err)
 		{
 			ft_putstr_fd("sash : ", 2);
-			ft_putstr_fd(p->str[1], 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
+			ft_putstr_fd(strerror(p->err), 2);
+			ft_putstr_fd("\n", 2);
 			exit(1);
 		}
 		dup2(p->in_fd, 0);
@@ -226,7 +232,7 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 		perror("");
 	}
 	// else
-	// 	wait(&i);
+		wait(&i);
 }
 
 void	one_cmd_nb(t_all *all, t_simple_cmd *p)
