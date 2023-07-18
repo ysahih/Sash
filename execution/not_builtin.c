@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/18 07:11:32 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/18 08:07:18 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,9 +197,9 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 	i = fork();
 	if (i == 0)
 	{
+		sigreset();
 		if (!ft_strcmp(p->str[0], "./sash"))
 		{
-			sigreset();
 			shelvl_en = check_char(all->env, "SHLVL");
 			shelvl_ex = check_char(all->exp, "SHLVL");
 			dup2(p->in_fd, 0);
@@ -231,8 +231,7 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 		execve(p->str[0], p->str, k);
 		perror("");
 	}
-	// else
-		wait(&i);
+	wait(&i);
 }
 
 void	one_cmd_nb(t_all *all, t_simple_cmd *p)
