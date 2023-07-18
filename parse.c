@@ -336,7 +336,7 @@ int	event(void)
 void	hd_sig(int sig)
 {
 	(void)sig;
-	gl.rl = 1;
+	// gl.rl = 1;
 	rl_done = 1;
 }
 
@@ -360,9 +360,9 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 	while(true)
 	{
 		line = readline("> ");
-		if (!line || strcmp(line, s) == 0 || gl.rl)
+		if (!line || strcmp(line, s) == 0)
 		{
-			gl.rl = 0;
+			// gl.rl = 0;
 			break ;
 		}
 		write(fd[1], line, ft_strlen(line));
@@ -467,7 +467,7 @@ void	parse(t_all *all, t_lexer *cmdline)
 	if (!cmd || (cmd && cmd->type == WSPACE))
 	{
 		ft_putstr_fd("sash: : command not found\n", 2);
-		gl.exit_status = 127;
+		// gl.exit_status = 127;
 		while (cmd && cmd->type != PIPE)
 			cmd = cmd->next;
 		if (cmd && cmd->type == PIPE)
