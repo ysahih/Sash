@@ -14,7 +14,7 @@
 
 # define PROMPT "sash"
 
-// int	g_rd;
+
 
 typedef struct s_global
 {
@@ -25,11 +25,9 @@ typedef struct s_global
 t_global	gl;
 
 // enum	pipe {BEFORE, AFTER};
+
 enum	operator {WSPACE, PIPE, VAR, WORD, SQUOTE, DQUOTE, OUTRED, INRED, APPEND, HERDOC};
 				// 0      1     2     3     4       5      6                        9
-
-// # define SC  " \t\n!%*\"'+,-./\\:;<=>?@[]~^`|$"
-// # define NOTWORD " \t\r\n\"'\v\f|<>$/"
 
 typedef struct s_lexer
 {

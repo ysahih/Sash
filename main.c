@@ -10,13 +10,13 @@ void	handle_INT(int sig)
 	waitpid(0, NULL, WNOHANG);
 	write(1, "\n", 1);
 	rl_on_new_line();
-	// rl_replace_line("", 0);
+	rl_replace_line("", 0);
 	rl_redisplay();
 }
 
 void	sig_handler()
 {
-	// rl_catch_signals = 0;
+	rl_catch_signals = 0;
 	signal(SIGINT, handle_INT);
 	signal(SIGQUIT, SIG_IGN);
 }
@@ -47,11 +47,6 @@ void	set_env(t_all *all, char **env)
 		lst_var(&all->exp, ft_split(env[i]));
 		i++;
 	}
-
-	// all->env = unset_env("OLDPWD", &all->env);
-	// oldpwd = check_char(all->exp, "OLDPWD");
-	// free(oldpwd->val);
-	// oldpwd->val = NULL;
 }
 
 
