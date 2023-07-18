@@ -368,6 +368,7 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 		write(fd[1], line, ft_strlen(line));
 		write(fd[1], "\n", 1);
 	}
+	close(fd[1]);
 	if ((*cmdline))
 		(*cmdline) = (*cmdline)->next;
 	(*scmd)->in_fd = fd[0];

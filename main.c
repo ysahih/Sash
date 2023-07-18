@@ -7,7 +7,7 @@ void	handle_INT(int sig)
 	(void)sig;
 	if (gl.rl)
 		return ;
-	waitpid(0, NULL, WNOHANG);
+	// waitpid(0, NULL, WNOHANG);
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
