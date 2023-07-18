@@ -128,6 +128,26 @@ void	tokenize_red(t_lexer **node, char **s)
 	*s = line;
 }
 
+void	get_token(t_lexer **node, char **line, int type)
+{
+	if (type == PIPE)
+	{
+		create_node(node, "|", PIPE);
+		(*line)++;
+	}
+	if (type == WSPACE)
+	{
+		create_node(node, " ", WSPACE);
+		while (**line == ' ')
+			(*line)++;
+	}
+	if (type == -1)
+	{
+		create_node(node, "*", -1);
+		(*line)++;
+	}
+}
+
 t_lexer	*tokenize(char *line)
 {
 	t_lexer *node;
@@ -138,28 +158,18 @@ t_lexer	*tokenize(char *line)
 	while (*line)
 	{
 		if (*line == ' ')
-		{
-			create_node(&node, " ", WSPACE);
-			while (*line == ' ')
-				line++;
-		}
+			get_token(&node, &line, WSPACE);
 		else if (*line == '|')
-		{
-			create_node(&node, "|", PIPE);
-			line++;
-		}
+			get_token(&node, &line, PIPE);
 		else if (*line == '"')
 			tokenize_dquote(&node, &line);
 		else if (*line == '\'')
 			tokenize_squote(&node, &line);
 		else if (*line == '*')
-		{
-			create_node(&node, "*", -1);
-			line++;
-		}
+			get_token(&node, &line, -1);
 		else if (*line == '>'|| *line == '<')
 			tokenize_red(&node, &line);
-		else if (*line == '$' && *(line + 1) && valid_var(*(line + 1)))
+		else if (*line == '$' && *(line + 1) && (valid_var(*(line + 1) || *(line + 1) == '?')))
 			tokenize_var(&node, &line);
 		else
 			tokenize_word(&node, &line);

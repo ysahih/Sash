@@ -2,6 +2,9 @@
 *.d
  .vscode/
  a.out
+ TODO
+
+ .tldr
 # Object files
 *.o
 *.ko

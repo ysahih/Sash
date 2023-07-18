@@ -5,28 +5,13 @@
 void	handle_INT(int sig)
 {
 	(void)sig;
-	printf("\n");
+
+	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
-// 	// else
-// 	// {
-// 		// g_interrupte = 1;
-// 		// rl_catch_signals = 0;
-// 		// printf("\n");
-// 		// rl_on_new_line();
-// 		// rl_replace_line("", 0);
-// 		// rl_redisplay();
-// 		// return ;
-// 	// }
-	
-// }
 
-// void	handle_QUIT()
-// {
-	
-// }
 void	sig_handler()
 {
 	rl_catch_signals = 0;
@@ -59,10 +44,10 @@ void	set_env(t_all *all, char **env)
 		lst_var(&all->exp, ft_split(env[i]));
 		i++;
 	}
-	all->env = unset_env("OLDPWD", &all->env);
-	oldpwd = check_char(all->exp, "OLDPWD");
-	free(oldpwd->val);
-	oldpwd->val = NULL;
+	// all->env = unset_env("OLDPWD", &all->env);
+	// oldpwd = check_char(all->exp, "OLDPWD");
+	// free(oldpwd->val);
+	// oldpwd->val = NULL;
 }
 
 
@@ -70,40 +55,34 @@ void	set_env(t_all *all, char **env)
 int	main(int ac, char **av, char **env)
 {
 	char	*line;
-	// char	**cpy;
 	t_lexer	*cmd;
-	// t_simple_cmd	*cp;
 	t_all	all;
 
-	// cpy = env;
-	g_rd = 0;
 	if (ac != 1 || av[1])
-		return (printf("program does not accept agruments"), 0);
+		return (printf("program does not accept agruments\n"), 0);
 
 	set_env(&all, env);
+
 	while (true)
 	{
-	
 		sig_handler();
 		line = readline("sash$ ");
 		if (!line)
-			break ;
+			break;
 		if (*line)
 			add_history(line);
+		else
+		{
+			free(line);
+			continue;
+		}
 		cmd = tokenize(line);
-
 		if (!analyze_syntax(cmd))
 		{
-			write (1, "syntax error\n", 13);
+			printf("%d\n", gl.exit_status);
 			continue ;
 		}
 		parse(&all, cmd);
-		// cp = all.cmd;
-		// while (cp)
-		// {
-		// 	printf("in : %d\nout : %d\nerr : %d\n", cp->in_fd, cp->out_fd, cp->err);
-		// 	cp = cp->next;
-		// }
 		exec(&all);
 	}
 }

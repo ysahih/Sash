@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.excalidraw": "json",
+        "*.excalidrawlib": "json",
+        "__locale": "c",
+        "cctype": "c",
+        "locale": "c",
+        "filesystem": "c"
+    }
+}
