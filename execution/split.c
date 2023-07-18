@@ -91,8 +91,6 @@ char	**ft_split(char const *s, char c)
 	char	*ptr;
 	int		len;
 
-	if (!s)
-		return (NULL);
 	i = 0;
 	p = malloc(sizeof(char *) * (calcule_mot(s, c) + 1));
 	if (!p)
