@@ -1,1 +1,12 @@
 exit message when exiting with long number (> ull) : 9223372036854775807
+
+echo printing without spaces 
+
+unclosed processes
+
+cd .. when I remove the directory outside of it
+
+abort on cd (should return to the home directory)
+
+redirection does not work with pipe
+
