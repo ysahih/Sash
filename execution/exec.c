@@ -60,6 +60,10 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp)
 		i = fork();
 		if (i == 0)
 		{
+			if (tmp->out_fd != 1)
+				dup2(tmp->out_fd, 1);
+			if (tmp->in_fd != 0)
+				dup2(tmp->in_fd, 0);
 			if (tmp->next) {
 				dup2(fd[1], tmp->out_fd);
 				close(fd[0]);
