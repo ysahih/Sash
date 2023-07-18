@@ -5,8 +5,8 @@
 void	handle_INT(int sig)
 {
 	(void)sig;
-	if (gl.rl)
-		return ;
+	// if (gl.rl)
+	// 	return ;
 	// waitpid(0, NULL, WNOHANG);
 	write(1, "\n", 1);
 	rl_on_new_line();
@@ -64,7 +64,7 @@ int	main(int ac, char **av, char **env)
 
 	while (true)
 	{
-		gl.rl = 0;
+		// gl.rl = 0;
 		sig_handler();
 		line = readline("sash$ ");
 		if (!line)
@@ -79,7 +79,7 @@ int	main(int ac, char **av, char **env)
 		cmd = tokenize(line);
 		if (!analyze_syntax(cmd))
 		{
-			printf("%d\n", gl.exit_status);
+			// printf("%d\n", gl.exit_status);
 			continue ;
 		}
 		parse(&all, cmd);

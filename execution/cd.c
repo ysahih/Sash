@@ -53,7 +53,7 @@ int	home_success(t_all *all, t_pwd *pwd)
 		if (pwd->pwd_en->val && pwd->pwd_ex->val)
 		{
 			free(pwd->pwd_en->val);
-			pwd->pwd_en->val = pwd->node->val;
+			pwd->pwd_en->val = ft_strdup(pwd->node->val);
 			free(pwd->pwd_ex->val);
 			pwd->pwd_ex->val = ft_strdup(pwd->node->val);
 		}
@@ -82,10 +82,20 @@ int	cd_home(t_all *all)
 		pwd.pwd_en = check_char(all->env, "PWD");
 		pwd.oldpwd_ex = check_char(all->exp, "OLDPWD");
 		pwd.pwd_ex = check_char(all->exp, "PWD");
+		// printf("pwd_en: %s\n", pwd.pwd_en->val);
+		// printf("pwd_ex: %s\n", pwd.pwd_ex->val);
+		// printf("oldpwd_en: %s\n", pwd.oldpwd_en->val);
+		// printf("oldpwd_ex: %s\n", pwd.oldpwd_ex->val);
 		home_success(all, &pwd);
+		// printf("\n\npwd_en: %s\n", pwd.pwd_en->val);
+		// printf("pwd_ex: %s\n", pwd.pwd_ex->val);
+		// printf("oldpwd_en: %s\n", pwd.oldpwd_en->val);
+		// printf("oldpwd_ex: %s\n", pwd.oldpwd_ex->val);
 	}
 	else
+	{
 		cd_error(pwd.node->val, p->str[1]);
+	}
 	return (0);
 }
 

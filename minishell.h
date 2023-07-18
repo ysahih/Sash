@@ -22,7 +22,7 @@ typedef struct s_global
 	int exit_status;
 	int runing;
 } t_global;
-t_global	gl;
+// t_global	gl;
 
 // enum	pipe {BEFORE, AFTER};
 

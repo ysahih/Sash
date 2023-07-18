@@ -24,7 +24,7 @@ void	print_err(char *s)
 	ft_putstr_fd("sash: syntax error near unexpected token '", 2);
 	ft_putstr_fd(s, 2);
 	ft_putstr_fd("'\n", 2);
-	gl.exit_status = 258;
+	// gl.exit_status = 258;
 }
 
 bool	pipe_analyze(t_lexer *cmd)
@@ -55,7 +55,7 @@ bool	analyze_quote(t_lexer **node, int flag)
 	if (!cmd->next)
 	{
 		ft_putstr_fd("sash: syntax error: unexpected end of file\n", 2);
-		gl.exit_status = 258;
+		// gl.exit_status = 258;
 		return false ;
 	}
 	cmd = cmd->next;
@@ -65,7 +65,7 @@ bool	analyze_quote(t_lexer **node, int flag)
 	if (!cmd)
 	{
 		ft_putstr_fd("sash: syntax error: unexpected end of file\n", 2);
-		gl.exit_status = 258;
+		// gl.exit_status = 258;
 		return false ;
 	}
 	return true;

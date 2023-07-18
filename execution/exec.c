@@ -107,7 +107,7 @@ int	exec(t_all *all)
 	t_simple_cmd	*tmp;
 
 	i = 0;
-	gl.rl = 1;
+	// gl.rl = 1;
 	if (!all->cmd)
 		return (0);
 	tmp = all->cmd;
