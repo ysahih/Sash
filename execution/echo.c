@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 09:50:45 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/11 20:05:22 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/18 14:45:18 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ void	exist_arg(t_simple_cmd *p, int flag)
 				ft_putstr_fd(p->str[j++], flag);
 			else
 			{
-				ft_putstr_fd(" ", flag);
 				ft_putstr_fd(p->str[j++], flag);
+				ft_putstr_fd(" ", flag);
 			}
 		}
 		return ;
@@ -84,7 +84,10 @@ void	only_echo(t_simple_cmd *p, int flag)
 			if (p->str[j + 1] == NULL)
 				ft_putstr_fd(p->str[j++], flag);
 			else
+			{
 				ft_putstr_fd(p->str[j++], flag);
+				ft_putstr_fd(" ", flag);	
+			}
 		}
 		ft_putstr_fd("\n", flag);
 		return ;
