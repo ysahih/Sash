@@ -23,10 +23,9 @@ RM = rm -rf
 CC = cc
 OBJS = $(SRCS:%.c=%.o)
 B_OBJS = $(B_SRCS:%.c=%.o)
-CFLAGS =  -I/Users/ysahih/Desktop/readline/include
+CFLAGS =  -Wall -Wextra -Werror -I/Users/ysahih/Desktop/readline/include
  
-# RLFLAGS = -L/Users/ysahih/Desktop/readline/lib /
-# -fsanitize=address -g
+RLFLAGS = -L/Users/ysahih/Desktop/readline/lib/ -fsanitize=address -g
 
 all : $(NAME)
 
