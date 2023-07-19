@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   not_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/19 08:54:09 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/19 16:30:26 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	check_path(t_var *key, char **k, t_simple_cmd *p)
 	execve(p->str[0], p->str, k);
 }
 
-static	int	ft_count(int n)
+int	ft_count(int n)
 {
 	int	i;
 
@@ -236,7 +236,6 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 
 void	one_cmd_nb(t_all *all, t_simple_cmd *p)
 {
-	// int		i;
 	char	**k;
 	t_var	*key;
 
