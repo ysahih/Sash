@@ -135,7 +135,7 @@ t_lexer	*merge_word(t_lexer *cmd)
 		return NULL;
 	while (cmd)
 	{
-		while (cmd && cmd->type == WORD)
+		while (cmd && (cmd->type == WORD || cmd->type == -2))
 		{
 			str = ft_strjoin(str, cmd->str);
 			cmd = cmd->next;
@@ -441,7 +441,7 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 			parse_red(cmdline, &cmd, APPEND);
 		else if((*cmdline)->type == HERDOC)
 			parse_hd(&cmd, cmdline);
-		else if ((*cmdline)->type == WORD)
+		else if ((*cmdline)->type == WORD || (*cmdline)->type == -2)
 		{
 			cmd->str[i] = (*cmdline)->str;
 			(*cmdline) = (*cmdline)->next;
