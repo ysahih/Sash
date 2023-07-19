@@ -5,25 +5,25 @@
 void	handle_INT(int sig)
 {
 	(void)sig;
-	// if (gl.rl)
-	// 	return ;
+	if (gl.rl)
+		return ;
 	// waitpid(0, NULL, WNOHANG);
 	write(1, "\n", 1);
 	rl_on_new_line();
-	// rl_replace_line("", 0);
+	rl_replace_line("", 0);
 	rl_redisplay();
 }
 
 void	sig_handler()
 {
-	// rl_catch_signals = 0;
+	rl_catch_signals = 0;
 	signal(SIGINT, handle_INT);
 	signal(SIGQUIT, SIG_IGN);
 }
 
 void	set_env(t_all *all, char **env)
 {
-	t_var	*oldpwd;
+	// t_var	*oldpwd;
 	int		i;
 	char	path[800];
 
@@ -64,7 +64,7 @@ int	main(int ac, char **av, char **env)
 
 	while (true)
 	{
-		// gl.rl = 0;
+		gl.rl = 0;
 		sig_handler();
 		line = readline("sash$ ");
 		if (!line)

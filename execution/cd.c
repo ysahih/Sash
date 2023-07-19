@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 19:39:14 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/14 08:38:55 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/19 08:54:00 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	cd_home(t_all *all)
 	return (0);
 }
 
-void	swap_success(t_all *all, t_pwd *pwd)
+void	swap_success(t_pwd *pwd)
 {
 	char	*val;
 
@@ -124,7 +124,7 @@ int	cd_swap(t_all *all)
 {
 	t_simple_cmd	*p;
 	t_pwd			pd;
-	char			*val;
+	// char			*val;
 	int				err;
 
 	p = all->cmd;
@@ -139,7 +139,7 @@ int	cd_swap(t_all *all)
 	{
 		pd.pwd_en = check_char(all->env, "PWD");
 		pd.pwd_ex = check_char(all->exp, "PWD");
-		swap_success(all, &pd);
+		swap_success(&pd);
 		pwd(all);
 	}
 	else
@@ -180,7 +180,7 @@ int	cd_else(t_all *all)
 {
 	t_simple_cmd	*p;
 	t_pwd			pwd;
-	char			*val;
+	// char			*val;
 	char			path[800];
 
 	p = all->cmd;

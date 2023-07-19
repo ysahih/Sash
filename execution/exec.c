@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/18 11:04:43 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/19 08:51:24 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	exec(t_all *all)
 	t_simple_cmd	*tmp;
 
 	i = 0;
-	// gl.rl = 1;
+	gl.rl = 1;
 	if (!all->cmd)
 		return (0);
 	tmp = all->cmd;

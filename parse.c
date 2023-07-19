@@ -93,10 +93,23 @@ void	empty_quotes(t_lexer **cmdline, t_lexer **node)
 	t_lexer	*cmd;
 
 	cmd = *cmdline;
-	if (cmd->type == DQUOTE && cmd->next && cmd->next->type == DQUOTE)
+	if (!cmd->next)
+		return ;
+	if (cmd->type == DQUOTE && cmd->next->type == DQUOTE)
+	{
 		create_node(node, ft_strdup(""), -2);
-	if (cmd->type == SQUOTE && cmd->next && cmd->next->type == SQUOTE)
+		cmd = cmd->next;
+		cmd = cmd->next;
+	}
+	if (!cmd || !cmd->next)
+		return ;
+	if (cmd->type == SQUOTE && cmd->next->type == SQUOTE)
+	{
 		create_node(node, ft_strdup(""), -2);
+		cmd = cmd->next;
+		cmd = cmd->next;
+	}
+	*cmdline = cmd;
 }
 
 t_lexer	*rm_quote(t_lexer *cmdline)
@@ -336,8 +349,8 @@ int	event(void)
 void	hd_sig(int sig)
 {
 	(void)sig;
-	// gl.rl = 1;
-	// rl_done = 1;
+	gl.rl = 1;
+	rl_done = 1;
 }
 
 void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
@@ -351,7 +364,7 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 		(*scmd)->err = errno;
 		return ;
 	}
-	// rl_event_hook = event;
+	rl_event_hook = event;
 	signal(SIGINT, hd_sig);
 	(*cmdline) = (*cmdline)->next;
 	s = ft_strdup("");
@@ -362,7 +375,7 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 		line = readline("> ");
 		if (!line || strcmp(line, s) == 0)
 		{
-			// gl.rl = 0;
+			gl.rl = 0;
 			break ;
 		}
 		write(fd[1], line, ft_strlen(line));
