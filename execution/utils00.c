@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:03:37 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/11 19:30:43 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/19 14:53:29 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,4 +103,21 @@ char	**my_env(t_all *all)
 	}
 	tmp[i] = NULL;
 	return (tmp);
+}
+
+int	ft_strrchr(char *str, char c)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	i--;
+	while (i >= 0)
+	{
+		if (str[i] == c)
+			return (i);
+		i--;
+	}
+	return (0);
 }
