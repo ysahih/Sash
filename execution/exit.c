@@ -6,17 +6,17 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 17:41:06 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/14 08:25:28 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/19 14:16:04 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_atoi(char *str)
+unsigned long long	ft_atoi(char *str)
 {
-	int		i;
-	int		s;
-	long	n;
+	int					i;
+	int					s;
+	unsigned long long	n;
 
 	s = 1;
 	i = 0;
@@ -31,7 +31,7 @@ int	ft_atoi(char *str)
 	}
 	while (str[i] >= '0' && str[i] <= '9')
 		n = (n * 10) + str[i++] - 48;
-	if ((str[i] < 48 || str[i] > 57) && str[i])
+	if (((str[i] < 48 || str[i] > 57) && str[i]) || n * s > 9223372036854775807)
 	{
 		printf("exit\nsash: exit: %s: numeric argument required\n", str);
 		exit(255);

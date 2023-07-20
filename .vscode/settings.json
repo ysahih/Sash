@@ -5,6 +5,9 @@
         "__locale": "c",
         "cctype": "c",
         "locale": "c",
-        "filesystem": "c"
+        "filesystem": "c",
+        "type_traits": "c",
+        "ostream": "c",
+        "bitset": "c"
     }
 }

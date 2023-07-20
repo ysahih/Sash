@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/18 07:52:41 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/20 07:52:14 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,8 @@ int	is_builting(t_simple_cmd *tmp)
 void	many_cmds(t_all *all, t_simple_cmd *tmp)
 {
 	int				i;
-	int				f;
+	int				status;
 	int				fd[2];
-	int				f_d;
 	t_simple_cmd	*t;
 
 	t = tmp;
@@ -61,34 +60,63 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp)
 		i = fork();
 		if (i == 0)
 		{
-			dup2(f_d, 0);
-			close(f_d);
+			sigreset();
+			if (tmp->out_fd != 1)
+				dup2(tmp->out_fd, 1);
+			if (tmp->in_fd != 0)
+				dup2(tmp->in_fd, 0);
 			if (tmp->next) {
 				dup2(fd[1], tmp->out_fd);
 				close(fd[0]);
 				close(fd[1]);
 			}
 			if (is_builting(tmp))
+			{
+				// gl.exit_status = 
 				one_cmd(all, tmp);
+				exit(0);
+			}
 			else
 				one_cmd_nb(all, tmp);
 		}
 		else
 		{
 			if (tmp->next) {
-				dup2(fd[0], f_d);
+				dup2(fd[0], tmp->in_fd);
 				close(fd[0]);
 				close(fd[1]);
 			} else {
-				dup2(0, f_d);
+				dup2(0, tmp->in_fd);
+				close(0);
 			}
 		}
 		tmp = tmp->next;
 	}
+	tmp = t;
 	while (t)
 	{
-		// if (!is_builting(t))
-		wait(&f);
+		if (wait(&status) == -1)
+			exit(EXIT_FAILURE);
+		if (WIFSIGNALED(status))
+		{
+			if (t == tmp)
+			{
+				
+				if (WTERMSIG(status) == SIGINT)
+				{
+					write(1, "\n", 1);
+					// g_lob->exit_status = 130;
+				}
+				else if (WTERMSIG(status) == SIGQUIT)
+				{
+					write(1, "Quit: 3\n", 8);
+					// g_lob->exit_status = 131;
+				}
+			}
+			
+		}
+		// else if (WIFEXITED(status))
+		// 	g_lob->exit_status = WEXITSTATUS(status);
 		t = t->next;
 	}
 }
@@ -100,10 +128,11 @@ int	exec(t_all *all)
 	t_simple_cmd	*tmp;
 
 	i = 0;
-	// fd = dup(0);
+	gl.rl = 1;
 	if (!all->cmd)
 		return (0);
 	tmp = all->cmd;
+	fd = dup(0);
 	if (!*(tmp->str))
 	{
 		if (tmp->err)
@@ -114,10 +143,10 @@ int	exec(t_all *all)
 		}
 		return (0);
 	}
-	if (!tmp->next)
-		one_cmd(all, tmp);
-	else
+	// if (!tmp->next)
+	// 	one_cmd(all, tmp);
+	// else
 		many_cmds(all, tmp);
-
+	dup2(fd, 0);
 	return (0);
 }
