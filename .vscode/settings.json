@@ -6,6 +6,7 @@
         "cctype": "c",
         "locale": "c",
         "filesystem": "c",
-        "type_traits": "c"
+        "type_traits": "c",
+        "ostream": "c"
     }
 }

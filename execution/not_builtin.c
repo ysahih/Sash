@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   not_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/19 16:30:26 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/20 07:46:14 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 	i = fork();
 	if (i == 0)
 	{
-		sigreset();
+	
 		if (!ft_strcmp(p->str[0], "./sash"))
 		{
 			shelvl_en = check_char(all->env, "SHLVL");
