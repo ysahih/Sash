@@ -61,11 +61,11 @@ int	main(int ac, char **av, char **env)
 		return (printf("program does not accept agruments\n"), 0);
 
 	set_env(&all, env);
+	sig_handler();
 
 	while (true)
 	{
 		gl.rl = 0;
-		sig_handler();
 		line = readline("sash$ ");
 		if (!line)
 			break;
