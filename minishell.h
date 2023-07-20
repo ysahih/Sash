@@ -16,7 +16,6 @@
 # define PROMPT "sash"
 
 
-
 typedef struct s_global
 {
 	int	rl;

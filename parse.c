@@ -285,10 +285,9 @@ char	*find_var(t_var *var, char *str)
 
 
 	val = NULL;
-	// if (str[0] == '?')
-	// {
-	// 	val = ft_strdup();
-	// }
+
+	if (!strcmp("?", str))
+		val = ft_itoa(gl.exit_status);
 	while (var)
 	{
 		if (!strcmp(var->key, str))
@@ -297,7 +296,6 @@ char	*find_var(t_var *var, char *str)
 		}
 		var = var->next;
 	}
-
 	return (val);
 }
 
@@ -333,7 +331,9 @@ t_lexer *expand_var(t_lexer *cmd, t_var *var)
 		if (!cmd)
 			break ;
 		if (cmd->type == VAR)
+		{
 			create_node(&node, find_var(var, cmd->str), WORD);
+		}
 		else
 			create_node(&node, cmd->str, cmd->type);
 		cmd = cmd->next;
@@ -533,7 +533,7 @@ void	parse(t_all *all, t_lexer *cmdline)
 		
 	
 		
-	// 	printf("=%s=\n", cmd->str);
+	// 	printf("=%d=\n", cmd->type);
 		
 		
 	// 	cmd = cmd->next;
