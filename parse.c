@@ -442,9 +442,13 @@ t_lexer	*parse_wc(t_lexer *cmd)
 			dir = opendir(".");
 			if (dir == NULL)
 				perror("opendir");
-			while ((entry = readdir(dir)) != NULL){
-				create_node(&node, entry->d_name, WORD);
-				create_node(&node, " ", WSPACE);
+			while ((entry = readdir(dir)) != NULL)
+			{
+				if (entry->d_name[0] != '.')
+				{
+					create_node(&node, entry->d_name, WORD);
+					create_node(&node, " ", WSPACE);
+				}
 			}
 			// closedir(dir);
 		}
