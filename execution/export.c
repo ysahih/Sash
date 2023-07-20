@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 16:28:32 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/20 14:59:46 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/20 19:12:55 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	egal_not_exist(t_all *all, t_simple_cmd *p, int i)
 		ft_putstr_fd("': not a valid identifier\n", 2);
 		return ;
 	}
-
 	tmp_ex = check_char(all->exp, p->str[i]);
 	if (!tmp_ex)
 		add_exen_back(&all->exp, lstnew_exen(p->str[i], NULL));

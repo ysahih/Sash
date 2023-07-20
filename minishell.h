@@ -184,14 +184,14 @@ void	env(t_all *all);
 
 			//---{exit}---//
 unsigned long long	ft_atoi(char *str);
-void				ex_it(t_all *all);
+int					ex_it(t_all *all);
 
 			//---{pwd}---//
 void	get_pwd(t_all *all);
 void	pwd(t_all *all);
 
 			//---{unset}---//
-void	unset(t_simple_cmd *p, t_var **env, t_var **exp);
+int		unset(t_simple_cmd *p, t_var **env, t_var **exp);
 t_var	*unset_exp(char *str, t_var **exp);
 t_var	*unset_env(char *str, t_var **env);
 t_var	*check_exist_key(t_var	*lst, char	*str);
