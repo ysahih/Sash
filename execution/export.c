@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 16:28:32 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/19 15:53:27 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/20 14:59:46 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,14 @@
 void	egal_not_exist(t_all *all, t_simple_cmd *p, int i)
 {
 	t_var	*tmp_ex;
+
+	if (is_valid(p->str[i]) == 1)
+	{
+		ft_putstr_fd("bash: export: `", 2);
+		ft_putstr_fd(p->str[i], 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
+		return ;
+	}
 
 	tmp_ex = check_char(all->exp, p->str[i]);
 	if (!tmp_ex)
@@ -43,11 +51,14 @@ void	export(t_all *all)
 				ft_putstr_fd(p->str[i], 2);
 				ft_putstr_fd("\': not a valid identifier\n", 2);
 			}
-			k = ft_strchr(p->str[i], '=');
-			if (k != -1)
-				exist_egal(all, p, i, k);
 			else
-				egal_not_exist(all, p, i);
+			{
+				k = ft_strchr(p->str[i], '=');
+				if (k != -1)
+					exist_egal(all, p, i, k);
+				else
+					egal_not_exist(all, p, i);
+			}
 		}
 	}
 }
