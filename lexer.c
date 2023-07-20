@@ -27,6 +27,12 @@ void	tokenize_var(t_lexer **node, char **s)
 	i = 0;
 	*s += 1;
 	tmp = *s;
+	if (!ft_strcmp(tmp, "?"))
+	{
+		create_node(node, "?", VAR);
+		*s += 1;
+		return ;
+	}
 	if (!tmp[i] || !valid_var(tmp[i]))
 		return ;
 	while(tmp[i] && valid_var(tmp[i]))
@@ -169,7 +175,7 @@ t_lexer	*tokenize(char *line)
 			get_token(&node, &line, -1);
 		else if (*line == '>'|| *line == '<')
 			tokenize_red(&node, &line);
-		else if (*line == '$' && *(line + 1) && (valid_var(*(line + 1) || *(line + 1) == '?')))
+		else if (*line == '$' && *(line + 1) && (valid_var(*(line + 1)) || *(line + 1) == '?'))
 			tokenize_var(&node, &line);
 		else
 			tokenize_word(&node, &line);

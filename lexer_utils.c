@@ -16,6 +16,7 @@ int	ft_strlen(char *s)
 	int	i;
 
 	i = 0;
+
 	while (i[s])
 		i++;
 	return (i);

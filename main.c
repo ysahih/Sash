@@ -5,7 +5,9 @@
 void	handle_INT(int sig)
 {
 	(void)sig;
-
+	if (gl.rl)
+		return ;
+	// waitpid(0, NULL, WNOHANG);
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
@@ -21,7 +23,7 @@ void	sig_handler()
 
 void	set_env(t_all *all, char **env)
 {
-	t_var	*oldpwd;
+	// t_var	*oldpwd;
 	int		i;
 	char	path[800];
 
@@ -38,16 +40,13 @@ void	set_env(t_all *all, char **env)
 		add_exen_back(&all->env ,lstnew_exen(ft_strdup("_"), ft_strdup("/usr/bin/env")));
 		return ;
 	}
+
 	while (env[i])
 	{
 		lst_var(&all->env, ft_split(env[i]));
 		lst_var(&all->exp, ft_split(env[i]));
 		i++;
 	}
-	// all->env = unset_env("OLDPWD", &all->env);
-	// oldpwd = check_char(all->exp, "OLDPWD");
-	// free(oldpwd->val);
-	// oldpwd->val = NULL;
 }
 
 
@@ -65,6 +64,7 @@ int	main(int ac, char **av, char **env)
 
 	while (true)
 	{
+		gl.rl = 0;
 		sig_handler();
 		line = readline("sash$ ");
 		if (!line)
@@ -79,7 +79,7 @@ int	main(int ac, char **av, char **env)
 		cmd = tokenize(line);
 		if (!analyze_syntax(cmd))
 		{
-			printf("%d\n", gl.exit_status);
+			// printf("%d\n", gl.exit_status);
 			continue ;
 		}
 		parse(&all, cmd);

@@ -93,10 +93,23 @@ void	empty_quotes(t_lexer **cmdline, t_lexer **node)
 	t_lexer	*cmd;
 
 	cmd = *cmdline;
-	if (cmd->type == DQUOTE && cmd->next && cmd->next->type == DQUOTE)
+	if (!cmd->next)
+		return ;
+	if (cmd->type == DQUOTE && cmd->next->type == DQUOTE)
+	{
 		create_node(node, ft_strdup(""), -2);
-	if (cmd->type == SQUOTE && cmd->next && cmd->next->type == SQUOTE)
+		cmd = cmd->next;
+		cmd = cmd->next;
+	}
+	if (!cmd || !cmd->next)
+		return ;
+	if (cmd->type == SQUOTE && cmd->next->type == SQUOTE)
+	{
 		create_node(node, ft_strdup(""), -2);
+		cmd = cmd->next;
+		cmd = cmd->next;
+	}
+	*cmdline = cmd;
 }
 
 t_lexer	*rm_quote(t_lexer *cmdline)
@@ -135,7 +148,7 @@ t_lexer	*merge_word(t_lexer *cmd)
 		return NULL;
 	while (cmd)
 	{
-		while (cmd && cmd->type == WORD)
+		while (cmd && (cmd->type == WORD || cmd->type == -2))
 		{
 			str = ft_strjoin(str, cmd->str);
 			cmd = cmd->next;
@@ -213,7 +226,7 @@ void	add_scmd(t_simple_cmd **lst, t_simple_cmd *new)
 	}
 	last_node = last_cmd(*lst);
 	last_node->next = new;
-    last_node->next->previous = last_node;
+	last_node->next->previous = last_node;
 }
 
 int	count_wd(t_lexer *cmd)
@@ -272,10 +285,9 @@ char	*find_var(t_var *var, char *str)
 
 
 	val = NULL;
-	// if (str[0] == '?')
-	// {
-	// 	val = ft_strdup();
-	// }
+
+	if (!strcmp("?", str))
+		val = ft_itoa(gl.exit_status);
 	while (var)
 	{
 		if (!strcmp(var->key, str))
@@ -284,7 +296,6 @@ char	*find_var(t_var *var, char *str)
 		}
 		var = var->next;
 	}
-
 	return (val);
 }
 
@@ -320,7 +331,9 @@ t_lexer *expand_var(t_lexer *cmd, t_var *var)
 		if (!cmd)
 			break ;
 		if (cmd->type == VAR)
+		{
 			create_node(&node, find_var(var, cmd->str), WORD);
+		}
 		else
 			create_node(&node, cmd->str, cmd->type);
 		cmd = cmd->next;
@@ -368,6 +381,7 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 		write(fd[1], line, ft_strlen(line));
 		write(fd[1], "\n", 1);
 	}
+	close(fd[1]);
 	if ((*cmdline))
 		(*cmdline) = (*cmdline)->next;
 	(*scmd)->in_fd = fd[0];
@@ -413,6 +427,36 @@ void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd, int red)
 	(*cmdline) = (*cmdline)->next;
 }
 
+t_lexer	*parse_wc(t_lexer *cmd)
+{
+	struct dirent	*entry;
+	t_lexer 		*node;
+	DIR 			*dir;
+
+	node = NULL;
+	dir = NULL;
+	while (cmd)
+	{
+		if (cmd->type == -1)
+		{
+			dir = opendir(".");
+			if (dir == NULL)
+				perror("opendir");
+			while ((entry = readdir(dir)) != NULL){
+				create_node(&node, entry->d_name, WORD);
+				create_node(&node, " ", WSPACE);
+			}
+			// closedir(dir);
+		}
+		else
+			create_node(&node, cmd->str, cmd->type);
+		cmd = cmd->next;
+	}
+	// if (dir != NULL)
+	// 	closedir(dir);
+	return node;
+}
+
 t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 {
 	t_simple_cmd	*cmd;
@@ -440,7 +484,7 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 			parse_red(cmdline, &cmd, APPEND);
 		else if((*cmdline)->type == HERDOC)
 			parse_hd(&cmd, cmdline);
-		else if ((*cmdline)->type == WORD)
+		else if ((*cmdline)->type == WORD || (*cmdline)->type == -2)
 		{
 			cmd->str[i] = (*cmdline)->str;
 			(*cmdline) = (*cmdline)->next;
@@ -460,36 +504,36 @@ void	parse(t_all *all, t_lexer *cmdline)
 	t_lexer 		*cmd;
 
 	scmd = NULL;
+
+	// cmd = cmdline;
 	cmd = rm_quote(cmdline);
 	if (cmd->type == -2)
 		cmd = cmd->next;
 	if (!cmd || (cmd && cmd->type == WSPACE))
 	{
 		ft_putstr_fd("sash: : command not found\n", 2);
-		gl.exit_status = 127;
+		// gl.exit_status = 127;
 		while (cmd && cmd->type != PIPE)
 			cmd = cmd->next;
 		if (cmd && cmd->type == PIPE)
 			cmd = cmd->next;
 	}
 	cmd = expand_var(cmd, all->env);
+	cmd = parse_wc(cmd);
 	cmd = merge_word(cmd);
 	cmd = rm_space(cmd);
 	while(cmd)
 		add_scmd(&scmd, collect_scmds(&cmd));
-
-
 	all->cmd = scmd;
 
-	// while (scmd)
+	// while (cmd)
 	// {
 		
 	
 		
-	// 	printf("=%d=\n", scmd->err);
-			
+	// 	printf("=%d=\n", cmd->type);
 		
-	
-	// 	scmd = scmd->next;
+		
+	// 	cmd = cmd->next;
 	// }
 }
