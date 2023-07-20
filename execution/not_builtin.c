@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/20 16:39:45 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/20 16:49:08 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,8 +180,8 @@ int	my_atoi(char *str)
 
 void	sigreset(void)
 {
-	signal(SIGINT, SIG_DFL);
-	// signal(SIGQUIT, SIG_DFL);
+	// signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }
 
 void	shelvl(t_all *all, t_simple_cmd *p)
@@ -214,6 +214,7 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 	int		i;
 	char	**k;
 	t_var	*key;
+	int		status;
 	int	len;
 
 	i = fork();
@@ -244,7 +245,23 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 		}
 		perror("");
 	}
-	wait(&i);
+	if (wait(&status) == -1)
+			exit(EXIT_FAILURE);
+		if (WIFSIGNALED(status))
+		{
+			if (WTERMSIG(status) == SIGINT)
+			{
+				write(1, "\n", 1);
+				gl.exit_status = 130;
+			}
+			else if (WTERMSIG(status) == SIGQUIT)
+			{
+				write(1, "Quit: 3\n", 8);
+				gl.exit_status = 131;
+			}
+		}
+		else if (WIFEXITED(status))
+			gl.exit_status = WEXITSTATUS(status);
 }
 
 void	one_cmd_nopipe(t_all *all, t_simple_cmd *p)
