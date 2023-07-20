@@ -221,4 +221,5 @@ int		count_path(char *str);
 
 void	sig_handler();
 void	handle_INT(int sig);
+void		sigreset();
 #endif
