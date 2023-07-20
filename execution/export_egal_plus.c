@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 15:48:52 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/20 15:45:22 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/20 18:47:59 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,13 +90,9 @@ void	egal_plus_empty(t_all *all, t_simple_cmd *p, int i, int k)
 	char	*new_key;
 
 	new_key = ft_substr(p->str[i], 0, k - 1);
-	printf("{%s}\n", new_key);
 	tmp_ex = check_char(all->exp, new_key);
-	printf("{≥≥≥≥≥≥%s}\n", new_key);
-	puts("l");
 	if (!tmp_ex)
 	{
-		puts("k");
 		add_exen_back(&all->env, lstnew_exen(new_key, ft_strdup("")));
 		add_exen_back(&all->exp, lstnew_exen(ft_strdup(new_key), \
 		ft_strdup("")));

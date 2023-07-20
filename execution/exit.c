@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 17:41:06 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/19 14:16:04 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/20 18:41:41 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ unsigned long long	ft_atoi(char *str)
 	return (n * s);
 }
 
-void	ex_it(t_all *all)
+int	ex_it(t_all *all)
 {
 	t_simple_cmd	*p;
 	int				nbr;
@@ -61,4 +61,5 @@ void	ex_it(t_all *all)
 		printf("exit\n");
 		exit(nbr);
 	}
+	return (0);
 }
