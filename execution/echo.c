@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 09:50:45 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/18 14:45:18 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/20 10:47:06 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,15 +101,11 @@ void	echo(t_simple_cmd *a)
 
 	p = a;
 	flag = p->out_fd;
-	while (p)
+	if (!p->str[1])
 	{
-		if (!p->str[1])
-		{
-			ft_putstr_fd("\n", flag);
-			return ;
-		}
-		only_echo(p, flag);
-		exist_arg(p, flag);
-		p = p->next;
+		ft_putstr_fd("\n", flag);
+		return ;
 	}
+	only_echo(p, flag);
+	exist_arg(p, flag);
 }

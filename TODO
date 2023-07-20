@@ -1,8 +1,5 @@
 # exit message when exiting with long number (> ul) : 9223372036854775807
 
-# echo printing without spaces 
-
-unclosed processes
 
 # cd .. when I remove the directory outside of it
 
@@ -10,11 +7,9 @@ unclosed processes
 
 # redirection does not work with pipe
 
-#//ls message
 
 #exit
 
-#cat fiha new line zayed f pipe (echo)
 
 #herdoc khaso expend
 
