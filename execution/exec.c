@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/20 07:52:14 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/20 16:40:48 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp)
 				exit(0);
 			}
 			else
-				one_cmd_nb(all, tmp);
+				one_cmd_nopipe(all, tmp);
 		}
 		else
 		{
@@ -143,9 +143,9 @@ int	exec(t_all *all)
 		}
 		return (0);
 	}
-	// if (!tmp->next)
-	// 	one_cmd(all, tmp);
-	// else
+	if (!tmp->next)
+		one_cmd(all, tmp);
+	else
 		many_cmds(all, tmp);
 	dup2(fd, 0);
 	return (0);
