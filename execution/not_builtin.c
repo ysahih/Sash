@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/20 07:46:14 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/20 10:51:36 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,7 @@ int	my_atoi(char *str)
 void	sigreset(void)
 {
 	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	// signal(SIGQUIT, SIG_DFL);
 }
 
 void	one_cmd_nob(t_all *all, t_simple_cmd *p)

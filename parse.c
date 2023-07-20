@@ -484,8 +484,6 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 			parse_red(cmdline, &cmd, APPEND);
 		else if((*cmdline)->type == HERDOC)
 			parse_hd(&cmd, cmdline);
-		// else if ((*cmdline)->type == -1)
-		// 	parse_wc(&cmd, cmdline);
 		else if ((*cmdline)->type == WORD || (*cmdline)->type == -2)
 		{
 			cmd->str[i] = (*cmdline)->str;
