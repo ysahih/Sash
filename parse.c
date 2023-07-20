@@ -226,7 +226,7 @@ void	add_scmd(t_simple_cmd **lst, t_simple_cmd *new)
 	}
 	last_node = last_cmd(*lst);
 	last_node->next = new;
-    last_node->next->previous = last_node;
+	last_node->next->previous = last_node;
 }
 
 int	count_wd(t_lexer *cmd)
@@ -427,6 +427,36 @@ void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd, int red)
 	(*cmdline) = (*cmdline)->next;
 }
 
+t_lexer	*parse_wc(t_lexer *cmd)
+{
+	struct dirent	*entry;
+	t_lexer 		*node;
+	DIR 			*dir;
+
+	node = NULL;
+	dir = NULL;
+	while (cmd)
+	{
+		if (cmd->type == -1)
+		{
+			dir = opendir(".");
+			if (dir == NULL)
+				perror("opendir");
+			while ((entry = readdir(dir)) != NULL){
+				create_node(&node, entry->d_name, WORD);
+				create_node(&node, " ", WSPACE);
+			}
+			// closedir(dir);
+		}
+		else
+			create_node(&node, cmd->str, cmd->type);
+		cmd = cmd->next;
+	}
+	// if (dir != NULL)
+	// 	closedir(dir);
+	return node;
+}
+
 t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 {
 	t_simple_cmd	*cmd;
@@ -454,6 +484,8 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 			parse_red(cmdline, &cmd, APPEND);
 		else if((*cmdline)->type == HERDOC)
 			parse_hd(&cmd, cmdline);
+		// else if ((*cmdline)->type == -1)
+		// 	parse_wc(&cmd, cmdline);
 		else if ((*cmdline)->type == WORD || (*cmdline)->type == -2)
 		{
 			cmd->str[i] = (*cmdline)->str;
@@ -474,6 +506,8 @@ void	parse(t_all *all, t_lexer *cmdline)
 	t_lexer 		*cmd;
 
 	scmd = NULL;
+
+	// cmd = cmdline;
 	cmd = rm_quote(cmdline);
 	if (cmd->type == -2)
 		cmd = cmd->next;
@@ -487,21 +521,21 @@ void	parse(t_all *all, t_lexer *cmdline)
 			cmd = cmd->next;
 	}
 	cmd = expand_var(cmd, all->env);
+	cmd = parse_wc(cmd);
 	cmd = merge_word(cmd);
 	cmd = rm_space(cmd);
 	while(cmd)
 		add_scmd(&scmd, collect_scmds(&cmd));
 	all->cmd = scmd;
 
-	// while (scmd)
+	// while (cmd)
 	// {
 		
 	
 		
-	// 	printf("=%d=\n", scmd->err);
-			
+	// 	printf("=%s=\n", cmd->str);
 		
-	
-	// 	scmd = scmd->next;
+		
+	// 	cmd = cmd->next;
 	// }
 }
