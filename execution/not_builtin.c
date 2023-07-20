@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/19 16:30:26 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/20 15:54:38 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,37 +184,43 @@ void	sigreset(void)
 	signal(SIGQUIT, SIG_DFL);
 }
 
+void	shelvl(t_all *all, t_simple_cmd *p)
+{
+	t_var	*shelvl_ex;
+	t_var	*shelvl_en;
+	int		new;
+	char	*str;
+	
+	if (!ft_strcmp(p->str[0], "./sash"))
+	{
+		shelvl_en = check_char(all->env, "SHLVL");
+		shelvl_ex = check_char(all->exp, "SHLVL");
+		dup2(p->in_fd, 0);
+		dup2(p->out_fd, 1);
+		new = my_atoi(shelvl_en->val);
+		new++;
+		free (shelvl_en->val);
+		free (shelvl_ex->val);
+		str = ft_itoa(new);
+		shelvl_en->val = NULL;
+		shelvl_en->val = ft_strdup(str);
+		shelvl_ex->val = NULL;
+		shelvl_ex->val = ft_strdup(str);
+	}
+}
+
 void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 {
 	int		i;
 	char	**k;
-	char	*str;
-	int		new;
 	t_var	*key;
-	t_var	*shelvl_ex;
-	t_var	*shelvl_en;
+	int	len;
 
 	i = fork();
 	if (i == 0)
 	{
 		sigreset();
-		if (!ft_strcmp(p->str[0], "./sash"))
-		{
-			shelvl_en = check_char(all->env, "SHLVL");
-			shelvl_ex = check_char(all->exp, "SHLVL");
-			dup2(p->in_fd, 0);
-			dup2(p->out_fd, 1);
-			new = my_atoi(shelvl_en->val);
-			new++;
-			free (shelvl_en->val);
-			free (shelvl_ex->val);
-			str = ft_itoa(new);
-			shelvl_en->val = NULL;
-			shelvl_en->val = ft_strdup(str);
-			shelvl_ex->val = NULL;
-			shelvl_ex->val = ft_strdup(str);
-			// return ;
-		}
+		shelvl(all, p);
 		k = my_env(all);
 		if (p->err)
 		{
@@ -229,12 +235,19 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 		if (key)
 			check_path(key, k, p);
 		execve(p->str[0], p->str, k);
+		len = ft_strlen(p->str[0]);
+		if (p->str[0][0] == '/' || p->str[0][len-1]== '/')
+		{
+			ft_putstr_fd("sash: ", 2);
+			ft_putstr_fd(p->str[0], 2);
+			ft_putstr_fd(": ", 2);
+		}
 		perror("");
 	}
 	wait(&i);
 }
 
-void	one_cmd_nb(t_all *all, t_simple_cmd *p)
+void	one_cmd_nopipe(t_all *all, t_simple_cmd *p)
 {
 	char	**k;
 	t_var	*key;

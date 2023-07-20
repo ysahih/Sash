@@ -169,6 +169,8 @@ t_var	*check_char(t_var *env, char *str);
 t_var	*sort_env(t_var *lst);
 void	only_exp(t_all *all, int flag);
 void	egal_not_exist(t_all *all, t_simple_cmd *p, int i);
+int		is_valid(char *c);
+int		not_valid(t_simple_cmd *p, int i, int k);
 
 			//---{echo}---//
 void	echo(t_simple_cmd *a);
@@ -208,7 +210,7 @@ int		alpha(int c);
 
 // <<<<<<<<<<<<<<<<<<<<<not_builtin>>>>>>>>>>>>>>>>>>>>>>//
 
-void	one_cmd_nb(t_all *all, t_simple_cmd *p);
+void	one_cmd_nopipe(t_all *all, t_simple_cmd *p);
 void	one_cmd_nob(t_all *all, t_simple_cmd *p);
 int		my_atoi(char *str);
 char	*ft_itoa(int n);

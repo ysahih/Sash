@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/19 08:51:24 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/20 15:48:20 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp)
 				exit(0);
 			}
 			else
-				one_cmd_nb(all, tmp);
+				one_cmd_nopipe(all, tmp);
 		}
 		else
 		{
