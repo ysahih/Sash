@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 21:07:40 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/20 19:30:08 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/21 14:56:25 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ t_var	*unset_env(char *str, t_var **env)
 	t_var	*tmp;
 
 	exist_key_env = check_exist_key(*env, str);
-	// check
 	if (!exist_key_env)
 		return (*env);
 	if (exist_key_env == *env)
@@ -93,12 +92,13 @@ t_var	*unset_exp(char *str, t_var **exp)
 
 int	invalid_unset(char *c)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (c[i] != '\0')
 	{
-		if (!((c[i] >= 65 && c[i] <= 90) || (c[i] >= 97 && c[i] <= 122) || (c[i] >= 48 && c[i] <= 57)\
+		if (!((c[i] >= 65 && c[i] <= 90) || (c[i] >= 97 && c[i] <= 122) || \
+		(c[i] >= 48 && c[i] <= 57) \
 		|| (c[i] == '_')))
 			return (1);
 		i++;
@@ -115,7 +115,7 @@ int	unset(t_simple_cmd *p, t_var **env, t_var **exp)
 	i = 1;
 	while (p->str[i])
 	{
-		if ((alpha(p->str[i][0]) != 1 && p->str[i][0] != '_') ||\
+		if ((alpha(p->str[i][0]) != 1 && p->str[i][0] != '_') || \
 		invalid_unset(p->str[i]) == 1)
 		{
 			ft_putstr_fd("sash: unset: `", 2);

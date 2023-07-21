@@ -27,7 +27,7 @@ void	tokenize_var(t_lexer **node, char **s)
 	i = 0;
 	*s += 1;
 	tmp = *s;
-	if (!ft_strcmp(tmp, "?"))
+	if (tmp[0] == '?')
 	{
 		create_node(node, "?", VAR);
 		*s += 1;
