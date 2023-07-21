@@ -6,30 +6,31 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/20 18:39:33 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/21 15:50:15 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	one_cmd(t_all *all, t_simple_cmd *tmp)
+int	one_cmd(t_all *all, t_simple_cmd *tmp)
 {
 	if (!ft_strcmp(tmp->str[0], "env"))
-		env(all);
+		return (env(all), 0);
 	else if (!ft_strcmp(tmp->str[0], "export"))
-		export(all);
+		return (export(all, tmp));
 	else if (!ft_strcmp(tmp->str[0], "pwd"))
-		pwd(all);
+		return (pwd(all), 0);
 	else if (!ft_strcmp(tmp->str[0], "echo"))
-		echo(tmp);
-	else if (!ft_strcmp(tmp->str[0] , "unset"))
-		unset(tmp, &all->env, &all->exp);
+		return (echo(tmp), 0);
+	else if (!ft_strcmp(tmp->str[0], "unset"))
+		return (unset(tmp, &all->env, &all->exp));
 	else if (!ft_strcmp(tmp->str[0], "exit"))
-		ex_it(all);
+		return (ex_it(all));
 	else if (!ft_strcmp(tmp->str[0], "cd"))
-		cd (all);
+		return (cd (all));
 	else
 		one_cmd_nob(all, tmp);
+	return (gl.exit_status);
 }
 
 int	is_builting(t_simple_cmd *tmp)
@@ -63,34 +64,30 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp)
 			sigreset();
 			if (tmp->out_fd != 1)
 				dup2(tmp->out_fd, 1);
-			if (tmp->in_fd != 0)
+			if (tmp->in_fd >= 0)
 				dup2(tmp->in_fd, 0);
-			if (tmp->next) {
-				dup2(fd[1], tmp->out_fd);
+			if (tmp->next)
+			{
+				dup2(fd[1], 1);
 				close(fd[0]);
 				close(fd[1]);
 			}
 			if (is_builting(tmp))
 			{
-				// gl.exit_status = 
-				// gl.exit_status = 
-				one_cmd(all, tmp);
+				gl.exit_status = one_cmd(all, tmp);
 				exit(gl.exit_status);
 			}
 			else
 				one_cmd_nopipe(all, tmp);
 		}
-		else
+		if (tmp->next)
 		{
-			if (tmp->next) {
-				dup2(fd[0], tmp->in_fd);
-				close(fd[0]);
-				close(fd[1]);
-			} else {
-				dup2(0, tmp->in_fd);
-				close(0);
-			}
+			dup2(fd[0], 0);
+			close(fd[0]);
+			close(fd[1]);
 		}
+		else
+			close(0);
 		tmp = tmp->next;
 	}
 	tmp = t;
@@ -102,7 +99,6 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp)
 		{
 			if (t == tmp)
 			{
-				
 				if (WTERMSIG(status) == SIGINT)
 				{
 					write(1, "\n", 1);
@@ -114,7 +110,6 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp)
 					gl.exit_status = 131;
 				}
 			}
-			
 		}
 		else if (WIFEXITED(status))
 			gl.exit_status = WEXITSTATUS(status);
@@ -145,7 +140,7 @@ int	exec(t_all *all)
 		return (0);
 	}
 	if (!tmp->next)
-		one_cmd(all, tmp);
+		gl.exit_status = one_cmd(all, tmp);
 	else
 		many_cmds(all, tmp);
 	dup2(fd, 0);
