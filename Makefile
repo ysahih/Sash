@@ -20,6 +20,7 @@ execution/export_invalid.c\
 execution/pwd.c\
 execution/echo.c\
 execution/unset.c\
+execution/invalid_unset.c\
 execution/cd.c\
 execution/cd_curr_prvs.c\
 execution/cd_swap_home.c\
@@ -34,7 +35,7 @@ OBJS = $(SRCS:%.c=%.o)
 B_OBJS = $(B_SRCS:%.c=%.o)
 CFLAGS =  -Wall -Wextra -Werror -I/Users/ysahih/Desktop/readline/include
  
-RLFLAGS = -L/Users/ysahih/Desktop/readline/lib/ -fsanitize=address -g
+RLFLAGS = -L/Users/ysahih/Desktop/readline/lib/
 
 all : $(NAME)
 
@@ -50,4 +51,4 @@ clean :
 fclean : clean
 	@$(RM) $(NAME) 
 
-re : fclean all 
+re : fclean all

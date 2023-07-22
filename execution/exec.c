@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/21 15:50:15 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/22 09:46:27 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,87 @@ int	is_builting(t_simple_cmd *tmp)
 		return (1);
 	return (0);
 }
+
+// void	check_redirction(t_simple_cmd	*tmp)
+// {
+// 	if (tmp->out_fd != 1)
+// 		dup2(tmp->out_fd, 1);
+// 	if (tmp->in_fd >= 0)
+// 		dup2(tmp->in_fd, 0);
+// }
+
+// void	execut_pipe(t_all *all, t_simple_cmd *tmp)
+// {
+// 	if (is_builting(tmp))
+// 	{
+// 		gl.exit_status = one_cmd(all, tmp);
+// 		exit(gl.exit_status);
+// 	}
+// 	else
+// 		one_cmd_nopipe(all, tmp);
+// }
+
+// void	many_cmds(t_all *all, t_simple_cmd *tmp)
+// {
+// 	int				i;
+// 	int				status;
+// 	int				fd[2];
+// 	t_simple_cmd	*t;
+
+// 	t = tmp;
+// 	while (tmp)
+// 	{
+// 		if (tmp->next)
+// 			pipe(fd);
+// 		i = fork();
+// 		if (i == 0)
+// 		{
+// 			sigreset();
+// 			check_redirction(tmp);
+// 			if (tmp->next)
+// 			{
+// 				dup2(fd[1], 1);
+// 				close(fd[0]);
+// 				close(fd[1]);
+// 			}
+// 			execut_pipe(all, tmp);
+// 		}
+// 		if (tmp->next)
+// 		{
+// 			dup2(fd[0], 0);
+// 			close(fd[0]);
+// 			close(fd[1]);
+// 		}
+// 		else
+// 			close(0);
+// 		tmp = tmp->next;
+// 	}
+// 	tmp = t;
+// 	while (t)
+// 	{
+// 		if (wait(&status) == -1)
+// 			exit(EXIT_FAILURE);
+// 		if (WIFSIGNALED(status))
+// 		{
+// 			if (t == tmp)
+// 			{
+// 				if (WTERMSIG(status) == SIGINT)
+// 				{
+// 					write(1, "\n", 1);
+// 					gl.exit_status = 130;
+// 				}
+// 				else if (WTERMSIG(status) == SIGQUIT)
+// 				{
+// 					write(1, "Quit: 3\n", 8);
+// 					gl.exit_status = 131;
+// 				}
+// 			}
+// 		}
+// 		else if (WIFEXITED(status))
+// 			gl.exit_status = WEXITSTATUS(status);
+// 		t = t->next;
+// 	}
+// }
 
 void	many_cmds(t_all *all, t_simple_cmd *tmp)
 {
@@ -117,10 +198,20 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp)
 	}
 }
 
+void	print_message(t_simple_cmd *tmp)
+{
+	if (tmp->err)
+	{	
+		ft_putstr_fd("sash : ", 2);
+		ft_putstr_fd(strerror(tmp->err), 2);
+		ft_putstr_fd("\n", 2);
+	}
+}
+
 int	exec(t_all *all)
 {
 	int				i;
-	int				fd;
+	// int				fd;
 	t_simple_cmd	*tmp;
 
 	i = 0;
@@ -128,21 +219,13 @@ int	exec(t_all *all)
 	if (!all->cmd)
 		return (0);
 	tmp = all->cmd;
-	fd = dup(0);
+	// fd = dup(0);
 	if (!*(tmp->str))
-	{
-		if (tmp->err)
-		{	
-			ft_putstr_fd("sash : ", 2);
-			ft_putstr_fd(strerror(tmp->err), 2);
-			ft_putstr_fd("\n", 2);
-		}
-		return (0);
-	}
+		print_message(tmp);
 	if (!tmp->next)
 		gl.exit_status = one_cmd(all, tmp);
 	else
 		many_cmds(all, tmp);
-	dup2(fd, 0);
+	// dup2(fd, 0);
 	return (0);
 }

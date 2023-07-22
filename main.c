@@ -26,7 +26,10 @@ void	set_env(t_all *all, char **env)
 	// t_var	*oldpwd;
 	int		i;
 	char	path[800];
+	// char	*shelval;	
+	t_simple_cmd *p;
 
+	p = all->cmd;
 	i = 0;
 	all->env = NULL;
 	all->exp = NULL;
@@ -48,8 +51,6 @@ void	set_env(t_all *all, char **env)
 		i++;
 	}
 }
-
-
 
 int	main(int ac, char **av, char **env)
 {

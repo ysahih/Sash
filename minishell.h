@@ -1,5 +1,17 @@
-#ifndef MINISHELL
-#define MINISHELL
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/21 17:43:01 by kaboussi          #+#    #+#             */
+/*   Updated: 2023/07/21 18:20:17 by kaboussi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef MINISHELL_H
+# define MINISHELL_H
 # include <stdio.h>
 # include <signal.h>
 # include <readline/readline.h>
@@ -10,18 +22,19 @@
 # include <stdbool.h>
 # include <fcntl.h>
 # include <errno.h>
-#include <sys/wait.h>
-#include <dirent.h>
+# include <sys/wait.h>
+# include <dirent.h>
 
 # define PROMPT "sash"
 
+// <<<<<<<<<<<<<<<parse>>>>>>>>>>>>>>>>>>>>>>>//
 
 typedef struct s_global
 {
 	int	rl;
-	int exit_status;
-	int runing;
-} t_global;
+	int	exit_status;
+	int	runing;
+}	t_global;
 t_global	gl;
 
 // enum	pipe {BEFORE, AFTER};
@@ -34,16 +47,15 @@ typedef struct s_lexer
 	int		type;
 	char	*str;
 	struct s_lexer	*next;
-	struct s_lexer *previous;	
-}  t_lexer;
+	struct s_lexer	*previous;	
+}	t_lexer;
 
-
-typedef struct	s_var
+typedef	struct	s_var
 {
-	char 			*key;
-	char 			*val;
+	char			*key;
+	char			*val;
 	struct s_var	*next;
-} t_var;
+}	t_var;
 
 typedef struct s_simple_cmds
 {
@@ -53,7 +65,7 @@ typedef struct s_simple_cmds
 	int						err;
 	struct s_simple_cmds	*next;
 	struct s_simple_cmds	*previous;
-} t_simple_cmd;
+}	t_simple_cmd;
 
 //list utils
 void	create_node(t_lexer	**lst, char *s, int operator);
@@ -79,13 +91,11 @@ bool	is_alnum(char c);
 bool	is_alpha(int c);
 bool	valid_var(char c);
 
-
 //syntax analyzer
 bool	analyze_syntax(t_lexer *cmd);
 bool	analyze_quote(t_lexer **node, int flag);
 bool	pipe_analyze(t_lexer *cmd);
 bool	pipe_checker(t_lexer *cmd, int i);
-
 
 //utils_parse
 
@@ -93,28 +103,21 @@ void	lst_var(t_var **var, char **s);
 char	**ft_split(char *str);
 char	*ft_strjoin(char *s1, char *s2);
 
-
 //------------------------------------------------------------------------------
 
-typedef struct	s_export
+typedef struct s_export
 {
-	char 			*var;
-	char 			*val;
+	char			*var;
+	char			*val;
 	struct s_export	*next;
-} t_export;
+}	t_export;
 
-typedef struct	s_all
+typedef struct s_all
 {
-	t_var 				*env;
-	t_var 				*exp;
+	t_var				*env;
+	t_var				*exp;
 	t_simple_cmd		*cmd;
-} t_all;
-
-typedef struct s_list
-{
-	void			*content;
-	struct s_list	*next;
-}					t_list;         
+}	t_all;
 
 typedef struct s_pwd
 {
@@ -197,6 +200,7 @@ t_var	*unset_exp(char *str, t_var **exp);
 t_var	*unset_env(char *str, t_var **env);
 t_var	*check_exist_key(t_var	*lst, char	*str);
 void	ft_lstdelone(t_var *lst);
+int		invalid_unset(char *c);
 
 			//---{utils}---//
 int		ft_strcmp(char *st1, char *st2);
@@ -223,7 +227,10 @@ char	*ft(char *s, char *s2, int len);
 int		count_path(char *str);
 void	shelvl(t_all *all, t_simple_cmd *p);
 
-void	sig_handler();
+// <<<<<<<<<<<<<<<<<<<signals>>>>>>>>>>>>>>>>>>>>>>>>>>>//
+
+void	sig_handler(void);
 void	handle_INT(int sig);
-void		sigreset();
+void	sigreset(void);
+
 #endif

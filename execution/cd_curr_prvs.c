@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 14:48:59 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/21 14:06:54 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/22 10:07:31 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,12 @@ int	curr_cd(t_all *all)
 	pwd = getcwd(path, 800);
 	if (!pwd)
 	{
+		printf(">>>>{%s}\n", pwd);
 		ft_putstr_fd("cd: error retrieving current directory: ", 2);
 		ft_putstr_fd("getcwd: cannot access parent directories: ", 2);
 		ft_putstr_fd("No such file or directory\n", 2);
+		chdir(".");
+		printf("{%s}\n", getcwd(path, 800));
 		return (0);
 	}
 	i = chdir(pwd);
@@ -80,6 +83,7 @@ void	prvs_succes(t_all *all, t_pwd *pwd, char *val, char *path)
 		pwd->pwd_en->val = NULL;
 		pwd->pwd_en->val = ft_strdup(val);
 	}
+	
 	if (pwd->pwd_ex && pwd->pwd_ex->val)
 	{
 		free(pwd->oldpwd_ex->val);
