@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 15:48:52 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/22 08:23:19 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/22 08:33:53 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,33 +91,14 @@ void	egal_plus_empty(t_all *all, t_simple_cmd *p, int i, int k)
 	char	*new_key;
 
 	new_key = ft_substr(p->str[i], 0, k - 1);
-	printf("{%s}\n", new_key);
 	tmp_ex = check_char(all->exp, new_key);
-	printf("{≥≥≥≥≥≥%s}\n", new_key);
-	puts("l");
 	if (!tmp_ex)
 	{
-		puts("k");
 		add_exen_back(&all->env, lstnew_exen(new_key, ft_strdup("")));
 		add_exen_back(&all->exp, lstnew_exen(ft_strdup(new_key), \
 		ft_strdup("")));
 		all->exp = sort_env(all->exp);
 	}
-}
-
-int	is_valid(char *c)
-{
-	int i;
-
-	i = 0;
-	while (c[i] != '\0')
-	{
-		if (!((c[i] >= 65 && c[i] <= 90) || (c[i] >= 97 && c[i] <= 122) || (c[i] >= 48 && c[i] <= 57)\
-		|| (c[i] == '_') || (c[i] == '=')))
-			return (1);
-		i++;
-	}
-	return (0);
 }
 
 void	exist_egal(t_all *all, t_simple_cmd *p, int i, int k)
@@ -132,35 +113,4 @@ void	exist_egal(t_all *all, t_simple_cmd *p, int i, int k)
 		egal_plus(all, p, i, k);
 	else if (p->str[i][k + 1] == '\0' && p->str[i][k - 1] == '+')
 		egal_plus_empty(all, p, i, k);
-}
-
-int	not_valid(t_simple_cmd *p, int i, int k)
-{
-	char *invalid;
-	int j;
-
-	invalid = ft_substr(p->str[i], 0, k);
-	j = ft_strchr(invalid, '+');
-	if (k - 1 == j)
-	{
-		invalid = ft_substr(p->str[i], 0, j);
-		if (is_valid(invalid) == 1)
-		{
-			puts("hna");
-			ft_putstr_fd("sash: export: `", 2);
-			ft_putstr_fd(p->str[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
-			return (1);
-		}
-		else
-			return (0);
-	}
-	else if (j != -1)
-	{
-		ft_putstr_fd("sash: export: `", 2);
-		ft_putstr_fd(p->str[i], 2);
-		ft_putstr_fd("': not a valid identifier\n", 2);
-		return (1);
-	}
-	return (2);
 }

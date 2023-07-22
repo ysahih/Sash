@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 21:07:40 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/19 16:00:00 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/21 14:56:25 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,15 +90,44 @@ t_var	*unset_exp(char *str, t_var **exp)
 	return (*exp);
 }
 
-void	unset(t_simple_cmd *p, t_var **env, t_var **exp)
+int	invalid_unset(char *c)
 {
 	int	i;
 
+	i = 0;
+	while (c[i] != '\0')
+	{
+		if (!((c[i] >= 65 && c[i] <= 90) || (c[i] >= 97 && c[i] <= 122) || \
+		(c[i] >= 48 && c[i] <= 57) \
+		|| (c[i] == '_')))
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	unset(t_simple_cmd *p, t_var **env, t_var **exp)
+{
+	int	i;
+	int	flag;
+
+	flag = 0;
 	i = 1;
 	while (p->str[i])
 	{
+		if ((alpha(p->str[i][0]) != 1 && p->str[i][0] != '_') || \
+		invalid_unset(p->str[i]) == 1)
+		{
+			ft_putstr_fd("sash: unset: `", 2);
+			ft_putstr_fd(p->str[i], 2);
+			ft_putstr_fd("\': not a valid identifier\n", 2);
+			flag++;
+		}
 		*env = unset_env(p->str[i], env);
 		*exp = unset_exp(p->str[i], exp);
 		i++;
 	}
+	if (flag != 0)
+		return (1);
+	return (0);
 }

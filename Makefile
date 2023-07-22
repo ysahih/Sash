@@ -17,6 +17,7 @@ execution/export.c\
 execution/export_only.c\
 execution/export_egal_plus.c\
 execution/export_lst-utils.c\
+execution/export_invalid.c\
 execution/pwd.c\
 execution/echo.c\
 execution/unset.c\
@@ -25,6 +26,8 @@ execution/cd_curr_prvs.c\
 execution/cd_swap_home.c\
 execution/exit.c\
 execution/not_builtin.c\
+execution/notbuiltin_utils0.c\
+execution/notbuiltin_utils1.c\
 
 RM = rm -rf
 CC = cc
