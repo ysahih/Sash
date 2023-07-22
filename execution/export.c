@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 16:28:32 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/21 14:33:49 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/22 11:37:31 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	egal_not_exist(t_all *all, t_simple_cmd *p, int i)
 {
 	t_var	*tmp_ex;
 
-	if (is_valid(p->str[i]) == 1)
+	if (is_valid(p->str[i]) == -1)
 	{
 		ft_putstr_fd("sash: export: `", 2);
 		ft_putstr_fd(p->str[i], 2);
@@ -44,8 +44,8 @@ int	export(t_all *all, t_simple_cmd	*p)
 	int				flag;
 	int				i;
 
-	flag = 0;
 	k = 0;
+	flag = 0;
 	if (!p->str[1])
 		only_exp(all, all->cmd->out_fd);
 	else
@@ -53,7 +53,7 @@ int	export(t_all *all, t_simple_cmd	*p)
 		i = 0;
 		while (p->str[++i])
 		{
-			if (alpha(p->str[i][0]) != 1 && p->str[i][0] != '_')
+			if (!valid_var(p->str[i][0]))
 			{
 				print_invalid(p, i);
 				flag++;

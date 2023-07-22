@@ -42,7 +42,13 @@ bool	is_alpha(int c)
 
 bool	valid_var(char c)
 {
-	return (is_alpha(c) || is_digit(c) || c == '_');
+	return (is_alpha(c) || c == '_');
+}
+
+bool	is_ws(char c)
+{
+	return (c == ' ' || c == '\t' || c == '\v' ||
+		c == '\n' || c == '\r'  || c == '\f');
 }
 
 char	*ft_strcpy(char *str, int size)

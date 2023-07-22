@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 21:07:40 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/21 14:56:25 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/22 11:07:44 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	unset(t_simple_cmd *p, t_var **env, t_var **exp)
 	i = 1;
 	while (p->str[i])
 	{
-		if ((alpha(p->str[i][0]) != 1 && p->str[i][0] != '_') || \
+		if ((is_alpha(p->str[i][0]) != 1 && p->str[i][0] != '_') || \
 		invalid_unset(p->str[i]) == 1)
 		{
 			ft_putstr_fd("sash: unset: `", 2);

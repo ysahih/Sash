@@ -85,7 +85,6 @@ bool	is_alnum(char c);
 bool	is_alpha(int c);
 bool	valid_var(char c);
 
-
 //syntax analyzer
 bool	analyze_syntax(t_lexer *cmd);
 bool	analyze_quote(t_lexer **node, int flag);
@@ -100,6 +99,10 @@ char	**ft_split(char *str);
 char	*ft_strjoin(char *s1, char *s2);
 char	**ft_free(char **p, int j);
 char	**ft_freee(char **p);
+
+// extra utils
+bool	is_alpha(int c);
+bool	is_ws(char c);
 
 //------------------------------------------------------------------------------
 
@@ -132,10 +135,10 @@ typedef struct s_pwd
 	t_var			*oldpwd_ex;
 }	t_pwd;
 
-//parse
+// parse
 void	parse(t_all *all, t_lexer *cmdline);
 
-// <<<<<<<<<<<<<<<execution>>>>>>>>>>>>>>>>>>>>>>>//
+// execution
 
 int		exec(t_all *all);
 int		one_cmd(t_all *all, t_simple_cmd *tmp);

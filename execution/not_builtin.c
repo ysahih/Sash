@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   not_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/21 14:53:17 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/22 10:46:20 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 void	sigreset(void)
 {
-	// signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	signal(SIGQUIT, SIG_ERR);
 }
 
 void	wa_it(void)

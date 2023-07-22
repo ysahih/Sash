@@ -68,6 +68,7 @@ void	set_env(t_all *all, char **env)
 		add_exen_back(&all->env ,lstnew_exen(ft_strdup("PWD"), ft_strdup(getcwd(path, 800))));
 		add_exen_back(&all->env ,lstnew_exen(ft_strdup("SHLVL"), ft_strdup("1")));
 		add_exen_back(&all->env ,lstnew_exen(ft_strdup("_"), ft_strdup("/usr/bin/env")));
+
 		return ;
 	}
 	while (env[i])
@@ -96,13 +97,9 @@ int	main(int ac, char **av, char **env)
 	while (true)
 	{
 		gl.rl = 0;
-		line = readline("sash$ ");
-		// ft_putstr_fd(line, 2);
+		line = readline("sash>$ ");
 		if (!line)
-		{
-			write(1, "exit\n", 5);
-			break;
-		}
+			return (printf("exit\n"), gl.exit_status);
 		if (*line)
 			add_history(line);
 		else
@@ -111,23 +108,13 @@ int	main(int ac, char **av, char **env)
 			continue;
 		}
 		cmd = tokenize(line);
-		// free(line);
 		if (!analyze_syntax(cmd))
-		{
-			// printf("%d\n", gl.exit_status);
 			continue ;
-		}
 		parse(&all, cmd);
 		exec(&all);
 
 		// t_simple_cmd	*tmp;
-		// int		i = 0;
-		// tmp = all.cmd;
-		// while (tmp)
-		// {
-		// 	i++;
-		// 	tmp = tmp->next;
-		// }
+		
 		// while (all.cmd)
 		// {
 		// 	// puts("aaaaaaa");

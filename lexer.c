@@ -2,13 +2,11 @@
 
 void	tokenize_word(t_lexer **node, char **s)
 {
+	char *tmp;
 	int	i;
 
-	char *tmp;
-
-	tmp = *s;
 	i = 0;
-	
+	tmp = *s;
 	while (tmp[i] && !is_symbol(tmp[i]))
 	{
 		if (tmp[i] == '$' && tmp[i + 1] && valid_var(tmp[i + 1]))
@@ -41,6 +39,38 @@ void	tokenize_var(t_lexer **node, char **s)
 	*s += i;
 }
 
+void	quote_word(t_lexer **node, char *s, int *i, int j)
+{
+	char *tmp;
+
+	tmp = s;
+	j = *i;
+	while (tmp[*i] && tmp[*i] != '"')
+	{
+		if (tmp[*i] == '$' && tmp[*i + 1] && valid_var(tmp[*i + 1]))
+			break ;
+		(*i)++;
+	}
+	create_node(node, ft_strcpy(s + j, *i - j), WORD, 0);
+}
+
+char *set_quote(t_lexer **node, char **s)
+{
+	char *tmp;
+
+	*s += 1;
+	tmp = *s;
+	create_node(node, "\"", DQUOTE, 0);
+	return (tmp);
+}
+
+void	close_quotes(t_lexer **node, char **s, char *tmp, int i)
+{
+	create_node(node, "\"", DQUOTE, 0);
+	*s = &tmp[++i];
+	return ;
+}
+
 void	tokenize_dquote(t_lexer **node, char **s)
 {
 	int		i;
@@ -48,17 +78,11 @@ void	tokenize_dquote(t_lexer **node, char **s)
 	char	*tmp;
 
 	i = 0;
-	*s += 1;
-	tmp = *s;
-	create_node(node, "\"", DQUOTE, 0);
+	tmp = set_quote(node, s);
 	while (tmp[i])
 	{
 		if (tmp[i] == '"')
-		{
-			create_node(node, "\"", DQUOTE, 0);
-			*s = &tmp[++i];
-			return ;
-		}
+			return (close_quotes(node, s, tmp, i));
 		if (tmp[i] == '$' && tmp[i + 1] && valid_var(tmp[i + 1]))
 		{
 			j = ++i;
@@ -69,15 +93,8 @@ void	tokenize_dquote(t_lexer **node, char **s)
 		}
 		else
 		{
-			j = i;
-			while (tmp[i] && tmp[i] != '"')
-			{
-				if (tmp[i] == '$' && tmp[i + 1] && valid_var(tmp[i + 1]))
-					break ;
-				i++;
-			}
-			create_node(node, ft_strcpy(tmp + j, i - j), WORD, 0);
-			*s = &tmp[i];
+			quote_word(node, tmp, &i, j);
+			*s += i;
 		}
 	}
 }
@@ -100,9 +117,9 @@ void	tokenize_squote(t_lexer **node, char **s)
 		create_node(node, "'", SQUOTE, 0);
 		i++;
 	}
-	// printf("|%c|\n", tmp[i - 1]);
 	*s += i;
 }
+
 
 void	tokenize_red(t_lexer **node, char **s)
 {
@@ -144,7 +161,7 @@ void	get_token(t_lexer **node, char **line, int type)
 	if (type == WSPACE)
 	{
 		create_node(node, " ", WSPACE, 0);
-		while (**line == ' ')
+		while (is_ws(**line))
 			(*line)++;
 	}
 	if (type == -1)
@@ -154,15 +171,23 @@ void	get_token(t_lexer **node, char **line, int type)
 	}
 }
 
+char *set_line(t_lexer **node, char **line)
+{
+	char *tmp;
+
+	tmp = *line;
+	*node = NULL;
+	while (is_ws(**line))
+		(*line)++;
+	return (tmp);
+}
+
 t_lexer	*tokenize(char *line)
 {
 	t_lexer *node;
 	char 	*tmp;
 
-	tmp = line;
-	node = NULL;
-	while(*line == ' ')
-		line++;
+	tmp = set_line(&node, &line);
 	while (*line)
 	{
 		if (*line == ' ')
@@ -177,18 +202,12 @@ t_lexer	*tokenize(char *line)
 			get_token(&node, &line, -1);
 		else if (*line == '>'|| *line == '<')
 			tokenize_red(&node, &line);
-		else if (*line == '$' && *(line + 1) && (valid_var(*(line + 1)) || *(line + 1) == '?'))
+		else if (*line == '$' && *(line + 1) &&
+			(valid_var(*(line + 1)) || *(line + 1) == '?'))
 			tokenize_var(&node, &line);
 		else
 			tokenize_word(&node, &line);
 	}
-	// t_lexer	 *tmp = node;
-	// puts("ls");
-	// while (tmp)
-	// {
-	// 	printf("|%s|-%d\n", tmp->str, tmp->type);
-	// 	tmp = tmp->next;
-	// }
 	free(tmp);
 	return (node);
 }

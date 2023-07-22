@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_lst-utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 15:12:45 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/19 15:15:27 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/22 11:32:09 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,7 @@ void	add_exen_back(t_var **exen, t_var *new)
 		if (k != NULL)
 		{
 			if (!ft_strcmp(k->val, new->val))
-			{
 				return ;
-			}
 		}
 		k = ft_last(tmp);
 		k->next = new;

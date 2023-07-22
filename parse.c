@@ -56,8 +56,18 @@ char	**ft_split(char *str)
 			s[j++] = ft_strncpy(malloc (i - a + 1), str + a, i - a);
 	}
 	s[j] = NULL;
-	// printf("%s=%s\n", s[0], s[1]);
 	return (s);
+}
+
+char	*empty_str(char *s1, char *s2)
+{
+	if (s1 && s2)
+		return (NULL);
+	if (!s1)
+		return (s2);
+	if (!s2)
+		return (s1);
+	return (NULL);
 }
 
 char	*ft_strjoin(char *s1, char *s2)
@@ -68,10 +78,8 @@ char	*ft_strjoin(char *s1, char *s2)
 
 	if (!s1 && !s2)
 		return (0);
-	if(!s1)
-		return (s2);
-	if(!s2)
-		return (s1);
+	if (empty_str(s1, s2) != NULL)
+		return (empty_str(s1, s2));
 	p = (char *)malloc (ft_strlen (s1) + ft_strlen (s2) + 1);
 	if (!p)
 		return (0);
@@ -116,7 +124,6 @@ void	empty_quotes(t_lexer **cmdline, t_lexer **node)
 t_lexer	*rm_quote(t_lexer *cmdline)
 {
 	t_lexer	*node;
-	// t_lexer	*tmp;
 
 	node = NULL;
 	while (cmdline)
@@ -128,20 +135,11 @@ t_lexer	*rm_quote(t_lexer *cmdline)
 			create_node(&node, cmdline->str, cmdline->type, 0);
 		cmdline = cmdline->next;
 	}
-	// free_gb();
 	return (node);
 }
 
-t_lexer	*merge_word(t_lexer *cmd)
+void	join_words(t_lexer **node, t_lexer *cmd, char *str)
 {
-	t_lexer	*node;
-	// t_lexer	*tmp;
-	char 	*str;
-
-	str = NULL;
-	node = NULL;
-	if (!cmd)
-		return NULL;
 	while (cmd)
 	{
 		while (cmd && (cmd->type == WORD || cmd->type == -2))
@@ -149,25 +147,31 @@ t_lexer	*merge_word(t_lexer *cmd)
 			str = ft_strjoin(str, cmd->str);
 			cmd = cmd->next;
 		}
-		create_node(&node, str, WORD, 0);
+		create_node(node, str, WORD, 0);
 		str = NULL;
 		if (!cmd)
 			break ;
 		else 
-		// if (cmd->type != WORD)
 		{
-			create_node(&node, cmd->str, cmd->type, 0);
+			create_node(node, cmd->str, cmd->type, 0);
 			cmd = cmd->next;
 		}
 	}
 	if (cmd)
-		create_node(&node, cmd->str, cmd->type, 0);
-	// while (cmd)
-	// {
-	// 	tmp = cmd->next;
-	// 	free(cmd);
-	// 	cmd = tmp;
-	// }
+		create_node(node, cmd->str, cmd->type, 0);
+
+}
+
+t_lexer	*merge_word(t_lexer *cmd)
+{
+	t_lexer	*node;
+	char 	*str;
+
+	str = NULL;
+	node = NULL;
+	if (!cmd)
+		return NULL;
+	join_words(&node, cmd, str);
 	return (node);
 }
 
@@ -176,14 +180,13 @@ t_lexer	*rm_space(t_lexer *cmd)
 	t_lexer	*node;
 
 	node = NULL;
-	// free_gb();
 	while (cmd)
 	{
 		if (cmd->type != WSPACE)
 			create_node(&node, cmd->str, cmd->type, 1);
 		cmd = cmd->next;
 	}
-	// free_gb();
+	free_gb();
 	return(node);
 }
 
@@ -217,7 +220,6 @@ void	add_scmd(t_simple_cmd **lst, t_simple_cmd *new)
 	}
 	last_node = last_cmd(*lst);
 	last_node->next = new;
-	// last_node->next->previous = last_node;
 }
 
 int	count_wd(t_lexer *cmd)
@@ -227,7 +229,8 @@ int	count_wd(t_lexer *cmd)
 	i = 0;
 	while (cmd && cmd->type != PIPE)
 	{
-		if ((cmd->type == WORD && !cmd->previous) || (cmd->type == WORD && cmd->previous && cmd->previous->type <= WORD))
+		if ((cmd->type == WORD && !cmd->previous) ||
+			(cmd->type == WORD && cmd->previous && cmd->previous->type <= WORD))
 			i++;
 		cmd = cmd->next;
 	}
@@ -243,7 +246,6 @@ t_simple_cmd *create_scmd(t_lexer *cmd)
 	scmd = malloc(sizeof(t_simple_cmd));
 	scmd->str = malloc(sizeof(char *) * i);
 	scmd->next = NULL;
-	// scmd->previous = NULL;
 	scmd->in_fd = 0;
 	scmd->out_fd = 1;
 	scmd->err = 0;
@@ -341,35 +343,17 @@ void	hd_sig(int sig)
 {
 	(void)sig;
 	gl.rl = 1;
-	// rl_done = 1;
+	rl_done = 1;
 }
 
-void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
+void	read_hd( char *s, int fd[2])
 {
 	char	*line;
-	char	*s;
-	int		fd[2];
-	t_lexer	*tmp;
 
-	if (pipe(fd) == -1)
-	{
-		(*scmd)->err = errno;
-		return ;
-	}
-	// rl_event_hook = event;
-	signal(SIGINT, hd_sig);
-	(*cmdline) = (*cmdline)->next;
-	tmp = *cmdline;
-	s = ft_strdup("");
-	if ((*cmdline))
-	{
-		free(s);
-		s = (*cmdline)->str;
-	}
 	while(true)
 	{
 		line = readline("> ");
-		if (!line || strcmp(line, s) == 0 || gl.rl)
+		if (!line || ft_strcmp(line, s) == 0 || gl.rl)
 		{
 			gl.rl = 0;
 			if (line)
@@ -381,13 +365,34 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 		free(line);
 	}
 	close(fd[1]);
+	free(s);
+}
+
+void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
+{
+	int		fd[2];
+	char *s;
+
+	if (pipe(fd) == -1)
+	{
+		(*scmd)->err = errno;
+		return ;
+	}
+	rl_event_hook = event;
+	signal(SIGINT, hd_sig);
+	(*cmdline) = (*cmdline)->next;
+	s = ft_strdup("");
+	if ((*cmdline))
+	{
+		free(s);
+		s = (*cmdline)->str;
+	}
+	read_hd( s, fd);
 	if ((*cmdline))
 		(*cmdline) = (*cmdline)->next;
 	(*scmd)->in_fd = fd[0];
-	free(s);
-	// if (tmp)
-	// 	free (tmp);
 }
+
 
 void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd, int red)
 {
@@ -395,16 +400,9 @@ void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd, int red)
 
 	(*cmdline) = (*cmdline)->next;
 	tmp = *cmdline;
-	// if (!(*cmdline) || ((*cmdline) && (*cmdline)->type == -2))
-	// {
-	// 	ft_putstr_fd("sash: : No such file or directory\n", 2);
-	// 	(*cmd)->err = 0;
-	// 	if ((*cmdline))
-	// 		(*cmdline) = (*cmdline)->next;
-	// 	return ;
-	// }
 	if (red == OUTRED)
 	{
+		
 		(*cmd)->out_fd = open(tmp->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if((*cmd)->out_fd < 0)
 			(*cmd)->err = errno;
@@ -416,11 +414,6 @@ void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd, int red)
 		if((*cmd)->in_fd < 0)
 		{
 			(*cmd)->err = errno;
-			// if (errno == 2)
-			// {
-			// 	// ft_putstr_fd("sash: : No such file or directory\n", 2);
-			// 	(*cmd)->err = 0;
-			// }
 		}
 	}
 	else if (red == APPEND)
@@ -430,8 +423,7 @@ void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd, int red)
 			(*cmd)->err = errno;
 	}
 	(*cmdline) = (*cmdline)->next;
-	// free(tmp->str);
-	// free(tmp);
+	free(tmp->str);
 }
 
 t_lexer	*parse_wc(t_lexer *cmd)
@@ -457,27 +449,18 @@ t_lexer	*parse_wc(t_lexer *cmd)
 					create_node(&node, " ", WSPACE, 0);
 				}
 			}
-			// closedir(dir);
 		}
 		else
 			create_node(&node, cmd->str, cmd->type, 0);
 		cmd = cmd->next;
 	}
-	// free_gb();
 	return node;
 }
 
-t_simple_cmd	*collect_scmds(t_lexer **cmdline)
+t_simple_cmd	*collect_scmds(t_lexer **cmdline, int i)
 {
 	t_simple_cmd	*cmd;
-	t_lexer 		*tmp;
-	int				i;
-	int				flag;
-
-	i = 0;
-	flag = true;
-
-	tmp = *cmdline;
+	
 	cmd = create_scmd(*cmdline);
 	while (*cmdline)
 	{
@@ -486,53 +469,31 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 			*cmdline = (*cmdline)->next;
 			break ;
 		}
-		else if ((*cmdline)->type < 0)
-			(*cmdline) = (*cmdline)->next;
-		else if ((*cmdline)->type == OUTRED)
-			parse_red(cmdline, &cmd, OUTRED);
-		else if ((*cmdline)->type == INRED)
-			parse_red(cmdline, &cmd, INRED);
-		else if ((*cmdline)->type == APPEND)
-			parse_red(cmdline, &cmd, APPEND);
+		else if ((*cmdline)->type == OUTRED ||
+			(*cmdline)->type == INRED || (*cmdline)->type == APPEND)
+			parse_red(cmdline, &cmd, (*cmdline)->type);
 		else if((*cmdline)->type == HERDOC)
 			parse_hd(&cmd, cmdline);
 		else if ((*cmdline)->type == WORD || (*cmdline)->type == -2)
 		{
-			cmd->str[i] = (*cmdline)->str;
+			cmd->str[i++] = (*cmdline)->str;
 			(*cmdline) = (*cmdline)->next;
-			i++;
 		}
 	}
-	cmd->str[i] = NULL;
-	
-	// if (cmd->err < 0)
-	// 	return (NULL);
-	// i = 0;
-	// while (cmd->str[i])
-	// 	printf("[%s]\n", cmd->str[i++]);
-	return (cmd);
+	return (cmd->str[i] = NULL, cmd);
 }
 
-
-void	parse(t_all *all, t_lexer *cmdline)
+t_lexer	*filter(t_all *all, t_lexer *cmdline)
 {
-	t_simple_cmd 	*scmd;
-	// t_simple_cmd 	*tmp;
-	t_lexer 		*cmd;
-	t_lexer			*tmp1;
-	t_lexer			*tmp2;
+	t_lexer *cmd;
 
-
-	scmd = NULL;
-
-	// cmd = cmdline;
 	cmd = rm_quote(cmdline);
 	if (cmd->type == -2)
 		cmd = cmd->next;
 	if (!cmd || (cmd && cmd->type == WSPACE))
 	{
 		ft_putstr_fd("sash: : command not found\n", 2);
-		// gl.exit_status = 127;
+		gl.exit_status = 127;
 		while (cmd && cmd->type != PIPE)
 			cmd = cmd->next;
 		if (cmd && cmd->type == PIPE)
@@ -542,23 +503,26 @@ void	parse(t_all *all, t_lexer *cmdline)
 	cmd = parse_wc(cmd);  
 	cmd = merge_word(cmd);
 	cmd = rm_space(cmd);
+	return (cmd);
+}
+
+void	parse(t_all *all, t_lexer *cmdline)
+{
+	t_simple_cmd 	*scmd;
+	t_lexer 		*cmd;
+	t_lexer			*tmp1;
+	t_lexer			*tmp2;
+
+	scmd = NULL;
+	cmd = filter(all, cmdline);
 	tmp1 = cmd;
 	while(cmd)
-		add_scmd(&scmd, collect_scmds(&cmd));
+		add_scmd(&scmd, collect_scmds(&cmd, 0));
 	while (tmp1)
 	{
 		tmp2 = tmp1->next;
 		free(tmp1);
 		tmp1 = tmp2;
 	}
-	// system("leaks sash");
-	
 	all->cmd = scmd;
-	
-	
-	// 	printf("=%s=\n", cmd->str);
-		
-		
-	// 	cmd = cmd->next;
-	// }
 }

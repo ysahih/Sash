@@ -28,7 +28,6 @@ void	collect_garbage(void *ptr)
 {
 	t_gc	*tmp;
 
-
 	tmp = malloc(sizeof(t_gc));
 	tmp->ptr = ptr;
 	tmp->next = NULL;
@@ -49,14 +48,12 @@ void	*ft_malloc(int size, int flag)
 	return ptr;
 }
 
-
 void	free_gb()
 {
 	t_gc	*tmp;
 
 	while (gl.gc)
 	{
-		// printf("you\n");
 		tmp = gl.gc;
 		gl.gc = gl.gc->next;
 		free(tmp->ptr);

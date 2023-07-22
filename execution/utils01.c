@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils01.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 15:09:06 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/19 16:08:04 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/22 11:09:28 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,4 @@ char	*ft_strdup(char *str)
 	}
 	p[i] = 0x0;
 	return (p);
-}
-
-int	alpha(int c)
-{
-	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
-		return (1);
-	return (0);
 }
