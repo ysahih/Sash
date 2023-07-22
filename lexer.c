@@ -15,7 +15,7 @@ void	tokenize_word(t_lexer **node, char **s)
 			break ;
 		i++;
 	}
-	create_node(node, ft_strcpy(*s, i), WORD);
+	create_node(node, ft_strcpy(*s, i), WORD, 0);
 	*s += i;
 }
 
@@ -29,7 +29,7 @@ void	tokenize_var(t_lexer **node, char **s)
 	tmp = *s;
 	if (!ft_strcmp(tmp, "?"))
 	{
-		create_node(node, "?", VAR);
+		create_node(node, "?", VAR, 0);
 		*s += 1;
 		return ;
 	}
@@ -37,7 +37,7 @@ void	tokenize_var(t_lexer **node, char **s)
 		return ;
 	while(tmp[i] && valid_var(tmp[i]))
 		i++;
-	create_node(node, ft_strcpy(tmp, i), VAR);
+	create_node(node, ft_strcpy(tmp, i), VAR, 0);
 	*s += i;
 }
 
@@ -50,12 +50,12 @@ void	tokenize_dquote(t_lexer **node, char **s)
 	i = 0;
 	*s += 1;
 	tmp = *s;
-	create_node(node, "\"", DQUOTE);
+	create_node(node, "\"", DQUOTE, 0);
 	while (tmp[i])
 	{
 		if (tmp[i] == '"')
 		{
-			create_node(node, "\"", DQUOTE);
+			create_node(node, "\"", DQUOTE, 0);
 			*s = &tmp[++i];
 			return ;
 		}
@@ -64,7 +64,7 @@ void	tokenize_dquote(t_lexer **node, char **s)
 			j = ++i;
 			while (tmp[i] && valid_var(tmp[i]))
 				i++;
-			create_node(node, ft_strcpy(tmp + j, i - j), VAR);
+			create_node(node, ft_strcpy(tmp + j, i - j), VAR, 0);
 			*s = &tmp[i];
 		}
 		else
@@ -76,7 +76,7 @@ void	tokenize_dquote(t_lexer **node, char **s)
 					break ;
 				i++;
 			}
-			create_node(node, ft_strcpy(tmp + j, i - j), WORD);
+			create_node(node, ft_strcpy(tmp + j, i - j), WORD, 0);
 			*s = &tmp[i];
 		}
 	}
@@ -90,14 +90,14 @@ void	tokenize_squote(t_lexer **node, char **s)
 	i = 0;
 	*s += 1;
 	tmp = *s;
-	create_node(node, "'", SQUOTE);
+	create_node(node, "'", SQUOTE, 0);
 	while (tmp[i] && tmp[i] != '\'')
 		i++;
 	if (i)
-		create_node(node, ft_strcpy(tmp, i), WORD);
+		create_node(node, ft_strcpy(tmp, i), WORD, 0);
 	if (tmp[i] == '\'')
 	{
-		create_node(node, "'", SQUOTE);
+		create_node(node, "'", SQUOTE, 0);
 		i++;
 	}
 	// printf("|%c|\n", tmp[i - 1]);
@@ -113,22 +113,22 @@ void	tokenize_red(t_lexer **node, char **s)
 	{
 		if (*(line + 1) && *(line + 1) == '>')
 		{
-			create_node(node, ">>", APPEND);
+			create_node(node, ">>", APPEND, 0);
 			line++;
 		}
 		else
-			create_node(node, ">", OUTRED);
+			create_node(node, ">", OUTRED, 0);
 		line++;
 	}
 	else if (*line == '<')
 	{
 		if (*(line + 1) && *(line + 1) == '<')
 		{
-			create_node(node, "<<", HERDOC);
+			create_node(node, "<<", HERDOC, 0);
 			line++;
 		}
 		else
-			create_node(node, "<", INRED);
+			create_node(node, "<", INRED, 0);
 		line++;
 	}
 	*s = line;
@@ -138,18 +138,18 @@ void	get_token(t_lexer **node, char **line, int type)
 {
 	if (type == PIPE)
 	{
-		create_node(node, "|", PIPE);
+		create_node(node, "|", PIPE, 0);
 		(*line)++;
 	}
 	if (type == WSPACE)
 	{
-		create_node(node, " ", WSPACE);
+		create_node(node, " ", WSPACE, 0);
 		while (**line == ' ')
 			(*line)++;
 	}
 	if (type == -1)
 	{
-		create_node(node, "*", -1);
+		create_node(node, "*", -1, 0);
 		(*line)++;
 	}
 }
@@ -157,9 +157,11 @@ void	get_token(t_lexer **node, char **line, int type)
 t_lexer	*tokenize(char *line)
 {
 	t_lexer *node;
+	char 	*tmp;
 
+	tmp = line;
 	node = NULL;
-	while(*line == ' ') 
+	while(*line == ' ')
 		line++;
 	while (*line)
 	{
@@ -187,5 +189,6 @@ t_lexer	*tokenize(char *line)
 	// 	printf("|%s|-%d\n", tmp->str, tmp->type);
 	// 	tmp = tmp->next;
 	// }
+	free(tmp);
 	return (node);
 }

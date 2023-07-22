@@ -97,15 +97,16 @@ void	empty_quotes(t_lexer **cmdline, t_lexer **node)
 		return ;
 	if (cmd->type == DQUOTE && cmd->next->type == DQUOTE)
 	{
-		create_node(node, ft_strdup(""), -2);
+		create_node(node, ft_strdup(""), -2, 0);
 		cmd = cmd->next;
 		cmd = cmd->next;
 	}
 	if (!cmd || !cmd->next)
 		return ;
+	
 	if (cmd->type == SQUOTE && cmd->next->type == SQUOTE)
 	{
-		create_node(node, ft_strdup(""), -2);
+		create_node(node, ft_strdup(""), -2, 0);
 		cmd = cmd->next;
 		cmd = cmd->next;
 	}
@@ -115,7 +116,7 @@ void	empty_quotes(t_lexer **cmdline, t_lexer **node)
 t_lexer	*rm_quote(t_lexer *cmdline)
 {
 	t_lexer	*node;
-	t_lexer	*tmp;
+	// t_lexer	*tmp;
 
 	node = NULL;
 	while (cmdline)
@@ -124,15 +125,10 @@ t_lexer	*rm_quote(t_lexer *cmdline)
 		if (!cmdline)
 			break ;
 		if (cmdline->type != DQUOTE && cmdline->type != SQUOTE)
-			create_node(&node, cmdline->str, cmdline->type);
+			create_node(&node, cmdline->str, cmdline->type, 0);
 		cmdline = cmdline->next;
 	}
-	while (cmdline)
-	{
-		tmp = cmdline->next;
-		free(cmdline);
-		cmdline = tmp;
-	}
+	// free_gb();
 	return (node);
 }
 
@@ -153,19 +149,19 @@ t_lexer	*merge_word(t_lexer *cmd)
 			str = ft_strjoin(str, cmd->str);
 			cmd = cmd->next;
 		}
-		create_node(&node, str, WORD);
+		create_node(&node, str, WORD, 0);
 		str = NULL;
 		if (!cmd)
 			break ;
 		else 
 		// if (cmd->type != WORD)
 		{
-			create_node(&node, cmd->str, cmd->type);
+			create_node(&node, cmd->str, cmd->type, 0);
 			cmd = cmd->next;
 		}
 	}
 	if (cmd)
-		create_node(&node, cmd->str, cmd->type);
+		create_node(&node, cmd->str, cmd->type, 0);
 	// while (cmd)
 	// {
 	// 	tmp = cmd->next;
@@ -178,21 +174,16 @@ t_lexer	*merge_word(t_lexer *cmd)
 t_lexer	*rm_space(t_lexer *cmd)
 {
 	t_lexer	*node;
-	t_lexer	*tmp;
 
 	node = NULL;
+	// free_gb();
 	while (cmd)
 	{
 		if (cmd->type != WSPACE)
-			create_node(&node, cmd->str, cmd->type);
+			create_node(&node, cmd->str, cmd->type, 1);
 		cmd = cmd->next;
 	}
-	while (cmd)
-	{
-		tmp = cmd->next;
-		free(cmd);
-		cmd = tmp;
-	}
+	// free_gb();
 	return(node);
 }
 
@@ -226,7 +217,7 @@ void	add_scmd(t_simple_cmd **lst, t_simple_cmd *new)
 	}
 	last_node = last_cmd(*lst);
 	last_node->next = new;
-	last_node->next->previous = last_node;
+	// last_node->next->previous = last_node;
 }
 
 int	count_wd(t_lexer *cmd)
@@ -234,7 +225,7 @@ int	count_wd(t_lexer *cmd)
 	int	i;
 
 	i = 0;
-	while (cmd)
+	while (cmd && cmd->type != PIPE)
 	{
 		if ((cmd->type == WORD && !cmd->previous) || (cmd->type == WORD && cmd->previous && cmd->previous->type <= WORD))
 			i++;
@@ -252,7 +243,7 @@ t_simple_cmd *create_scmd(t_lexer *cmd)
 	scmd = malloc(sizeof(t_simple_cmd));
 	scmd->str = malloc(sizeof(char *) * i);
 	scmd->next = NULL;
-	scmd->previous = NULL;
+	// scmd->previous = NULL;
 	scmd->in_fd = 0;
 	scmd->out_fd = 1;
 	scmd->err = 0;
@@ -267,8 +258,8 @@ void	lst_var(t_var **var, char **s)
 	if (!var || !s || !*s)
 		return ;
 	tmp = malloc(sizeof(t_var));
-	tmp->key = s[0];
-	tmp->val = s[1];
+	tmp->key = ft_strdup(s[0]);
+	tmp->val = ft_strdup(s[1]);
 	tmp->next = NULL;
 	if (*var == NULL)
 	{
@@ -304,16 +295,16 @@ void	hd_var(t_lexer **node, t_lexer **cmdline)
 	t_lexer *cmd;
 
 	cmd = *cmdline;
-	create_node(node, cmd->str, cmd->type);
+	create_node(node, cmd->str, cmd->type, 0);
 	cmd = cmd->next;
 	if (cmd && cmd->type == WSPACE)
 	{
-		create_node(node, cmd->str, cmd->type);
+		create_node(node, cmd->str, cmd->type, 0);
 		cmd = cmd->next;
 	}
 	if (cmd && cmd->type == VAR)
 	{
-		create_node(node, ft_strjoin("$", cmd->str), WORD);
+		create_node(node, ft_strjoin("$", cmd->str), WORD, 0);
 		cmd = cmd->next;
 	}
 	*cmdline = cmd;
@@ -332,10 +323,10 @@ t_lexer *expand_var(t_lexer *cmd, t_var *var)
 			break ;
 		if (cmd->type == VAR)
 		{
-			create_node(&node, find_var(var, cmd->str), WORD);
+			create_node(&node, find_var(var, cmd->str), WORD, 0);
 		}
 		else
-			create_node(&node, cmd->str, cmd->type);
+			create_node(&node, cmd->str, cmd->type, 0);
 		cmd = cmd->next;
 	}
 	return (node);
@@ -358,6 +349,7 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 	char	*line;
 	char	*s;
 	int		fd[2];
+	t_lexer	*tmp;
 
 	if (pipe(fd) == -1)
 	{
@@ -367,29 +359,42 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 	rl_event_hook = event;
 	signal(SIGINT, hd_sig);
 	(*cmdline) = (*cmdline)->next;
+	tmp = *cmdline;
 	s = ft_strdup("");
 	if ((*cmdline))
+	{
+		free(s);
 		s = (*cmdline)->str;
+	}
 	while(true)
 	{
 		line = readline("> ");
 		if (!line || strcmp(line, s) == 0 || gl.rl)
 		{
 			gl.rl = 0;
+			if (line)
+				free(line);
 			break ;
 		}
 		write(fd[1], line, ft_strlen(line));
 		write(fd[1], "\n", 1);
+		free(line);
 	}
 	close(fd[1]);
 	if ((*cmdline))
 		(*cmdline) = (*cmdline)->next;
 	(*scmd)->in_fd = fd[0];
+	free(s);
+	// if (tmp)
+	// 	free (tmp);
 }
 
 void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd, int red)
 {
+	t_lexer	*tmp;
+
 	(*cmdline) = (*cmdline)->next;
+	tmp = *cmdline;
 	// if (!(*cmdline) || ((*cmdline) && (*cmdline)->type == -2))
 	// {
 	// 	ft_putstr_fd("sash: : No such file or directory\n", 2);
@@ -400,14 +405,14 @@ void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd, int red)
 	// }
 	if (red == OUTRED)
 	{
-		(*cmd)->out_fd = open((*cmdline)->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		(*cmd)->out_fd = open(tmp->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if((*cmd)->out_fd < 0)
 			(*cmd)->err = errno;
 
 	}
 	else if (red == INRED)
 	{
-		(*cmd)->in_fd = open((*cmdline)->str, O_RDONLY, 0644);
+		(*cmd)->in_fd = open(tmp->str, O_RDONLY, 0644);
 		if((*cmd)->in_fd < 0)
 		{
 			(*cmd)->err = errno;
@@ -420,11 +425,13 @@ void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd, int red)
 	}
 	else if (red == APPEND)
 	{
-		(*cmd)->out_fd = open((*cmdline)->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
+		(*cmd)->out_fd = open(tmp->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		if((*cmd)->out_fd < 0)
 			(*cmd)->err = errno;
 	}
 	(*cmdline) = (*cmdline)->next;
+	// free(tmp->str);
+	// free(tmp);
 }
 
 t_lexer	*parse_wc(t_lexer *cmd)
@@ -446,30 +453,31 @@ t_lexer	*parse_wc(t_lexer *cmd)
 			{
 				if (entry->d_name[0] != '.')
 				{
-					create_node(&node, entry->d_name, WORD);
-					create_node(&node, " ", WSPACE);
+					create_node(&node, entry->d_name, WORD, 0);
+					create_node(&node, " ", WSPACE, 0);
 				}
 			}
 			// closedir(dir);
 		}
 		else
-			create_node(&node, cmd->str, cmd->type);
+			create_node(&node, cmd->str, cmd->type, 0);
 		cmd = cmd->next;
 	}
-	// if (dir != NULL)
-	// 	closedir(dir);
+	// free_gb();
 	return node;
 }
 
 t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 {
 	t_simple_cmd	*cmd;
+	t_lexer 		*tmp;
 	int				i;
 	int				flag;
 
 	i = 0;
 	flag = true;
-	
+
+	tmp = *cmdline;
 	cmd = create_scmd(*cmdline);
 	while (*cmdline)
 	{
@@ -496,8 +504,12 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 		}
 	}
 	cmd->str[i] = NULL;
-	if (cmd->err < 0)
-		return (NULL);
+	
+	// if (cmd->err < 0)
+	// 	return (NULL);
+	// i = 0;
+	// while (cmd->str[i])
+	// 	printf("[%s]\n", cmd->str[i++]);
 	return (cmd);
 }
 
@@ -505,7 +517,11 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline)
 void	parse(t_all *all, t_lexer *cmdline)
 {
 	t_simple_cmd 	*scmd;
+	// t_simple_cmd 	*tmp;
 	t_lexer 		*cmd;
+	t_lexer			*tmp1;
+	t_lexer			*tmp2;
+
 
 	scmd = NULL;
 
@@ -523,19 +539,24 @@ void	parse(t_all *all, t_lexer *cmdline)
 			cmd = cmd->next;
 	}
 	cmd = expand_var(cmd, all->env);
-	cmd = parse_wc(cmd);
+	cmd = parse_wc(cmd);  
 	cmd = merge_word(cmd);
 	cmd = rm_space(cmd);
+	tmp1 = cmd;
 	while(cmd)
 		add_scmd(&scmd, collect_scmds(&cmd));
-	all->cmd = scmd;
-
-	// while (cmd)
-	// {
-		
+	while (tmp1)
+	{
+		tmp2 = tmp1->next;
+		free(tmp1);
+		tmp1 = tmp2;
+	}
+	// system("leaks sash");
 	
-		
-	// 	printf("=%d=\n", cmd->type);
+	all->cmd = scmd;
+	
+	
+	// 	printf("=%s=\n", cmd->str);
 		
 		
 	// 	cmd = cmd->next;

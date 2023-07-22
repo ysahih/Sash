@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_egal_plus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 15:48:52 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/20 15:45:22 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/22 08:23:19 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	just_egal(t_all *all, int i, int k, t_simple_cmd *p)
 		else
 			tmp_en->val = ft_strdup("");
 	}
+	
 }
 
 void	just_egal_not_plus(t_all *all, t_simple_cmd *p, int i, int k)
