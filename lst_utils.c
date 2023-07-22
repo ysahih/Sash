@@ -24,14 +24,13 @@ void	ft_lstadd_back(t_lexer **lst, t_lexer *new)
     last_node->next->previous = last_node;
 }
 
-
-void   create_node(t_lexer	**lst, char *s, int operator)
+void   create_node(t_lexer	**lst, char *s, int operator, int flag)
 {
 	t_lexer	*node;
 
 	if (s == NULL)
 		return ;
-	node = malloc(sizeof(t_lexer));
+	node = ft_malloc(sizeof(t_lexer), flag);
 	node->type = operator;
 	node->str = s;
     node->previous = NULL;

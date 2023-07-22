@@ -15,12 +15,18 @@
 
 # define PROMPT "sash"
 
-
+typedef struct s_gc
+{
+	int		flag;
+	void	*ptr;
+	struct s_gc *next;
+} t_gc;
 typedef struct s_global
 {
 	int	rl;
 	int exit_status;
-	int runing;
+	t_gc *gc;
+	// int runing;
 } t_global;
 t_global	gl;
 
@@ -52,11 +58,11 @@ typedef struct s_simple_cmds
 	int						out_fd;
 	int						err;
 	struct s_simple_cmds	*next;
-	struct s_simple_cmds	*previous;
+	// struct s_simple_cmds	*previous;
 } t_simple_cmd;
 
 //list utils
-void	create_node(t_lexer	**lst, char *s, int operator);
+void	create_node(t_lexer	**lst, char *s, int operator, int flag);
 void	ft_lstadd_back(t_lexer **lst, t_lexer *new);
 t_lexer	*ft_lstlast(t_lexer *lst);
 
@@ -92,7 +98,8 @@ bool	pipe_checker(t_lexer *cmd, int i);
 void	lst_var(t_var **var, char **s);
 char	**ft_split(char *str);
 char	*ft_strjoin(char *s1, char *s2);
-
+char	**ft_free(char **p, int j);
+char	**ft_freee(char **p);
 
 //------------------------------------------------------------------------------
 
@@ -221,7 +228,12 @@ char	**ft_split_path(char *str);
 char	*ft(char *s, char *s2, int len);
 int		count_path(char *str);
 
+void	*ft_malloc(int size, int flag);
+void	free_gb();
+// char	**ft_free(char **p);
+
+
 void	sig_handler();
 void	handle_INT(int sig);
-void		sigreset();
+void	sigreset();
 #endif
