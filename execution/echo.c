@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 09:50:45 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/20 10:47:06 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/21 14:09:04 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	only_echo(t_simple_cmd *p, int flag)
 			else
 			{
 				ft_putstr_fd(p->str[j++], flag);
-				ft_putstr_fd(" ", flag);	
+				ft_putstr_fd(" ", flag);
 			}
 		}
 		ft_putstr_fd("\n", flag);
