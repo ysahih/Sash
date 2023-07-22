@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 14:48:59 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/19 14:52:40 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/21 14:06:54 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	curr_cd(t_all *all)
 	return (0);
 }
 
-int	prvs_succes(t_all *all, t_pwd *pwd, char *val, char *path)
+void	prvs_succes(t_all *all, t_pwd *pwd, char *val, char *path)
 {
 	if (pwd->pwd_en && pwd->pwd_en->val)
 	{
@@ -89,7 +89,6 @@ int	prvs_succes(t_all *all, t_pwd *pwd, char *val, char *path)
 		unset_exp("PWD", &all->exp);
 		add_exen_back(&all->exp, lstnew_exen(ft_strdup("PWD"), ft_strdup(val)));
 	}
-	return (0);
 }
 
 int	prvs_to_home(t_pwd *pwd, char *val)
@@ -144,4 +143,3 @@ int	cd_prvs(t_all *all)
 		perror("cd");
 	return (0);
 }
-

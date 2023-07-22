@@ -138,7 +138,7 @@ void	parse(t_all *all, t_lexer *cmdline);
 // <<<<<<<<<<<<<<<execution>>>>>>>>>>>>>>>>>>>>>>>//
 
 int		exec(t_all *all);
-void	one_cmd(t_all *all, t_simple_cmd *tmp);
+int		one_cmd(t_all *all, t_simple_cmd *tmp);
 int		is_builting(t_simple_cmd *tmp);
 
 // <<<<<<<<<<<<<<<pipe>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
@@ -148,7 +148,7 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp);
 // <<<<<<<<<<<<<<<<builtins cmds>>>>>>>>>>>>>>>>>>>//
 
 			//---{cd}---//
-void	cd(t_all *all);
+int		cd(t_all *all);
 int		cd_home(t_all *all);
 int		home_success(t_all *all, t_pwd *pwd);
 void	cd_error(char *path, char *str);
@@ -158,12 +158,12 @@ int		curr_cd(t_all *all);
 int		curr_success(t_all *all, t_pwd *pd, char *pwd);
 int		cd_prvs(t_all *all);
 int		prvs_to_home(t_pwd *pwd, char *val);
-int		prvs_succes(t_all *all, t_pwd *pwd, char *val, char *path);
+void	prvs_succes(t_all *all, t_pwd *pwd, char *val, char *path);
 int		cd_else(t_all *all);
 int		else_success(t_all *all, t_pwd *pwd, char *path);
 
 			//--{export}--//
-void	export(t_all *all);
+int		export(t_all *all, t_simple_cmd	*p);
 void	exist_egal(t_all *all, t_simple_cmd *p, int i, int k);
 void	just_egal_not_plus(t_all *all, t_simple_cmd *p, int i, int k);
 void	egal_plus(t_all *all, t_simple_cmd *p, int i, int k);
@@ -177,6 +177,7 @@ t_var	*sort_env(t_var *lst);
 void	only_exp(t_all *all, int flag);
 void	egal_not_exist(t_all *all, t_simple_cmd *p, int i);
 int		is_valid(char *c);
+void	print_invalid(t_simple_cmd *p, int i);
 int		not_valid(t_simple_cmd *p, int i, int k);
 
 			//---{echo}---//
@@ -191,14 +192,14 @@ void	env(t_all *all);
 
 			//---{exit}---//
 unsigned long long	ft_atoi(char *str);
-void				ex_it(t_all *all);
+int					ex_it(t_all *all);
 
 			//---{pwd}---//
 void	get_pwd(t_all *all);
 void	pwd(t_all *all);
 
 			//---{unset}---//
-void	unset(t_simple_cmd *p, t_var **env, t_var **exp);
+int		unset(t_simple_cmd *p, t_var **env, t_var **exp);
 t_var	*unset_exp(char *str, t_var **exp);
 t_var	*unset_env(char *str, t_var **env);
 t_var	*check_exist_key(t_var	*lst, char	*str);
@@ -227,6 +228,7 @@ void	cmd_not_found(t_simple_cmd *p);
 char	**ft_split_path(char *str);
 char	*ft(char *s, char *s2, int len);
 int		count_path(char *str);
+void	shelvl(t_all *all, t_simple_cmd *p);
 
 void	*ft_malloc(int size, int flag);
 void	free_gb();

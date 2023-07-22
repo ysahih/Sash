@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 19:39:14 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/19 14:53:33 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/21 12:38:40 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	cd_else(t_all *all)
 	return (0);
 }
 
-void	cd(t_all *all)
+int	cd(t_all *all)
 {
 	t_simple_cmd	*p;
 
@@ -76,4 +76,5 @@ void	cd(t_all *all)
 		cd_prvs(all);
 	else
 		cd_else(all);
+	return (0);
 }
