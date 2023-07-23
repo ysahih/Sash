@@ -31,24 +31,22 @@ void	collect_garbage(void *ptr)
 	tmp = malloc(sizeof(t_gc));
 	tmp->ptr = ptr;
 	tmp->next = NULL;
-	
 	add_garbage(tmp);
 }
 
-
 void	*ft_malloc(int size, int flag)
 {
-	void    *ptr;
+	void	*ptr;
 
 	ptr = malloc(size);
 	if (!ptr)
-		return NULL;
+		return (NULL);
 	if (!flag)
 		collect_garbage(ptr);
-	return ptr;
+	return (ptr);
 }
 
-void	free_gb()
+void	free_gb(void)
 {
 	t_gc	*tmp;
 

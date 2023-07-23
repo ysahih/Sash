@@ -6,11 +6,11 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:47 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/23 17:34:48 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/23 18:04:32 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../minishell.h"
 
 t_simple_cmd	*create_scmd(t_lexer *cmd)
 {

@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/23 17:05:13 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/23 18:46:15 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	one_cmd(t_all *all, t_simple_cmd *tmp)
 	return (gl.exit_status);
 }
 
-int	is_builting(t_simple_cmd *tmp)
+int	is_builtin(t_simple_cmd *tmp)
 {
 	if (!ft_strcmp(tmp->str[0], "cd") \
 	|| !ft_strcmp(tmp->str[0], "exit") \
@@ -81,11 +81,11 @@ void	in_child(t_all *all, t_simple_cmd *tmp, int fd[2])
 		dup2(tmp->in_fd, 0);
 	if (tmp->next)
 	{
-		dup2(fd[1], 1);
+		dup2(fd[1], tmp->out_fd);
 		close(fd[0]);
 		close(fd[1]);
 	}
-	if (is_builting(tmp))
+	if (is_builtin(tmp))
 	{
 		gl.exit_status = one_cmd(all, tmp);
 		exit(gl.exit_status);
@@ -98,7 +98,7 @@ void	closee(t_simple_cmd *tmp, int fd[2])
 {
 	if (tmp->next)
 	{
-		dup2(fd[0], 0);
+		dup2(fd[0], tmp->in_fd);
 		close(fd[0]);
 		close(fd[1]);
 	}

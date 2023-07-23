@@ -6,11 +6,11 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:32 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/23 17:34:33 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/23 18:18:23 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../minishell.h"
 
 bool	pipe_checker(t_lexer *cmd, int i)
 {

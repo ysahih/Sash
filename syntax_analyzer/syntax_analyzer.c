@@ -6,11 +6,11 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:35 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/23 17:34:36 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/23 17:39:44 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../minishell.h"
 
 bool	analyze_syntax(t_lexer *cmd)
 {

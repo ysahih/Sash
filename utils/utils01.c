@@ -6,11 +6,11 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:07 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/23 17:34:08 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/23 18:15:18 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../minishell.h"
 
 bool	valid_var(char c)
 {

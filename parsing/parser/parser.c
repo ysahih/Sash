@@ -6,11 +6,11 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:44 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/23 17:34:45 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/23 18:31:42 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../minishell.h"
 
 int	event(void)
 {

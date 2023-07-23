@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 17:43:01 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/22 15:33:07 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/23 18:46:45 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ extern t_global	gl;
 // enum	pipe {BEFORE, AFTER};
 
 enum	operator {WSPACE, PIPE, VAR, WORD, SQUOTE, DQUOTE, OUTRED, INRED, APPEND, HERDOC};
-				// 0      1     2     3     4       5      6                        9
 
 typedef struct s_lexer
 {
@@ -71,51 +70,6 @@ typedef struct s_simple_cmds
 	struct s_simple_cmds	*next;
 	// struct s_simple_cmds	*previous;
 } t_simple_cmd;
-
-//list utils
-void	create_node(t_lexer	**lst, char *s, int operator, int flag);
-void	ft_lstadd_back(t_lexer **lst, t_lexer *new);
-t_lexer	*ft_lstlast(t_lexer *lst);
-
-//lexer
-t_lexer	*tokenize(char *line);
-void	tokenize_word(t_lexer **node, char **s);
-void	tokenize_var(t_lexer **node, char **s);
-void	tokenize_dquote(t_lexer **node, char **s);
-void	tokenize_squote(t_lexer **node, char **s);
-void	tokenize_red(t_lexer **node, char **s);
-
-//lexer utils
-char	*ft_strcpy(char *str, int size);
-char	*ft_strcpy(char *str, int size);
-int		ft_strlen(char *s);
-bool	valid_var(char c);
-bool	is_symbol(char c);
-bool	is_digit(char c);
-bool	is_alnum(char c);
-bool	is_alpha(int c);
-bool	valid_var(char c);
-
-//syntax analyzer
-bool	analyze_syntax(t_lexer *cmd);
-bool	analyze_quote(t_lexer **node, int flag);
-bool	pipe_analyze(t_lexer *cmd);
-bool	pipe_checker(t_lexer *cmd, int i);
-
-//utils_parse
-
-void	lst_var(t_var **var, char **s);
-char	**ft_split(char *str);
-char	*ft_strjoin(char *s1, char *s2);
-char	**ft_free(char **p, int j);
-char	**ft_freee(char **p);
-
-// extra utils
-bool	is_alpha(int c);
-bool	is_ws(char c);
-
-//------------------------------------------------------------------------------
-
 typedef struct s_export
 {
 	char			*var;
@@ -139,14 +93,82 @@ typedef struct s_pwd
 	t_var			*oldpwd_ex;
 }	t_pwd;
 
+//list utils
+void	create_node(t_lexer	**lst, char *s, int operator, int flag);
+void	ft_lstadd_back(t_lexer **lst, t_lexer *new);
+t_lexer	*ft_lstlast(t_lexer *lst);
+t_simple_cmd	*create_scmd(t_lexer *cmd);
+void	add_scmd(t_simple_cmd **lst, t_simple_cmd *new);
+//lexer
+t_lexer	*tokenize(char *line);
+void	tokenize_word(t_lexer **node, char **s);
+void	tokenize_var(t_lexer **node, char **s);
+void	tokenize_dquote(t_lexer **node, char **s);
+void	tokenize_squote(t_lexer **node, char **s);
+void	tokenize_red(t_lexer **node, char **s);
+char	*set_line(t_lexer **node, char **line);
+void	get_token(t_lexer **node, char **line);
+
+//syntax analyzer
+bool	analyze_syntax(t_lexer *cmd);
+bool	analyze_quote(t_lexer **node, int flag);
+bool	pipe_analyze(t_lexer *cmd);
+bool	pipe_checker(t_lexer *cmd, int i);
+bool	red_analyze(t_lexer *cmd);
+
 // parse
-void	parse(t_all *all, t_lexer *cmdline);
+void			parse(t_all *all, t_lexer *cmdline);
+void			parse_red(t_lexer **cmdline, t_simple_cmd **cmd);
+void			out_red(t_lexer **node, char **line);
+void			in_red(t_lexer **node, char **line);
+void			close_quotes(t_lexer **node, char **s, char *tmp, int i);
+char			*set_quote(t_lexer **node, char **s);
+void			quote_word(t_lexer **node, char *s, int *i, int j);
+t_lexer			*merge_word(t_lexer *cmd);
+t_lexer			*filter(t_all *all, t_lexer *cmdline);
+t_simple_cmd	*collect_scmds(t_lexer **cmdline, int i);
+
+//redirection
+void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline);
+void	read_hd( char *s, int fd[2]);
+void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd);
+
+//expander
+t_lexer	*expand_var(t_lexer *cmd, t_var *var);
+void	hd_var(t_lexer **node, t_lexer **cmdline);
+char	*find_var(t_var *var, char *str);
+
+//extra utils
+void	lst_var(t_var **var, char **s);
+char	**ft_split(char *str);
+char	*ft_strjoin(char *s1, char *s2);
+char	**ft_free(char **p, int j);
+char	**ft_freee(char **p);
+char	*ft_strcpy(char *str, int size);
+char	*ft_strcpy(char *str, int size);
+int		ft_strlen(char *s);
+bool	valid_var(char c);
+bool	is_symbol(char c);
+bool	is_digit(char c);
+bool	is_alnum(char c);
+bool	is_alpha(int c);
+bool	valid_var(char c);
+int		count_wd(t_lexer *cmd);
+bool	is_ws(char c);
+int		count_len(char *str);
+
+// parsing utils
+t_lexer	*parse_wc(t_lexer *cmd);
+void	collect_filenames(t_lexer **node);
+t_lexer	*rm_space(t_lexer *cmd);
+t_lexer	*merge_word(t_lexer *cmd);
+void	join_words(t_lexer **node, t_lexer *cmd, char *str);
+t_lexer	*rm_quote(t_lexer *cmdline);
 
 // execution
-
 int		exec(t_all *all);
 int		one_cmd(t_all *all, t_simple_cmd *tmp);
-int		is_builting(t_simple_cmd *tmp);
+int		is_builtin(t_simple_cmd *tmp);
 
 // <<<<<<<<<<<<<<<pipe>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
 
@@ -246,4 +268,7 @@ void	free_gb();
 void	sig_handler();
 void	handle_INT(int sig);
 void	sigreset();
+void	hd_sig(int sig);
+int	event(void);
+
 #endif

@@ -6,11 +6,11 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:02 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/23 17:34:03 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/23 18:15:06 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../minishell.h"
 
 t_lexer	*ft_lstlast(t_lexer *lst)
 {

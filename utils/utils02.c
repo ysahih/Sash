@@ -6,11 +6,11 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:12 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/23 17:34:13 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/23 18:16:21 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishel.h"
+#include "../minishell.h"
 
 int	count_len(char *str)
 {
