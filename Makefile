@@ -3,11 +3,23 @@ NAME = sash
 HDR = minishell.h
 
 SRCS = main.c\
-lst_utils.c\
-lexer.c\
-lexer_utils.c\
+parsing/lexer/lexer_tools.c\
+parsing/lexer/lexer.c\
+parsing/paser/expander.c\
+parsing/paser/words.c\
+parsing/paser/parser_tools.c\
+parsing/paser/redirection.c\
+parsing/paser/parser.c\
+parsing/utils/lexer_utils00.c\
+parsing/utils/lexer_utils01.c\
+parsing/utils/paser_utils00.c\
+utils/lst_utils.c\
+utils/utils00.c\
+utils/utils01.c\
+utils/utils02.c\
+
+
 syntax_analyzer.c\
-parse.c\
 allocate.c\
 execution/exec.c\
 execution/utils00.c\

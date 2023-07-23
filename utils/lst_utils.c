@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../../minishell.h"
 
 t_lexer	*ft_lstlast(t_lexer *lst)
 {
