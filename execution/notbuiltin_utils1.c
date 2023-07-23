@@ -12,14 +12,14 @@
 
 #include "../minishell.h"
 
-void	cmd_not_found(char **path, char **k, char *join, t_simple_cmd *p)
+void	cmd_not_found(char **path, char **k, t_simple_cmd *p)
 {
 	ft_freee(path);
 	ft_freee(k);
-	free(join);
 	ft_putstr_fd("sash: ", 2);
 	ft_putstr_fd(p->str[0], 2);
 	ft_putstr_fd(": command not found\n", 2);
+	gl.exit_status = 127;
 	exit(127);
 }
 
@@ -97,7 +97,7 @@ void	check_path(t_var *key, char **k, t_simple_cmd *p)
 			free(join);
 			i++;
 		}
-		cmd_not_found(path, k, join, p);
+		cmd_not_found(path, k, p);
 	}
 	ft_freee(path);
 	execve(p->str[0], p->str, k);

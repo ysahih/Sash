@@ -40,7 +40,7 @@ typedef struct s_global
 	t_gc *gc;
 	// int runing;
 } t_global;
-t_global	gl;
+extern t_global	gl;
 
 // enum	pipe {BEFORE, AFTER};
 
@@ -228,7 +228,7 @@ int		my_atoi(char *str);
 char	*ft_itoa(int n);
 int		ft_count(int n);
 void	check_path(t_var *key, char **k, t_simple_cmd *p);
-void	cmd_not_found(char **path, char **k, char *join, t_simple_cmd *p);
+void	cmd_not_found(char **path, char **k, t_simple_cmd *p);
 char	**ft_split_path(char *str);
 char	*ft(char *s, char *s2, int len);
 int		count_path(char *str);
