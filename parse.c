@@ -393,68 +393,90 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 	(*scmd)->in_fd = fd[0];
 }
 
-
-void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd, int red)
+void	set_out_fd(t_simple_cmd **cmd, int new_fd)
 {
-	t_lexer	*tmp;
+	int	old_fd;
 
-	(*cmdline) = (*cmdline)->next;
-	tmp = *cmdline;
-	if (red == OUTRED)
-	{
-		
-		(*cmd)->out_fd = open(tmp->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	old_fd = (*cmd)->out_fd;
+	if (old_fd != 1)
+		close(old_fd);
+	(*cmd)->out_fd = new_fd;
 		if((*cmd)->out_fd < 0)
 			(*cmd)->err = errno;
+}
 
-	}
-	else if (red == INRED)
-	{
-		(*cmd)->in_fd = open(tmp->str, O_RDONLY, 0644);
+void	set_in_fd(t_simple_cmd **cmd, int new_fd)
+{
+	int	old_fd;
+
+	old_fd = (*cmd)->in_fd;
+	if (old_fd != 0)
+		close(old_fd);
+	(*cmd)->in_fd = new_fd;
 		if((*cmd)->in_fd < 0)
-		{
 			(*cmd)->err = errno;
+}
+
+void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd)
+{
+	int		flag;
+	int		new_fd;
+
+	flag = (*cmdline)->type;
+	(*cmdline) = (*cmdline)->next;
+	if (flag == OUTRED)
+	{
+		new_fd = open((*cmdline)->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		set_out_fd(cmd, new_fd);
+	}
+	else if (flag == INRED)
+	{
+		new_fd = open((*cmdline)->str, O_RDONLY, 0644);
+		set_in_fd(cmd, new_fd);
+	}
+	else if (flag == APPEND)
+	{
+		new_fd = open((*cmdline)->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
+		set_out_fd(cmd, new_fd);
+	}
+	free((*cmdline)->str);
+	(*cmdline) = (*cmdline)->next;
+}
+
+void	collect_filenames(t_lexer **node)
+{
+	struct dirent	*entry;
+	DIR 			*dir;
+
+	dir = NULL;
+	dir = opendir(".");
+	if (dir == NULL)
+		perror("opendir");
+	
+	while ((entry = readdir(dir)) != NULL)
+	{
+		if (entry->d_name[0] != '.')
+		{
+			create_node(node, entry->d_name, WORD, 0);
+			create_node(node, " ", WSPACE, 0);
 		}
 	}
-	else if (red == APPEND)
-	{
-		(*cmd)->out_fd = open(tmp->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
-		if((*cmd)->out_fd < 0)
-			(*cmd)->err = errno;
-	}
-	(*cmdline) = (*cmdline)->next;
-	free(tmp->str);
 }
 
 t_lexer	*parse_wc(t_lexer *cmd)
 {
-	struct dirent	*entry;
 	t_lexer 		*node;
-	DIR 			*dir;
 
 	node = NULL;
-	dir = NULL;
 	while (cmd)
 	{
 		if (cmd->type == -1)
-		{
-			dir = opendir(".");
-			if (dir == NULL)
-				perror("opendir");
-			while ((entry = readdir(dir)) != NULL)
-			{
-				if (entry->d_name[0] != '.')
-				{
-					create_node(&node, entry->d_name, WORD, 0);
-					create_node(&node, " ", WSPACE, 0);
-				}
-			}
-		}
+			collect_filenames(&node);
 		else
 			create_node(&node, cmd->str, cmd->type, 0);
 		cmd = cmd->next;
 	}
-	return node;
+	return (node);
 }
 
 t_simple_cmd	*collect_scmds(t_lexer **cmdline, int i)
@@ -469,9 +491,8 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline, int i)
 			*cmdline = (*cmdline)->next;
 			break ;
 		}
-		else if ((*cmdline)->type == OUTRED ||
-			(*cmdline)->type == INRED || (*cmdline)->type == APPEND)
-			parse_red(cmdline, &cmd, (*cmdline)->type);
+		else if ((*cmdline)->type >= OUTRED && (*cmdline)->type <= APPEND)
+			parse_red(cmdline, &cmd);
 		else if((*cmdline)->type == HERDOC)
 			parse_hd(&cmd, cmdline);
 		else if ((*cmdline)->type == WORD || (*cmdline)->type == -2)

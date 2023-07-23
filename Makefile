@@ -40,7 +40,7 @@ RLFLAGS = -L/Users/ysahih/Desktop/readline/lib/ #-fsanitize=address -g
 all : $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(RLFLAGS) $^ -o $(NAME) -lreadline 
+	$(CC) $(CFLAGS) $(RLFLAGS) $^ -o $(NAME) -lreadline -lhistory
 
 %.o: %.c $(HDR)
 	$(CC) $(CFLAGS) -c $< -o $@

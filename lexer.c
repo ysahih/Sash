@@ -78,6 +78,7 @@ void	tokenize_dquote(t_lexer **node, char **s)
 	char	*tmp;
 
 	i = 0;
+	j = 0;
 	tmp = set_quote(node, s);
 	while (tmp[i])
 	{
@@ -120,6 +121,37 @@ void	tokenize_squote(t_lexer **node, char **s)
 	*s += i;
 }
 
+void	in_red(t_lexer **node, char **line)
+{
+	char	*str;
+
+	str = *line;
+	if (*(str + 1) && *(str + 1) == '<')
+	{
+		create_node(node, "<<", HERDOC, 0);
+		str++;
+	}
+	else
+		create_node(node, "<", INRED, 0);
+	str++;
+	*line = str;
+}
+
+void	out_red(t_lexer **node, char **line)
+{
+	char	*str;
+
+	str = *line;
+	if (*(str + 1) && *(str + 1) == '>')
+	{
+		create_node(node, ">>", APPEND, 0);
+		str++;
+	}
+	else
+		create_node(node, ">", OUTRED, 0);
+	str++;
+	*line = str;
+}
 
 void	tokenize_red(t_lexer **node, char **s)
 {
@@ -127,44 +159,26 @@ void	tokenize_red(t_lexer **node, char **s)
 
 	line = *s;
 	if (*line == '>')
-	{
-		if (*(line + 1) && *(line + 1) == '>')
-		{
-			create_node(node, ">>", APPEND, 0);
-			line++;
-		}
-		else
-			create_node(node, ">", OUTRED, 0);
-		line++;
-	}
+		out_red(node, &line);
 	else if (*line == '<')
-	{
-		if (*(line + 1) && *(line + 1) == '<')
-		{
-			create_node(node, "<<", HERDOC, 0);
-			line++;
-		}
-		else
-			create_node(node, "<", INRED, 0);
-		line++;
-	}
+		in_red(node, &line);
 	*s = line;
 }
 
-void	get_token(t_lexer **node, char **line, int type)
+void	get_token(t_lexer **node, char **line)
 {
-	if (type == PIPE)
+	if (**line == '|')
 	{
 		create_node(node, "|", PIPE, 0);
 		(*line)++;
 	}
-	if (type == WSPACE)
+	if (**line == ' ')
 	{
 		create_node(node, " ", WSPACE, 0);
 		while (is_ws(**line))
 			(*line)++;
 	}
-	if (type == -1)
+	if (**line == '*')
 	{
 		create_node(node, "*", -1, 0);
 		(*line)++;
@@ -190,16 +204,12 @@ t_lexer	*tokenize(char *line)
 	tmp = set_line(&node, &line);
 	while (*line)
 	{
-		if (*line == ' ')
-			get_token(&node, &line, WSPACE);
-		else if (*line == '|')
-			get_token(&node, &line, PIPE);
+		if (*line == ' ' || *line == '*' || *line == '|')
+			get_token(&node, &line);
 		else if (*line == '"')
 			tokenize_dquote(&node, &line);
 		else if (*line == '\'')
 			tokenize_squote(&node, &line);
-		else if (*line == '*')
-			get_token(&node, &line, -1);
 		else if (*line == '>'|| *line == '<')
 			tokenize_red(&node, &line);
 		else if (*line == '$' && *(line + 1) &&
