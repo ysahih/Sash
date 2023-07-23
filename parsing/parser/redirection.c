@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirection.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/23 17:34:42 by ysahih            #+#    #+#             */
+/*   Updated: 2023/07/23 17:34:43 by ysahih           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include"../../minishell.h"
 
 void	read_hd( char *s, int fd[2])
 {
 	char	*line;
 
-	while(true)
+	while (true)
 	{
 		line = readline("> ");
 		if (!line || ft_strcmp(line, s) == 0 || gl.rl)
@@ -25,10 +37,11 @@ void	read_hd( char *s, int fd[2])
 void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 {
 	int		fd[2];
-	char *s;
+	char	*s;
 
 	if (pipe(fd) == -1)
 	{
+		(*cmdline) = (*cmdline)->next;
 		(*scmd)->err = errno;
 		return ;
 	}
@@ -41,7 +54,7 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 		free(s);
 		s = (*cmdline)->str;
 	}
-	read_hd( s, fd);
+	read_hd(s, fd);
 	if ((*cmdline))
 		(*cmdline) = (*cmdline)->next;
 	(*scmd)->in_fd = fd[0];
@@ -55,8 +68,8 @@ void	set_in_fd(t_simple_cmd **cmd, int new_fd)
 	if (old_fd != 0)
 		close(old_fd);
 	(*cmd)->in_fd = new_fd;
-		if((*cmd)->in_fd < 0)
-			(*cmd)->err = errno;
+	if ((*cmd)->in_fd < 0)
+		(*cmd)->err = errno;
 }
 
 void	set_out_fd(t_simple_cmd **cmd, int new_fd)
@@ -67,14 +80,14 @@ void	set_out_fd(t_simple_cmd **cmd, int new_fd)
 	if (old_fd != 1)
 		close(old_fd);
 	(*cmd)->out_fd = new_fd;
-		if((*cmd)->out_fd < 0)
-			(*cmd)->err = errno;
+	if ((*cmd)->out_fd < 0)
+		(*cmd)->err = errno;
 }
 
 void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd)
 {
-	int		flag;
-	int		new_fd;
+	int	flag;
+	int	new_fd;
 
 	flag = (*cmdline)->type;
 	(*cmdline) = (*cmdline)->next;

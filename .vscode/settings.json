@@ -8,6 +8,7 @@
         "filesystem": "c",
         "type_traits": "c",
         "ostream": "c",
-        "bitset": "c"
+        "bitset": "c",
+        "__node_handle": "c"
     }
 }

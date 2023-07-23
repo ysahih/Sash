@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   words.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/23 17:34:38 by ysahih            #+#    #+#             */
+/*   Updated: 2023/07/23 17:34:39 by ysahih           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 void	empty_quotes(t_lexer **cmdline, t_lexer **node)
@@ -54,7 +66,7 @@ void	join_words(t_lexer **node, t_lexer *cmd, char *str)
 		str = NULL;
 		if (!cmd)
 			break ;
-		else 
+		else
 		{
 			create_node(node, cmd->str, cmd->type, 0);
 			cmd = cmd->next;
@@ -62,18 +74,17 @@ void	join_words(t_lexer **node, t_lexer *cmd, char *str)
 	}
 	if (cmd)
 		create_node(node, cmd->str, cmd->type, 0);
-
 }
 
 t_lexer	*merge_word(t_lexer *cmd)
 {
 	t_lexer	*node;
-	char 	*str;
+	char	*str;
 
 	str = NULL;
 	node = NULL;
 	if (!cmd)
-		return NULL;
+		return (NULL);
 	join_words(&node, cmd, str);
 	return (node);
 }

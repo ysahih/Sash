@@ -1,5 +1,17 @@
-#ifndef MINISHELL
-#define MINISHELL
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/21 17:43:01 by kaboussi          #+#    #+#             */
+/*   Updated: 2023/07/22 15:33:07 by kaboussi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef MINISHELL_H
+# define MINISHELL_H
 # include <stdio.h>
 # include <signal.h>
 # include <readline/readline.h>
@@ -10,8 +22,8 @@
 # include <stdbool.h>
 # include <fcntl.h>
 # include <errno.h>
-#include <sys/wait.h>
-#include <dirent.h>
+# include <sys/wait.h>
+# include <dirent.h>
 
 # define PROMPT "sash"
 
@@ -40,16 +52,15 @@ typedef struct s_lexer
 	int		type;
 	char	*str;
 	struct s_lexer	*next;
-	struct s_lexer *previous;	
-}  t_lexer;
+	struct s_lexer	*previous;	
+}	t_lexer;
 
-
-typedef struct	s_var
+typedef	struct	s_var
 {
-	char 			*key;
-	char 			*val;
+	char			*key;
+	char			*val;
 	struct s_var	*next;
-} t_var;
+}	t_var;
 
 typedef struct s_simple_cmds
 {
@@ -91,7 +102,6 @@ bool	analyze_quote(t_lexer **node, int flag);
 bool	pipe_analyze(t_lexer *cmd);
 bool	pipe_checker(t_lexer *cmd, int i);
 
-
 //utils_parse
 
 void	lst_var(t_var **var, char **s);
@@ -106,25 +116,19 @@ bool	is_ws(char c);
 
 //------------------------------------------------------------------------------
 
-typedef struct	s_export
+typedef struct s_export
 {
-	char 			*var;
-	char 			*val;
+	char			*var;
+	char			*val;
 	struct s_export	*next;
-} t_export;
+}	t_export;
 
-typedef struct	s_all
+typedef struct s_all
 {
-	t_var 				*env;
-	t_var 				*exp;
+	t_var				*env;
+	t_var				*exp;
 	t_simple_cmd		*cmd;
-} t_all;
-
-typedef struct s_list
-{
-	void			*content;
-	struct s_list	*next;
-}					t_list;         
+}	t_all;
 
 typedef struct s_pwd
 {
@@ -168,8 +172,8 @@ int		else_success(t_all *all, t_pwd *pwd, char *path);
 			//--{export}--//
 int		export(t_all *all, t_simple_cmd	*p);
 void	exist_egal(t_all *all, t_simple_cmd *p, int i, int k);
-void	just_egal_not_plus(t_all *all, t_simple_cmd *p, int i, int k);
-void	egal_plus(t_all *all, t_simple_cmd *p, int i, int k);
+int		just_egal_not_plus(t_all *all, t_simple_cmd *p, int i, int k);
+int		egal_plus(t_all *all, t_simple_cmd *p, int i, int k);
 void	egal_plus_empty(t_all *all, t_simple_cmd *p, int i, int k);
 t_var	*ft_last(t_var *lst);
 t_var	*lstnew_exen(char *key, char *val);
@@ -207,6 +211,7 @@ t_var	*unset_exp(char *str, t_var **exp);
 t_var	*unset_env(char *str, t_var **env);
 t_var	*check_exist_key(t_var	*lst, char	*str);
 void	ft_lstdelone(t_var *lst);
+int		invalid_unset(char *c);
 
 			//---{utils}---//
 int		ft_strcmp(char *st1, char *st2);
@@ -227,7 +232,7 @@ int		my_atoi(char *str);
 char	*ft_itoa(int n);
 int		ft_count(int n);
 void	check_path(t_var *key, char **k, t_simple_cmd *p);
-void	cmd_not_found(t_simple_cmd *p);
+void	cmd_not_found(char **path, char **k, char *join, t_simple_cmd *p);
 char	**ft_split_path(char *str);
 char	*ft(char *s, char *s2, int len);
 int		count_path(char *str);

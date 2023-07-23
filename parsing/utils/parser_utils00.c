@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_utils00.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/23 17:34:20 by ysahih            #+#    #+#             */
+/*   Updated: 2023/07/23 17:34:21 by ysahih           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 t_var	*last_var(t_var *lst)
@@ -21,6 +33,7 @@ t_simple_cmd	*last_cmd(t_simple_cmd *lst)
 void	add_scmd(t_simple_cmd **lst, t_simple_cmd *new)
 {
 	t_simple_cmd	*last_node;
+
 	if (!lst)
 		return ;
 	if (*lst == NULL)
@@ -39,8 +52,9 @@ int	count_wd(t_lexer *cmd)
 	i = 0;
 	while (cmd && cmd->type != PIPE)
 	{
-		if ((cmd->type == WORD && !cmd->previous) ||
-			(cmd->type == WORD && cmd->previous && cmd->previous->type <= WORD))
+		if ((cmd->type == WORD && !cmd->previous)
+			|| (cmd->type == WORD && cmd->previous
+				&& cmd->previous->type <= WORD))
 			i++;
 		cmd = cmd->next;
 	}

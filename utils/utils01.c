@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils01.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/23 17:34:07 by ysahih            #+#    #+#             */
+/*   Updated: 2023/07/23 17:34:08 by ysahih           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 bool	valid_var(char c)
@@ -7,14 +19,14 @@ bool	valid_var(char c)
 
 bool	is_ws(char c)
 {
-	return (c == ' ' || c == '\t' || c == '\v' ||
-		c == '\n' || c == '\r'  || c == '\f');
+	return (c == ' ' || c == '\t' || c == '\v'
+		|| c == '\n' || c == '\r' || c == '\f');
 }
 
 char	*ft_strcpy(char *str, int size)
 {
-	int	i;
-	char *word;
+	char	*word;
+	int		i;
 
 	i = 0;
 	word = malloc(size + 1);
@@ -40,6 +52,7 @@ char	*ft_strncpy(char *s, char *s2, int len)
 	s[len] = '\0';
 	return (s);
 }
+
 char	**ft_split(char *str)
 {
 	char	**s;

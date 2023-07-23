@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-
-
 void	handle_INT(int sig)
 {
 	(void)sig;
@@ -56,8 +54,9 @@ void	set_env(t_all *all, char **env)
 	char	path[800];
 	char	**str;
 
+	// p = all->cmd;
 	i = 0;
-	gl.gc = NULL;
+	// gl.gc = NULL;
 	all->env = NULL;
 	all->exp = NULL;
 	if (!*env)
@@ -81,7 +80,24 @@ void	set_env(t_all *all, char **env)
 	}
 }
 
+void	free_enex(t_var *lst)
+{
+	t_var		*p;
+	t_var		*p1;
 
+	p = lst;
+	while (p)
+	{
+		p1 = p->next;
+		free(p->key);
+		p->key = NULL;
+		free(p->val);
+		p->val = NULL;
+		free (p);
+		p = NULL;
+		p = p1;
+	}
+}
 
 int	main(int ac, char **av, char **env)
 {
@@ -112,7 +128,7 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		parse(&all, cmd);
 		exec(&all);
-
+		// system("leaks sash");
 		// t_simple_cmd	*tmp;
 		
 		// while (all.cmd)
@@ -126,7 +142,8 @@ int	main(int ac, char **av, char **env)
 		// 	}
 		// 	free(tmp);
 		// }
-		// system("leaks sash");
 	}
+	// free_enex(all.env);
+	// free_enex(all.exp);
 	return 0;
 }

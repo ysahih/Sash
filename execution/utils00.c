@@ -57,10 +57,8 @@ char	*ft_strjoin_n(char *s1, char *s2)
 	if (!s1 && !s2)
 		return (0);
 	if (!s1)
-		return (s2);
-	if (!s2)
-		return (s1);
-	p = (char *)malloc (ft_strlen (s1) + ft_strlen (s2) + 1);
+		s1 = ft_strdup("");
+	p = (char *)malloc(ft_strlen (s1) + ft_strlen (s2) + 1);
 	if (!p)
 		return (0);
 	i = 0;
@@ -73,6 +71,7 @@ char	*ft_strjoin_n(char *s1, char *s2)
 	while (s2[j])
 		p[i++] = s2[j++];
 	p[i] = '\0';
+	free(s1);
 	return (p);
 }
 
@@ -96,8 +95,8 @@ char	**my_env(t_all *all)
 	p = all->env;
 	while (p)
 	{
-		tmp[i] = ft_strjoin_n(p->key, "=");
-		tmp[i] = ft_strjoin(tmp[i], p->val);
+		tmp[i] = ft_strjoin(p->key, "=");
+		tmp[i] = ft_strjoin_n(tmp[i], p->val);
 		i++;
 		p = p->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 14:13:39 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/22 11:37:21 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/23 17:04:42 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,21 +28,22 @@ int	not_valid(t_simple_cmd *p, int i, int k)
 	j = ft_strchr(invalid, '+');
 	if (k - 1 == j)
 	{
+		free(invalid);
 		invalid = ft_substr(p->str[i], 0, j);
 		if (is_valid(invalid) == 1)
 		{
 			print_invalid(p, i);
-			return (1);
+			return (free(invalid), 1);
 		}
 		else
-			return (0);
+			return (free(invalid), 0);
 	}
 	else if (j != -1)
 	{
 		print_invalid(p, i);
-		return (1);
+		return (free(invalid), 1);
 	}
-	return (2);
+	return (free(invalid), 2);
 }
 
 int	is_valid(char *c)

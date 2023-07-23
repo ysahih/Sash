@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer_utils00.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/23 17:34:28 by ysahih            #+#    #+#             */
+/*   Updated: 2023/07/23 17:34:29 by ysahih           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 void	quote_word(t_lexer **node, char *s, int *i, int j)
 {
-	char *tmp;
+	char	*tmp;
 
 	tmp = s;
 	j = *i;
@@ -15,9 +27,9 @@ void	quote_word(t_lexer **node, char *s, int *i, int j)
 	create_node(node, ft_strcpy(s + j, *i - j), WORD, 0);
 }
 
-char *set_quote(t_lexer **node, char **s)
+char	*set_quote(t_lexer **node, char **s)
 {
-	char *tmp;
+	char	*tmp;
 
 	*s += 1;
 	tmp = *s;

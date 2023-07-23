@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer_tools.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/23 17:18:12 by ysahih            #+#    #+#             */
+/*   Updated: 2023/07/23 17:18:13 by ysahih           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 void	tokenize_word(t_lexer **node, char **s)
 {
-	char *tmp;
-	int	i;
+	char	*tmp;
+	int		i;
 
 	i = 0;
 	tmp = *s;
@@ -33,7 +45,7 @@ void	tokenize_var(t_lexer **node, char **s)
 	}
 	if (!tmp[i] || !valid_var(tmp[i]))
 		return ;
-	while(tmp[i] && valid_var(tmp[i]))
+	while (tmp[i] && valid_var(tmp[i]))
 		i++;
 	create_node(node, ft_strcpy(tmp, i), VAR, 0);
 	*s += i;

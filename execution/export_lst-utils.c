@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 15:12:45 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/22 11:32:09 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/23 17:04:25 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	add_exen_back(t_var **exen, t_var *new)
 	else
 		*exen = new;
 }
+// while true; do leaks sash ; done
 
 void	add_both(t_all *all, char *key, char *val)
 {

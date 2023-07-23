@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_egal_plus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 15:48:52 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/22 08:33:53 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/22 17:35:37 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,22 @@ void	just_egal(t_all *all, int i, int k, t_simple_cmd *p)
 		add_both(all, key, "");
 	else
 	{
+		if (tmp_ex->val)
+			free(tmp_ex->val);
 		tmp_ex->val = ft_strdup("");
 		if (!tmp_en)
 			add_exen_back(&all->env, lstnew_exen(key, tmp_ex->val));
 		else
+		{
+			if (tmp_en->val)
+				free(tmp_en->val);
 			tmp_en->val = ft_strdup("");
+		}
 	}
-	
+	free(key);
 }
 
-void	just_egal_not_plus(t_all *all, t_simple_cmd *p, int i, int k)
+int	just_egal_not_plus(t_all *all, t_simple_cmd *p, int i, int k)
 {
 	t_var	*tmp_ex;
 	t_var	*tmp_en;
@@ -46,19 +52,22 @@ void	just_egal_not_plus(t_all *all, t_simple_cmd *p, int i, int k)
 	tmp_ex = check_char(all->exp, key);
 	tmp_en = check_char(all->env, key);
 	if (tmp_ex == NULL)
-		add_both(all, key, val);
+		return (add_both(all, key, val), free(key), free(val), 0);
+	if (!tmp_en)
+		add_exen_back(&all->env, \
+		lstnew_exen(ft_strdup(key), ft_strdup(val)));
 	else
 	{
-		if (!tmp_en)
-			add_exen_back(&all->env, \
-			lstnew_exen(ft_strdup(key), ft_strdup(val)));
-		else
-			tmp_en->val = val;
-		tmp_ex->val = ft_strdup(val);
+		if (tmp_en->val)
+			free(tmp_en->val);
+		tmp_en->val = ft_strdup(val);
 	}
+	if (tmp_ex->val)
+		free(tmp_ex->val);
+	return (tmp_ex->val = ft_strdup(val), free(key), free(val), 0);
 }
 
-void	egal_plus(t_all *all, t_simple_cmd *p, int i, int k)
+int	egal_plus(t_all *all, t_simple_cmd *p, int i, int k)
 {
 	t_var	*tmp_ex;
 	t_var	*tmp_en;
@@ -71,18 +80,19 @@ void	egal_plus(t_all *all, t_simple_cmd *p, int i, int k)
 	tmp_ex = check_char(all->exp, new_key);
 	if (tmp_ex != NULL)
 	{
-		tmp_ex->val = ft_strjoin(tmp_ex->val, new_val);
+		tmp_ex->val = ft_strjoin_n(tmp_ex->val, new_val);
 		if (tmp_en)
-			tmp_en->val = ft_strjoin(tmp_en->val, new_val);
+			tmp_en->val = ft_strjoin_n(tmp_en->val, new_val);
 	}
 	else
 		add_both(all, new_key, new_val);
+	tmp_en = check_char(all->env, new_key);
 	if (!tmp_en)
 	{
 		add_exen_back(&all->env, lstnew_exen(ft_strdup(new_key), \
 		ft_strdup(new_val)));
 	}
-	all->exp = sort_env(all->exp);
+	return (all->exp = sort_env(all->exp), free(new_key), free(new_val), 0);
 }
 
 void	egal_plus_empty(t_all *all, t_simple_cmd *p, int i, int k)
@@ -94,17 +104,18 @@ void	egal_plus_empty(t_all *all, t_simple_cmd *p, int i, int k)
 	tmp_ex = check_char(all->exp, new_key);
 	if (!tmp_ex)
 	{
-		add_exen_back(&all->env, lstnew_exen(new_key, ft_strdup("")));
-		add_exen_back(&all->exp, lstnew_exen(ft_strdup(new_key), \
-		ft_strdup("")));
+		add_both(all, new_key, "");
 		all->exp = sort_env(all->exp);
 	}
+	free(new_key);
 }
 
 void	exist_egal(t_all *all, t_simple_cmd *p, int i, int k)
 {
 	if (not_valid(p, i, k) == 1)
+	{
 		return ;
+	}
 	if (p->str[i][k + 1] == '\0' && p->str[i][k - 1] != '+')
 		just_egal(all, i, k, p);
 	else if (p->str[i][k + 1] != '\0' && p->str[i][k - 1] != '+')

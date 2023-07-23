@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 21:07:40 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/22 11:07:44 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/23 17:03:37 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,22 +88,6 @@ t_var	*unset_exp(char *str, t_var **exp)
 		ft_lstdelone(tmp);
 	}
 	return (*exp);
-}
-
-int	invalid_unset(char *c)
-{
-	int	i;
-
-	i = 0;
-	while (c[i] != '\0')
-	{
-		if (!((c[i] >= 65 && c[i] <= 90) || (c[i] >= 97 && c[i] <= 122) || \
-		(c[i] >= 48 && c[i] <= 57) \
-		|| (c[i] == '_')))
-			return (1);
-		i++;
-	}
-	return (0);
 }
 
 int	unset(t_simple_cmd *p, t_var **env, t_var **exp)

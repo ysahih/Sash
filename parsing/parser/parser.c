@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/23 17:34:44 by ysahih            #+#    #+#             */
+/*   Updated: 2023/07/23 17:34:45 by ysahih           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	event(void)
@@ -15,7 +27,7 @@ void	hd_sig(int sig)
 t_simple_cmd	*collect_scmds(t_lexer **cmdline, int i)
 {
 	t_simple_cmd	*cmd;
-	
+
 	cmd = create_scmd(*cmdline);
 	while (*cmdline)
 	{
@@ -26,7 +38,7 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline, int i)
 		}
 		else if ((*cmdline)->type >= OUTRED && (*cmdline)->type <= APPEND)
 			parse_red(cmdline, &cmd);
-		else if((*cmdline)->type == HERDOC)
+		else if ((*cmdline)->type == HERDOC)
 			parse_hd(&cmd, cmdline);
 		else if ((*cmdline)->type == WORD || (*cmdline)->type == -2)
 		{
@@ -39,7 +51,7 @@ t_simple_cmd	*collect_scmds(t_lexer **cmdline, int i)
 
 t_lexer	*filter(t_all *all, t_lexer *cmdline)
 {
-	t_lexer *cmd;
+	t_lexer	*cmd;
 
 	cmd = rm_quote(cmdline);
 	if (cmd->type == -2)
@@ -54,7 +66,7 @@ t_lexer	*filter(t_all *all, t_lexer *cmdline)
 			cmd = cmd->next;
 	}
 	cmd = expand_var(cmd, all->env);
-	cmd = parse_wc(cmd);  
+	cmd = parse_wc(cmd);
 	cmd = merge_word(cmd);
 	cmd = rm_space(cmd);
 	return (cmd);
@@ -62,15 +74,15 @@ t_lexer	*filter(t_all *all, t_lexer *cmdline)
 
 void	parse(t_all *all, t_lexer *cmdline)
 {
-	t_simple_cmd 	*scmd;
-	t_lexer 		*cmd;
+	t_simple_cmd	*scmd;
+	t_lexer			*cmd;
 	t_lexer			*tmp1;
 	t_lexer			*tmp2;
 
 	scmd = NULL;
 	cmd = filter(all, cmdline);
 	tmp1 = cmd;
-	while(cmd)
+	while (cmd)
 		add_scmd(&scmd, collect_scmds(&cmd, 0));
 	while (tmp1)
 	{

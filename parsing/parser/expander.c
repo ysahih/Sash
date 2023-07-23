@@ -1,12 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/23 17:34:50 by ysahih            #+#    #+#             */
+/*   Updated: 2023/07/23 17:34:51 by ysahih           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 char	*find_var(t_var *var, char *str)
 {
 	char	*val;
 
-
 	val = NULL;
-
 	if (!strcmp("?", str))
 		val = ft_itoa(gl.exit_status);
 	while (var)
@@ -22,7 +32,7 @@ char	*find_var(t_var *var, char *str)
 
 void	hd_var(t_lexer **node, t_lexer **cmdline)
 {
-	t_lexer *cmd;
+	t_lexer	*cmd;
 
 	cmd = *cmdline;
 	create_node(node, cmd->str, cmd->type, 0);
@@ -40,10 +50,10 @@ void	hd_var(t_lexer **node, t_lexer **cmdline)
 	*cmdline = cmd;
 }
 
-t_lexer *expand_var(t_lexer *cmd, t_var *var)
+t_lexer	*expand_var(t_lexer *cmd, t_var *var)
 {
-	t_lexer *node;
-	
+	t_lexer	*node;
+
 	node = NULL;
 	while (cmd)
 	{

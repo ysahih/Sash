@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_tools.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/23 17:34:47 by ysahih            #+#    #+#             */
+/*   Updated: 2023/07/23 17:34:48 by ysahih           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-t_simple_cmd *create_scmd(t_lexer *cmd)
+t_simple_cmd	*create_scmd(t_lexer *cmd)
 {
-	t_simple_cmd 	*scmd;
+	t_simple_cmd	*scmd;
 	int				i;
 
 	i = count_wd(cmd) + 1;
@@ -27,32 +39,33 @@ t_lexer	*rm_space(t_lexer *cmd)
 		cmd = cmd->next;
 	}
 	free_gb();
-	return(node);
+	return (node);
 }
 
 void	collect_filenames(t_lexer **node)
 {
 	struct dirent	*entry;
-	DIR 			*dir;
+	DIR				*dir;
 
 	dir = NULL;
 	dir = opendir(".");
 	if (dir == NULL)
 		perror("opendir");
-	
-	while ((entry = readdir(dir)) != NULL)
+	entry = readdir(dir);
+	while (entry != NULL)
 	{
 		if (entry->d_name[0] != '.')
 		{
 			create_node(node, entry->d_name, WORD, 0);
 			create_node(node, " ", WSPACE, 0);
 		}
+		entry = readdir(dir);
 	}
 }
 
 t_lexer	*parse_wc(t_lexer *cmd)
 {
-	t_lexer 		*node;
+	t_lexer	*node;
 
 	node = NULL;
 	while (cmd)
