@@ -50,7 +50,7 @@ char	*ft_strcpy(char *str, int size)
 	int	i;
 	char *word;
 
-	i = 0; 
+	i = 0;
 	word = malloc(size + 1);
 	while (str[i] && i < size)
 	{

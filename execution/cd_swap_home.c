@@ -12,29 +12,28 @@
 
 #include "../minishell.h"
 
-int	home_success(t_all *all, t_pwd *pwd)
+int	home_success(t_all *all, t_pwd *p)
 {
-	if (pwd->pwd_en && pwd->pwd_ex)
+	if (p->pwd_en && p->pwd_ex)
 	{
-		if (!pwd->oldpwd_en)
+		if (!p->oldpwd_en)
 			add_exen_back(&all->env, lstnew_exen(ft_strdup("OLDPWD"), \
-			ft_strdup(pwd->pwd_en->val)));
+			ft_strdup(p->pwd_en->val)));
 		else
 		{
-			free(pwd->oldpwd_en->val);
-			pwd->oldpwd_en->val = ft_strdup(pwd->pwd_en->val);
+			free(p->oldpwd_en->val);
+			p->oldpwd_en->val = ft_strdup(p->pwd_en->val);
 		}
-		free (pwd->oldpwd_ex->val);
-		pwd->oldpwd_ex->val = ft_strdup(pwd->pwd_ex->val);
+		free (p->oldpwd_ex->val);
+		p->oldpwd_ex->val = ft_strdup(p->pwd_ex->val);
 	}
-	if (pwd->pwd_en && pwd->pwd_ex)
+	if (p->pwd_en && p->pwd_ex)
 	{
-		if (pwd->pwd_en->val && pwd->pwd_ex->val)
+		if (p->pwd_en->val && p->pwd_ex->val)
 		{
-			free(pwd->pwd_en->val);
-			pwd->pwd_en->val = ft_strdup(pwd->node->val);
-			free(pwd->pwd_ex->val);
-			pwd->pwd_ex->val = ft_strdup(pwd->node->val);
+			free(p->pwd_en->val);
+			return (p->pwd_en->val = ft_strdup(p->node->val), \
+			free(p->pwd_ex->val), p->pwd_ex->val = ft_strdup(p->node->val), 0);
 		}
 		else
 			return (ft_putstr_fd("sash: cd: PWD not set\n", 2), 0);

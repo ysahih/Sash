@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 15:12:45 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/19 15:15:27 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/22 17:43:44 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void	add_exen_back(t_var **exen, t_var *new)
 	else
 		*exen = new;
 }
+// while true; do leaks sash ; done
 
 void	add_both(t_all *all, char *key, char *val)
 {

@@ -50,7 +50,7 @@ void	exist_arg(t_simple_cmd *p, int flag)
 	int	i;
 	int	j;
 
-	i = 1; 
+	i = 1;
 	if (arg(p->str[i]) == 1)
 	{
 		while (p->str[i] && arg(p->str[i]) == 1)

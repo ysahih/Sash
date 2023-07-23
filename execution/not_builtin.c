@@ -14,7 +14,7 @@
 
 void	sigreset(void)
 {
-	// signal(SIGINT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 }
 
@@ -41,16 +41,17 @@ void	wa_it(void)
 		gl.exit_status = WEXITSTATUS(status);
 }
 
-void	notbuiltin_error(t_simple_cmd *p, int len)
+void	notbuiltin_error(t_simple_cmd *p, int len, int flag)
 {
-	if (p->err)
+	if (p->err && flag == 0)
 	{
 		ft_putstr_fd("sash : ", 2);
 		ft_putstr_fd(strerror(p->err), 2);
 		ft_putstr_fd("\n", 2);
 		exit(1);
 	}
-	if (p->str[0][0] == '/' || p->str[0][len - 1] == '/')
+	if ((p->str[0][0] == '/' || p->str[0][len - 1] == '/')
+		&& flag == 1)
 	{
 		ft_putstr_fd("sash: ", 2);
 		ft_putstr_fd(p->str[0], 2);
@@ -71,8 +72,8 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 	{
 		sigreset();
 		shelvl(all, p);
+		notbuiltin_error(p, len, 0);
 		k = my_env(all);
-		notbuiltin_error(p, len);
 		dup2(p->in_fd, 0);
 		dup2(p->out_fd, 1);
 		key = check_char(all->env, "PATH");
@@ -80,7 +81,7 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 			check_path(key, k, p);
 		execve(p->str[0], p->str, k);
 		len = ft_strlen(p->str[0]);
-		notbuiltin_error(p, len);
+		notbuiltin_error(p, len, 1);
 		perror("");
 	}
 	wa_it();
@@ -96,5 +97,6 @@ void	one_cmd_nopipe(t_all *all, t_simple_cmd *p)
 	if (key)
 		check_path(key, k, p);
 	execve(p->str[0], p->str, k);
+	ft_freee(k);
 	perror("");
 }

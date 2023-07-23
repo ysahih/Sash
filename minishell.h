@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 17:43:01 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/21 18:20:17 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/22 15:33:07 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,19 @@
 
 # define PROMPT "sash"
 
-// <<<<<<<<<<<<<<<parse>>>>>>>>>>>>>>>>>>>>>>>//
-
+typedef struct s_gc
+{
+	int		flag;
+	void	*ptr;
+	struct s_gc *next;
+} t_gc;
 typedef struct s_global
 {
 	int	rl;
-	int	exit_status;
-	int	runing;
-}	t_global;
+	int exit_status;
+	t_gc *gc;
+	// int runing;
+} t_global;
 t_global	gl;
 
 // enum	pipe {BEFORE, AFTER};
@@ -64,11 +69,11 @@ typedef struct s_simple_cmds
 	int						out_fd;
 	int						err;
 	struct s_simple_cmds	*next;
-	struct s_simple_cmds	*previous;
-}	t_simple_cmd;
+	// struct s_simple_cmds	*previous;
+} t_simple_cmd;
 
 //list utils
-void	create_node(t_lexer	**lst, char *s, int operator);
+void	create_node(t_lexer	**lst, char *s, int operator, int flag);
 void	ft_lstadd_back(t_lexer **lst, t_lexer *new);
 t_lexer	*ft_lstlast(t_lexer *lst);
 
@@ -102,6 +107,8 @@ bool	pipe_checker(t_lexer *cmd, int i);
 void	lst_var(t_var **var, char **s);
 char	**ft_split(char *str);
 char	*ft_strjoin(char *s1, char *s2);
+char	**ft_free(char **p, int j);
+char	**ft_freee(char **p);
 
 //------------------------------------------------------------------------------
 
@@ -161,8 +168,8 @@ int		else_success(t_all *all, t_pwd *pwd, char *path);
 			//--{export}--//
 int		export(t_all *all, t_simple_cmd	*p);
 void	exist_egal(t_all *all, t_simple_cmd *p, int i, int k);
-void	just_egal_not_plus(t_all *all, t_simple_cmd *p, int i, int k);
-void	egal_plus(t_all *all, t_simple_cmd *p, int i, int k);
+int		just_egal_not_plus(t_all *all, t_simple_cmd *p, int i, int k);
+int		egal_plus(t_all *all, t_simple_cmd *p, int i, int k);
 void	egal_plus_empty(t_all *all, t_simple_cmd *p, int i, int k);
 t_var	*ft_last(t_var *lst);
 t_var	*lstnew_exen(char *key, char *val);
@@ -221,16 +228,18 @@ int		my_atoi(char *str);
 char	*ft_itoa(int n);
 int		ft_count(int n);
 void	check_path(t_var *key, char **k, t_simple_cmd *p);
-void	cmd_not_found(t_simple_cmd *p);
+void	cmd_not_found(char **path, char **k, char *join, t_simple_cmd *p);
 char	**ft_split_path(char *str);
 char	*ft(char *s, char *s2, int len);
 int		count_path(char *str);
 void	shelvl(t_all *all, t_simple_cmd *p);
 
-// <<<<<<<<<<<<<<<<<<<signals>>>>>>>>>>>>>>>>>>>>>>>>>>>//
+void	*ft_malloc(int size, int flag);
+void	free_gb();
+// char	**ft_free(char **p);
 
-void	sig_handler(void);
+
+void	sig_handler();
 void	handle_INT(int sig);
-void	sigreset(void);
-
+void	sigreset();
 #endif

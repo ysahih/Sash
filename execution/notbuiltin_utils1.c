@@ -12,8 +12,11 @@
 
 #include "../minishell.h"
 
-void	cmd_not_found(t_simple_cmd *p)
+void	cmd_not_found(char **path, char **k, char *join, t_simple_cmd *p)
 {
+	ft_freee(path);
+	ft_freee(k);
+	free(join);
 	ft_putstr_fd("sash: ", 2);
 	ft_putstr_fd(p->str[0], 2);
 	ft_putstr_fd(": command not found\n", 2);
@@ -85,12 +88,17 @@ void	check_path(t_var *key, char **k, t_simple_cmd *p)
 		while (path[i])
 		{
 			join = ft_strjoin(path[i], "/");
-			join = ft_strjoin(join, p->str[0]);
+			join = ft_strjoin_n(join, p->str[0]);
 			if (access(join, R_OK) == 0)
+			{
+				ft_freee(path);
 				execve(join, p->str, k);
+			}
+			free(join);
 			i++;
 		}
-		cmd_not_found(p);
+		cmd_not_found(path, k, join, p);
 	}
+	ft_freee(path);
 	execve(p->str[0], p->str, k);
 }

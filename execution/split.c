@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 16:04:43 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/06/18 16:11:29 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/22 08:11:42 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static char	*ft_charge(char const *str, char c, int len)
 	return (p);
 }
 
-static char	**ft_free(char **p, int j)
+char	**ft_free(char **p, int j)
 {
 	int	i;
 

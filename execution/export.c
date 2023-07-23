@@ -6,7 +6,7 @@
 /*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 16:28:32 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/21 14:33:49 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/22 16:34:54 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	egal_not_exist(t_all *all, t_simple_cmd *p, int i)
 {
 	t_var	*tmp_ex;
+	char	*str;
 
 	if (is_valid(p->str[i]) == 1)
 	{
@@ -25,7 +26,7 @@ void	egal_not_exist(t_all *all, t_simple_cmd *p, int i)
 	}
 	tmp_ex = check_char(all->exp, p->str[i]);
 	if (!tmp_ex)
-		add_exen_back(&all->exp, lstnew_exen(p->str[i], NULL));
+		add_exen_back(&all->exp, lstnew_exen(ft_strdup(p->str[i]), NULL));
 	all->exp = sort_env(all->exp);
 }
 
@@ -33,9 +34,13 @@ void	check_egal(t_all *all, t_simple_cmd	*p, int i, int k)
 {
 	k = ft_strchr(p->str[i], '=');
 	if (k != -1)
+	{
 		exist_egal(all, p, i, k);
+	}
 	else
+	{	
 		egal_not_exist(all, p, i);
+	}
 }
 
 int	export(t_all *all, t_simple_cmd	*p)

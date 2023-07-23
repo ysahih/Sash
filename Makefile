@@ -8,6 +8,7 @@ lexer.c\
 lexer_utils.c\
 syntax_analyzer.c\
 parse.c\
+allocate.c\
 execution/exec.c\
 execution/utils00.c\
 execution/utils01.c\
@@ -33,7 +34,7 @@ RM = rm -rf
 CC = cc
 OBJS = $(SRCS:%.c=%.o)
 B_OBJS = $(B_SRCS:%.c=%.o)
-CFLAGS =  -Wall -Wextra -Werror -I/Users/ysahih/Desktop/readline/include
+CFLAGS = -Wall -Wextra -Werror -I/Users/ysahih/Desktop/readline/include
  
 RLFLAGS = -L/Users/ysahih/Desktop/readline/lib/
 

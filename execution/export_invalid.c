@@ -28,21 +28,22 @@ int	not_valid(t_simple_cmd *p, int i, int k)
 	j = ft_strchr(invalid, '+');
 	if (k - 1 == j)
 	{
+		free(invalid);
 		invalid = ft_substr(p->str[i], 0, j);
 		if (is_valid(invalid) == 1)
 		{
 			print_invalid(p, i);
-			return (1);
+			return (free(invalid), 1);
 		}
 		else
-			return (0);
+			return (free(invalid), 0);
 	}
 	else if (j != -1)
 	{
 		print_invalid(p, i);
-		return (1);
+		return (free(invalid), 1);
 	}
-	return (2);
+	return (free(invalid), 2);
 }
 
 int	is_valid(char *c)
