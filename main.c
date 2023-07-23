@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+t_global	gl;
+
 void	handle_INT(int sig)
 {
 	(void)sig;

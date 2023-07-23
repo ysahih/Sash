@@ -144,6 +144,7 @@ void	print_message(t_simple_cmd *tmp)
 int	exec(t_all *all)
 {
 	int				i;
+	int				fd;
 	t_simple_cmd	*tmp;
 
 	i = 0;
@@ -151,11 +152,13 @@ int	exec(t_all *all)
 	if (!all->cmd)
 		return (0);
 	tmp = all->cmd;
+	fd = dup(0);
 	if (!*(tmp->str))
 		print_message(tmp);
 	if (!tmp->next)
 		gl.exit_status = one_cmd(all, tmp);
 	else
 		many_cmds(all, tmp);
+	dup2(fd, 0);
 	return (0);
 }
