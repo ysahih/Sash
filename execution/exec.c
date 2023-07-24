@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/24 17:25:48 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/24 18:29:43 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	one_cmd(t_all *all, t_simple_cmd *tmp)
 		return (cd (all));
 	else
 		one_cmd_nob(all, tmp);
-	return (gl.exit_status);
+	return (g_gl.exit_status);
 }
 
 void	in_child(t_all *all, t_simple_cmd *tmp, int fd[2])
@@ -51,8 +51,8 @@ void	in_child(t_all *all, t_simple_cmd *tmp, int fd[2])
 	}
 	if (is_builtin(tmp))
 	{
-		gl.exit_status = one_cmd(all, tmp);
-		exit(gl.exit_status);
+		g_gl.exit_status = one_cmd(all, tmp);
+		exit(g_gl.exit_status);
 	}
 	else
 		one_cmd_nopipe(all, tmp);
@@ -105,7 +105,7 @@ int	exec(t_all *all)
 	t_simple_cmd	*tmp;
 
 	i = 0;
-	gl.rl = 1;
+	g_gl.rl = 1;
 	if (!all->cmd)
 		return (0);
 	tmp = all->cmd;
@@ -114,7 +114,7 @@ int	exec(t_all *all)
 	if (!tmp)
 		return (0);
 	if (!tmp->next)
-		gl.exit_status = one_cmd(all, tmp);
+		g_gl.exit_status = one_cmd(all, tmp);
 	else
 		many_cmds(all, tmp);
 	dup2(fd, 0);

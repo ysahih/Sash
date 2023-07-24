@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:32 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/23 18:18:23 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 18:29:43 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ bool	pipe_checker(t_lexer *cmd, int i)
 			cmd = cmd->previous;
 	}
 	if (i)
-		return (cmd->type >= VAR && cmd->type <= HERDOC);
-	return (cmd->type >= VAR && cmd->type <= DQUOTE);
+		return ((cmd->type >= VAR && cmd->type <= HERDOC) || cmd->type == -1);
+	return ((cmd->type >= VAR && cmd->type <= DQUOTE) || cmd->type == -1);
 }
 
 void	print_err(char *s)
@@ -35,7 +35,7 @@ void	print_err(char *s)
 	ft_putstr_fd("sash: syntax error near unexpected token '", 2);
 	ft_putstr_fd(s, 2);
 	ft_putstr_fd("'\n", 2);
-	gl.exit_status = 258;
+	g_gl.exit_status = 258;
 }
 
 bool	pipe_analyze(t_lexer *cmd)
@@ -66,7 +66,7 @@ bool	analyze_quote(t_lexer **node, int flag)
 	if (!cmd->next)
 	{
 		ft_putstr_fd("sash: syntax error: unexpected end of file\n", 2);
-		gl.exit_status = 258;
+		g_gl.exit_status = 258;
 		return (false);
 	}
 	cmd = cmd->next;
@@ -76,7 +76,7 @@ bool	analyze_quote(t_lexer **node, int flag)
 	if (!cmd)
 	{
 		ft_putstr_fd("sash: syntax error: unexpected end of file\n", 2);
-		gl.exit_status = 258;
+		g_gl.exit_status = 258;
 		return (false);
 	}
 	return (true);

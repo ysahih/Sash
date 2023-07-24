@@ -3,25 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:42 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/24 16:56:38 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/24 18:29:43 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"../../minishell.h"
-
-char	*expand(t_var *var, char *line)
-{
-	char	*str;
-	
-	if (ft_strlen(line) < 2 || line[0] != '$')
-		return (line);
-	str = find_var(var, ft_strdup(line + 1));
-	free(line);
-	return (str);
-}
 
 void	read_hd(t_var *var, char *s, int fd[2])
 {
@@ -30,9 +19,9 @@ void	read_hd(t_var *var, char *s, int fd[2])
 	while (true)
 	{
 		line = readline("> ");
-		if (!line || ft_strcmp(line, s) == 0 || gl.rl)
+		if (!line || ft_strcmp(line, s) == 0 || g_gl.rl)
 		{
-			gl.rl = 0;
+			g_gl.rl = 0;
 			if (line)
 				free(line);
 			break ;
@@ -57,7 +46,7 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline, t_var *var)
 		(*scmd)->err = errno;
 		return ;
 	}
-	// rl_event_hook = event;
+	rl_event_hook = event;
 	signal(SIGINT, hd_sig);
 	(*cmdline) = (*cmdline)->next;
 	s = ft_strdup("");

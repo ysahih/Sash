@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 17:43:01 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/24 17:34:52 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/24 18:33:35 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,7 @@ typedef struct s_global
 	t_gc	*gc;
 }	t_global;
 
-t_global	gl;
-
-// enum	operator {WSPACE, PIPE, VAR, WORD, SQUOTE, DQUOTE, OUTRED, INRED, APPEND, HERDOC};
+t_global	g_gl;
 
 typedef enum s_type
 {
@@ -59,13 +57,13 @@ typedef enum s_type
 
 typedef struct s_lexer
 {
-	int		type;
-	char	*str;
+	int				type;
+	char			*str;
 	struct s_lexer	*next;
 	struct s_lexer	*previous;	
 }	t_lexer;
 
-typedef	struct	s_var
+typedef struct s_var
 {
 	char			*key;
 	char			*val;
@@ -138,17 +136,19 @@ void				quote_word(t_lexer **node, char *s, int *i, int j);
 t_lexer				*merge_word(t_lexer *cmd);
 t_lexer				*filter(t_all *all, t_lexer *cmdline);
 t_simple_cmd		*collect_scmds(t_lexer **cmdline, t_var *var, int i);
-	
+
 //redirection	
-void				parse_hd(t_simple_cmd **scmd, t_lexer **cmdline, t_var *var);
+void				parse_hd(t_simple_cmd **scmd, t_lexer **cmdline, \
+					t_var *var);
 void				read_hd(t_var *var, char *s, int fd[2]);
 void				parse_red(t_lexer **cmdline, t_simple_cmd **cmd);
-	
+
 //expander	
 t_lexer				*expand_var(t_lexer *cmd, t_var *var);
 void				hd_var(t_lexer **node, t_lexer **cmdline);
 char				*find_var(t_var *var, char *str);
-	
+char				*expand(t_var *var, char *line);
+
 //extra utils	
 void				lst_var(t_var **var, char **s);
 char				**ft_split(char *str);
@@ -168,27 +168,27 @@ int					count_wd(t_lexer *cmd);
 bool				is_ws(char c);
 int					count_len(char *str);
 t_simple_cmd		*empty_cmd(t_simple_cmd *tmp);
-	
-// parsing utils	
+
+// parsing utils
 t_lexer				*parse_wc(t_lexer *cmd);
 void				collect_filenames(t_lexer **node);
 t_lexer				*rm_space(t_lexer *cmd);
 t_lexer				*merge_word(t_lexer *cmd);
 void				join_words(t_lexer **node, t_lexer *cmd, char *str);
 t_lexer				*rm_quote(t_lexer *cmdline);
-	
+
 // execution	
 int					exec(t_all *all);
 int					one_cmd(t_all *all, t_simple_cmd *tmp);
 int					is_builtin(t_simple_cmd *tmp);
 void				wa_itt(t_simple_cmd *tmp, t_simple_cmd *t);
-	
+
 // <<<<<<<<<<<<<<<pipe>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
-	
+
 void				many_cmds(t_all *all, t_simple_cmd *tmp);
-	
+
 // <<<<<<<<<<<<<<<<builtins cmds>>>>>>>>>>>>>>>>>>>//
-	
+
 			//---{cd}---//
 int					cd(t_all *all);
 int					cd_home(t_all *all);
@@ -207,7 +207,8 @@ int					else_success(t_all *all, t_pwd *pwd, char *path);
 			//--{export}--//
 int					export(t_all *all, t_simple_cmd	*p);
 void				exist_egal(t_all *all, t_simple_cmd *p, int i, int k);
-int					just_egal_not_plus(t_all *all, t_simple_cmd *p, int i, int k);
+int					just_egal_not_plus(t_all *all, t_simple_cmd *p, \
+					int i, int k);
 int					egal_plus(t_all *all, t_simple_cmd *p, int i, int k);
 void				egal_plus_empty(t_all *all, t_simple_cmd *p, int i, int k);
 t_var				*ft_last(t_var *lst);
@@ -249,7 +250,7 @@ t_var				*unset_env(char *str, t_var **env);
 t_var				*check_exist_key(t_var	*lst, char	*str);
 void				ft_lstdelone(t_var *lst);
 int					invalid_unset(char *c);
-			
+
 			//---{utils}---//
 int					ft_strcmp(char *st1, char *st2);
 void				ft_putstr_fd(char *s, int fd);
@@ -260,9 +261,9 @@ int					ft_strchr(char *str, int ch);
 char				*ft_substr(char *s, int start, int len);
 char				*ft_strdup(char *str);
 int					alpha(int c);
-			
+
 // <<<<<<<<<<<<<<<<<<<<<not_builtin>>>>>>>>>>>>>>>>>>>>>>//
-			
+
 void				one_cmd_nopipe(t_all *all, t_simple_cmd *p);
 void				one_cmd_nob(t_all *all, t_simple_cmd *p);
 int					my_atoi(char *str);
@@ -278,15 +279,13 @@ void				print_message(t_simple_cmd *tmp);
 void				print_message_err(t_simple_cmd *tmp);			
 void				*ft_malloc(int size, int flag);
 // char				**ft_free(char **p);
-			
-void				free_gb();
+
+void				free_gb(void);
 void				free_enex(t_var *lst);
-			
-void				sig_handler();
-void				handle_INT(int sig);
-void				sigreset();
+void				sig_handler(void);
+void				handle_int(int sig);
+void				sigreset(void);
 void				hd_sig(int sig);
 int					event(void);
-			
-#endif			
-			
+
+#endif

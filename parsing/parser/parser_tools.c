@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:47 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/24 14:54:30 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 18:11:38 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	collect_filenames(t_lexer **node)
 	{
 		if (entry->d_name[0] != '.')
 		{
-			create_node(node, entry->d_name, WORD, 0);
+			create_node(node, ft_strdup(entry->d_name), WORD, 0);
 			create_node(node, " ", WSPACE, 0);
 		}
 		entry = readdir(dir);
@@ -88,13 +88,16 @@ t_lexer	*parse_wc(t_lexer *cmd)
 	{
 		if ((cmd->type == -1 && !cmd->next && !cmd->previous)
 			|| (cmd->type == -1 && cmd->next && cmd->previous
-				&& cmd->next->type == WSPACE && cmd->previous->type == WSPACE))
+				&& cmd->next->type == WSPACE && cmd->previous->type == WSPACE)
+			|| (cmd->type == -1 && !cmd->next && cmd->previous
+				&& cmd->previous->type == WSPACE)
+			|| (cmd->type == -1 && !cmd->previous && cmd->next
+				&& cmd->next->type == WSPACE))
 			collect_filenames(&node);
 		else
 			create_node(&node, cmd->str, cmd->type, 0);
 		cmd = cmd->next;
 	}
-	
 	node = check_for_wc(node);
 	return (node);
 }

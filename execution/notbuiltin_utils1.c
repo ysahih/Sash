@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 14:41:23 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/24 13:17:48 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 18:29:43 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	cmd_not_found(char **path, char **k, t_simple_cmd *p)
 	ft_putstr_fd("sash: ", 2);
 	ft_putstr_fd(p->str[0], 2);
 	ft_putstr_fd(": command not found\n", 2);
-	gl.exit_status = 127;
+	g_gl.exit_status = 127;
 	exit(127);
 }
 

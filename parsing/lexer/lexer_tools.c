@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:18:12 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/24 14:24:26 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 18:04:01 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	tokenize_var(t_lexer **node, char **s)
 	}
 	if (!tmp[i] || !valid_var(tmp[i]))
 		return ;
-	while (tmp[i] && valid_var(tmp[i]))
+	while (tmp[i] && (valid_var(tmp[i])))
 		i++;
 	create_node(node, ft_strcpy(tmp, i), VAR, 0);
 	*s += i;

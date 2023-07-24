@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:44 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/24 16:39:06 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/24 18:29:43 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ int	event(void)
 void	hd_sig(int sig)
 {
 	(void)sig;
-	gl.rl = 1;
-	// rl_done = 1;
+	g_gl.rl = 1;
+	rl_done = 1;
 }
 
 t_simple_cmd	*collect_scmds(t_lexer **cmdline, t_var *var, int i)
@@ -54,13 +54,14 @@ t_lexer	*filter(t_all *all, t_lexer *cmdline)
 	t_lexer	*cmd;
 	t_lexer	*tmp;
 
+	tmp = NULL;
 	cmd = rm_quote(cmdline);
 	if (cmd->type == -2)
 		cmd = cmd->next;
 	if (!cmd || (cmd && cmd->type == WSPACE))
 	{
 		ft_putstr_fd("sash: : command not found\n", 2);
-		gl.exit_status = 127;
+		g_gl.exit_status = 127;
 		while (cmd && cmd->type != PIPE)
 			cmd = cmd->next;
 		if (cmd && cmd->type == PIPE)

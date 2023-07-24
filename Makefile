@@ -3,6 +3,7 @@ NAME = sash
 HDR = minishell.h
 
 SRCS = main.c\
+signals.c\
 empty_env.c\
 parsing/lexer/lexer_tools.c\
 parsing/lexer/lexer.c\
@@ -47,14 +48,14 @@ RM = rm -rf
 CC = cc
 OBJS = $(SRCS:%.c=%.o)
 B_OBJS = $(B_SRCS:%.c=%.o)
-CFLAGS = -Wall -Wextra -Werror -I/Users/ysahih/Desktop/readline/include
+CFLAGS = -Wall -Wextra -Werror -I/Users/ysahih/Desktop/readline/include -fsanitize=address -g
  
 RLFLAGS = -L/Users/ysahih/Desktop/readline/lib/
 
 all : $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(RLFLAGS) $^ -o $(NAME) -lreadline 
+	$(CC) $(CFLAGS) $(RLFLAGS) $^ -o $(NAME) -lreadline
 
 %.o: %.c $(HDR)
 	$(CC) $(CFLAGS) -c $< -o $@

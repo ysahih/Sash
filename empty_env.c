@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   empty_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 17:27:46 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/24 17:31:38 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/24 17:48:10 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ char	**ft_freee(char **p)
 		free(p[i]);
 		i++;
 	}
-	free(p);
+	if (p)
+		free(p);
 	return (NULL);
 }
 

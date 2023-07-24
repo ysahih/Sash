@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 19:37:48 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/24 17:25:44 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/24 18:29:43 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,17 @@ void	wa_itt(t_simple_cmd *tmp, t_simple_cmd *t)
 			if (WTERMSIG(status) == SIGINT)
 			{
 				write(1, "\n", 1);
-				gl.exit_status = 130;
+				g_gl.exit_status = 130;
 			}
 			else if (WTERMSIG(status) == SIGQUIT)
 			{
 				write(1, "Quit: 3\n", 8);
-				gl.exit_status = 131;
+				g_gl.exit_status = 131;
 			}
 		}
 	}
 	else if (WIFEXITED(status))
-		gl.exit_status = WEXITSTATUS(status);
+		g_gl.exit_status = WEXITSTATUS(status);
 }
 
 t_simple_cmd	*empty_cmd(t_simple_cmd *tmp)

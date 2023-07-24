@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   allocate.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/24 18:28:18 by ysahih            #+#    #+#             */
+/*   Updated: 2023/07/24 18:29:43 by ysahih           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_gc	*lst_garbage(t_gc *gc)
@@ -14,10 +26,10 @@ void	add_garbage( t_gc *new)
 	t_gc	*last_garbage;
 	t_gc	*tmp;
 
-	tmp = gl.gc;
-	if (!gl.gc)
+	tmp = g_gl.gc;
+	if (!g_gl.gc)
 	{
-		gl.gc = new;
+		g_gl.gc = new;
 		return ;
 	}
 	last_garbage = lst_garbage(tmp);
@@ -50,12 +62,14 @@ void	free_gb(void)
 {
 	t_gc	*tmp;
 
-	while (gl.gc)
+	while (g_gl.gc)
 	{
-		tmp = gl.gc;
-		gl.gc = gl.gc->next;
+		tmp = g_gl.gc;
+		g_gl.gc = g_gl.gc->next;
 		free(tmp->ptr);
+		tmp->ptr = NULL;
 		free(tmp);
+		tmp = NULL;
 	}
-	gl.gc = NULL;
+	g_gl.gc = NULL;
 }

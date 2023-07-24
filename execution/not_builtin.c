@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   not_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/24 16:42:00 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/24 18:29:43 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,16 @@ void	wa_it(void)
 		if (WTERMSIG(status) == SIGINT)
 		{
 			write(1, "\n", 1);
-			gl.exit_status = 130;
+			g_gl.exit_status = 130;
 		}
 		else if (WTERMSIG(status) == SIGQUIT)
 		{
 			write(1, "Quit: 3\n", 8);
-			gl.exit_status = 131;
+			g_gl.exit_status = 131;
 		}
 	}
 	else if (WIFEXITED(status))
-		gl.exit_status = WEXITSTATUS(status);
+		g_gl.exit_status = WEXITSTATUS(status);
 }
 
 void	notbuiltin_error(t_simple_cmd *p, int len, int flag)

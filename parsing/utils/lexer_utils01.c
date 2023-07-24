@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:25 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/23 17:34:26 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 18:10:19 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,15 @@ char	*set_line(t_lexer **node, char **line)
 	while (is_ws(**line))
 		(*line)++;
 	return (tmp);
+}
+
+char	*expand(t_var *var, char *line)
+{
+	char	*str;
+
+	if (ft_strlen(line) < 2 || line[0] != '$')
+		return (line);
+	str = find_var(var, ft_strdup(line + 1));
+	free(line);
+	return (str);
 }
