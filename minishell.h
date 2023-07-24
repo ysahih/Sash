@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 17:43:01 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/24 11:53:06 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 15:08:21 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,11 +126,11 @@ char			*set_quote(t_lexer **node, char **s);
 void			quote_word(t_lexer **node, char *s, int *i, int j);
 t_lexer			*merge_word(t_lexer *cmd);
 t_lexer			*filter(t_all *all, t_lexer *cmdline);
-t_simple_cmd	*collect_scmds(t_lexer **cmdline, int i);
+t_simple_cmd	*collect_scmds(t_lexer **cmdline, t_var *var, int i);
 
 //redirection
-void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline);
-void	read_hd( char *s, int fd[2]);
+void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline, t_var *var);
+void	read_hd(t_var *var, char *s, int fd[2]);
 void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd);
 
 //expander

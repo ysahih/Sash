@@ -6,13 +6,24 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:42 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/24 11:21:57 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 15:15:03 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"../../minishell.h"
 
-void	read_hd( char *s, int fd[2])
+char	*expand(t_var *var, char *line)
+{
+	char	*str;
+	
+	if (ft_strlen(line) < 2 || line[0] != '$')
+		return (line);
+	str = find_var(var, ft_strdup(line + 1));
+	free(line);
+	return (str);
+}
+
+void	read_hd(t_var *var, char *s, int fd[2])
 {
 	char	*line;
 
@@ -26,15 +37,16 @@ void	read_hd( char *s, int fd[2])
 				free(line);
 			break ;
 		}
+		line = expand(var, line);
 		write(fd[1], line, ft_strlen(line));
 		write(fd[1], "\n", 1);
-		free(line);
+		// free(line);
 	}
 	close(fd[1]);
 	free(s);
 }
 
-void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
+void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline, t_var *var)
 {
 	int		fd[2];
 	char	*s;
@@ -54,7 +66,7 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline)
 		free(s);
 		s = (*cmdline)->str;
 	}
-	read_hd(s, fd);
+	read_hd(var, s, fd);
 	if ((*cmdline))
 		(*cmdline) = (*cmdline)->next;
 	(*scmd)->in_fd = fd[0];

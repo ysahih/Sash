@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:50 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/24 11:21:06 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 15:13:33 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ char	*find_var(t_var *var, char *str)
 	}
 	if (val == NULL)	
 		val = ft_strdup("");
+	free(str);
 	return (val);
 }
 
