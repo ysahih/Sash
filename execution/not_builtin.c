@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   not_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/24 13:18:07 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 16:42:00 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,11 +98,16 @@ void	one_cmd_nopipe(t_all *all, t_simple_cmd *p)
 {
 	char	**k;
 	t_var	*key;
+	int		len;
 
+	len = 1;
+	print_message_err(p);
 	k = my_env(all);
 	key = check_char(all->env, "PATH");
 	if (key)
 		check_path(key, k, p);
+	else
+		notbuiltin_error(p, len, 2);
 	execve(p->str[0], p->str, k);
 	ft_freee(k);
 	perror("");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:44 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/24 15:06:46 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 16:39:06 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	hd_sig(int sig)
 {
 	(void)sig;
 	gl.rl = 1;
-	rl_done = 1;
+	// rl_done = 1;
 }
 
 t_simple_cmd	*collect_scmds(t_lexer **cmdline, t_var *var, int i)

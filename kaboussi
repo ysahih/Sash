@@ -1,0 +1,15 @@
+Makefile
+README.md
+TODO
+allocate.c
+allocate.o
+execution
+kaboussi
+main.c
+main.o
+minishell.h
+parsing
+sash
+sash.dSYM
+syntax_analyzer
+utils

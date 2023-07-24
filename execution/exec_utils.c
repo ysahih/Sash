@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 19:37:48 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/23 19:40:26 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 17:25:44 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,25 @@ void	wa_itt(t_simple_cmd *tmp, t_simple_cmd *t)
 	}
 	else if (WIFEXITED(status))
 		gl.exit_status = WEXITSTATUS(status);
+}
+
+t_simple_cmd	*empty_cmd(t_simple_cmd *tmp)
+{
+	if (!*(tmp->str))
+	{
+		print_message(tmp);
+		tmp = tmp->next;
+	}
+	return (tmp);
+}
+
+void	print_message_err(t_simple_cmd *tmp)
+{
+	if (tmp->err)
+	{	
+		ft_putstr_fd("sash : ", 2);
+		ft_putstr_fd(strerror(tmp->err), 2);
+		ft_putstr_fd("\n", 2);
+		exit(1);
+	}
 }

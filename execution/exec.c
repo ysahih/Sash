@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/24 13:18:15 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 17:25:48 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,45 +31,6 @@ int	one_cmd(t_all *all, t_simple_cmd *tmp)
 	else
 		one_cmd_nob(all, tmp);
 	return (gl.exit_status);
-}
-
-int	is_builtin(t_simple_cmd *tmp)
-{
-	if (!ft_strcmp(tmp->str[0], "cd") \
-	|| !ft_strcmp(tmp->str[0], "exit") \
-	|| !ft_strcmp(tmp->str[0], "pwd") \
-	|| !ft_strcmp(tmp->str[0], "env") \
-	|| !ft_strcmp(tmp->str[0], "unset") \
-	|| !ft_strcmp(tmp->str[0], "export") \
-	|| !ft_strcmp(tmp->str[0], "echo"))
-		return (1);
-	return (0);
-}
-
-void	wa_itt(t_simple_cmd *tmp, t_simple_cmd *t)
-{
-	int	status;
-
-	if (wait(&status) == -1)
-		exit(EXIT_FAILURE);
-	if (WIFSIGNALED(status))
-	{
-		if (t == tmp)
-		{
-			if (WTERMSIG(status) == SIGINT)
-			{
-				write(1, "\n", 1);
-				gl.exit_status = 130;
-			}
-			else if (WTERMSIG(status) == SIGQUIT)
-			{
-				write(1, "Quit: 3\n", 8);
-				gl.exit_status = 131;
-			}
-		}
-	}
-	else if (WIFEXITED(status))
-		gl.exit_status = WEXITSTATUS(status);
 }
 
 void	in_child(t_all *all, t_simple_cmd *tmp, int fd[2])
@@ -107,26 +68,6 @@ void	closee(t_simple_cmd *tmp, int fd[2])
 	}
 	else
 		close(0);
-}
-
-void	print_message(t_simple_cmd *tmp)
-{
-	if (tmp->err)
-	{	
-		ft_putstr_fd("sash : ", 2);
-		ft_putstr_fd(strerror(tmp->err), 2);
-		ft_putstr_fd("\n", 2);
-	}
-}
-
-t_simple_cmd	*empty_cmd(t_simple_cmd *tmp)
-{
-	if (!*(tmp->str))
-	{
-		print_message(tmp);
-		tmp = tmp->next;
-	}
-	return (tmp);
 }
 
 void	many_cmds(t_all *all, t_simple_cmd *tmp)

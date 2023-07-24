@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:42 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/24 15:15:03 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 16:56:38 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	read_hd(t_var *var, char *s, int fd[2])
 		line = expand(var, line);
 		write(fd[1], line, ft_strlen(line));
 		write(fd[1], "\n", 1);
-		// free(line);
+		free(line);
 	}
 	close(fd[1]);
 	free(s);
@@ -57,7 +57,7 @@ void	parse_hd(t_simple_cmd **scmd, t_lexer **cmdline, t_var *var)
 		(*scmd)->err = errno;
 		return ;
 	}
-	rl_event_hook = event;
+	// rl_event_hook = event;
 	signal(SIGINT, hd_sig);
 	(*cmdline) = (*cmdline)->next;
 	s = ft_strdup("");
@@ -118,5 +118,6 @@ void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd)
 		new_fd = open((*cmdline)->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		set_out_fd(cmd, new_fd);
 	}
+	free((*cmdline)->str);
 	(*cmdline) = (*cmdline)->next;
 }

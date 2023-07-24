@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:50 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/24 15:13:33 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 17:01:04 by kaboussi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,16 @@ char	*find_var(t_var *var, char *str)
 
 	val = NULL;
 	if (!strcmp("?", str))
+	{
 		val = ft_itoa(gl.exit_status);
+		free(str);
+		return (val);
+	}
 	while (var)
 	{
 		if (!strcmp(var->key, str))
 		{
-			val = var->val;
+			val = ft_strdup(var->val);
 		}
 		var = var->next;
 	}
