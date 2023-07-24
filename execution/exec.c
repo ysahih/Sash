@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:46:35 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/23 18:46:15 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 13:18:15 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,10 @@ void	in_child(t_all *all, t_simple_cmd *tmp, int fd[2])
 		dup2(tmp->in_fd, 0);
 	if (tmp->next)
 	{
-		dup2(fd[1], tmp->out_fd);
+		if (tmp->out_fd == 1)
+			dup2(fd[1], 1);
+		else
+			dup2(fd[1], tmp->out_fd);
 		close(fd[0]);
 		close(fd[1]);
 	}
@@ -98,12 +101,32 @@ void	closee(t_simple_cmd *tmp, int fd[2])
 {
 	if (tmp->next)
 	{
-		dup2(fd[0], tmp->in_fd);
+		dup2(fd[0], 0);
 		close(fd[0]);
 		close(fd[1]);
 	}
 	else
 		close(0);
+}
+
+void	print_message(t_simple_cmd *tmp)
+{
+	if (tmp->err)
+	{	
+		ft_putstr_fd("sash : ", 2);
+		ft_putstr_fd(strerror(tmp->err), 2);
+		ft_putstr_fd("\n", 2);
+	}
+}
+
+t_simple_cmd	*empty_cmd(t_simple_cmd *tmp)
+{
+	if (!*(tmp->str))
+	{
+		print_message(tmp);
+		tmp = tmp->next;
+	}
+	return (tmp);
 }
 
 void	many_cmds(t_all *all, t_simple_cmd *tmp)
@@ -115,6 +138,9 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp)
 	t = tmp;
 	while (tmp)
 	{
+		tmp = empty_cmd(tmp);
+		if (!tmp)
+			return ;
 		if (tmp->next)
 			pipe(fd);
 		i = fork();
@@ -131,16 +157,6 @@ void	many_cmds(t_all *all, t_simple_cmd *tmp)
 	}
 }
 
-void	print_message(t_simple_cmd *tmp)
-{
-	if (tmp->err)
-	{	
-		ft_putstr_fd("sash : ", 2);
-		ft_putstr_fd(strerror(tmp->err), 2);
-		ft_putstr_fd("\n", 2);
-	}
-}
-
 int	exec(t_all *all)
 {
 	int				i;
@@ -153,8 +169,9 @@ int	exec(t_all *all)
 		return (0);
 	tmp = all->cmd;
 	fd = dup(0);
-	if (!*(tmp->str))
-		print_message(tmp);
+	tmp = empty_cmd(tmp);
+	if (!tmp)
+		return (0);
 	if (!tmp->next)
 		gl.exit_status = one_cmd(all, tmp);
 	else

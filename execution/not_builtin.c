@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/23 17:04:08 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 13:18:07 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,19 @@ void	notbuiltin_error(t_simple_cmd *p, int len, int flag)
 		ft_putstr_fd("\n", 2);
 		exit(1);
 	}
-	if ((p->str[0][0] == '/' || p->str[0][len - 1] == '/')
-		&& flag == 1)
+	if (flag == 1
+		&& (p->str[0][0] == '/' || p->str[0][len - 1] == '/'))
 	{
 		ft_putstr_fd("sash: ", 2);
 		ft_putstr_fd(p->str[0], 2);
 		ft_putstr_fd(": ", 2);
+	}
+	if (flag == 2)
+	{
+		ft_putstr_fd("sash: ", 2);
+		ft_putstr_fd(p->str[0], 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		exit(127);
 	}
 }
 
@@ -65,12 +72,12 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 	t_var	*key;
 	int		len;
 
-	len = 0;
 	i = fork();
 	if (i == 0)
 	{
 		sigreset();
 		shelvl(all, p);
+		len = ft_strlen(p->str[0]);
 		notbuiltin_error(p, len, 0);
 		k = my_env(all);
 		dup2(p->in_fd, 0);
@@ -78,10 +85,11 @@ void	one_cmd_nob(t_all *all, t_simple_cmd *p)
 		key = check_char(all->env, "PATH");
 		if (key)
 			check_path(key, k, p);
-		execve(p->str[0], p->str, k);
-		len = ft_strlen(p->str[0]);
+		else
+			notbuiltin_error(p, len, 2);
 		notbuiltin_error(p, len, 1);
 		perror("");
+		exit(126);
 	}
 	wa_it();
 }

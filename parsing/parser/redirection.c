@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:42 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/23 17:34:43 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 11:21:57 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,5 @@ void	parse_red(t_lexer **cmdline, t_simple_cmd **cmd)
 		new_fd = open((*cmdline)->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		set_out_fd(cmd, new_fd);
 	}
-	free((*cmdline)->str);
 	(*cmdline) = (*cmdline)->next;
 }

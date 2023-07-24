@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   notbuiltin_utils1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 14:41:23 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/21 14:42:47 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/24 13:17:48 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,11 @@ void	check_path(t_var *key, char **k, t_simple_cmd *p)
 	path = ft_split_path(key->val);
 	if (!strchr(p->str[0], '/'))
 	{
-		i = 0;
-		while (path[i])
+		i = -1;
+		while (path[++i])
 		{
+			if (!*p->str[0])
+				cmd_not_found(path, k, p);
 			join = ft_strjoin(path[i], "/");
 			join = ft_strjoin_n(join, p->str[0]);
 			if (access(join, R_OK) == 0)
@@ -95,7 +97,6 @@ void	check_path(t_var *key, char **k, t_simple_cmd *p)
 				execve(join, p->str, k);
 			}
 			free(join);
-			i++;
 		}
 		cmd_not_found(path, k, p);
 	}

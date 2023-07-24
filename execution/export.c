@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 16:28:32 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/23 17:04:58 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/24 11:51:56 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	egal_not_exist(t_all *all, t_simple_cmd *p, int i)
 {
 	t_var	*tmp_ex;
-	char	*str;
 
 	if (is_valid(p->str[i]) == -1)
 	{

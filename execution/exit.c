@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 17:41:06 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/21 12:56:17 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/24 12:09:40 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ unsigned long long	ft_atoi(char *str)
 	}
 	while (str[i] >= '0' && str[i] <= '9')
 		n = (n * 10) + str[i++] - 48;
-	if (((str[i] < 48 || str[i] > 57) && str[i]) || n * s > 9223372036854775807)
+	if (((str[i] < 48 || str[i] > 57) && str[i])
+		|| ft_strlen(str) > 19 || n * s > 9223372036854775807)
 	{
 		printf("exit\nsash: exit: %s: numeric argument required\n", str);
 		gl.exit_status = 255;
