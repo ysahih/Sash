@@ -1,4 +1,4 @@
-NAME = minishell
+NAME = sash
 
 HDR = minishell.h
 

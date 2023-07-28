@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 17:20:17 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/25 09:59:25 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/28 19:00:36 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	core(t_all *all)
 	while (true)
 	{
 		g_gl.rl = 0;
-		line = readline("minishell>$ ");
+		line = readline("sash-1.2$ ");
 		if (!line)
 			return (printf("exit\n"), free_enex(all->env), free_enex(all->exp));
 		if (*line)
