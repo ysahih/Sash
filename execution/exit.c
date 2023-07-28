@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 17:41:06 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/24 18:29:43 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/25 09:59:25 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ unsigned long long	ft_atoi(char *str)
 	if (((str[i] < 48 || str[i] > 57) && str[i])
 		|| ft_strlen(str) > 19 || n * s > 9223372036854775807)
 	{
-		printf("exit\nsash: exit: %s: numeric argument required\n", str);
+		printf("exit\nminishell: exit: %s: numeric argument required\n", str);
 		g_gl.exit_status = 255;
 		exit(255);
 	}
@@ -55,7 +55,7 @@ int	ex_it(t_all *all)
 	}
 	if (ft_atoi(p->str[1]) && p->str[2])
 	{
-		printf("exit\nsash: exit: too many arguments\n");
+		printf("exit\nminishell: exit: too many arguments\n");
 		g_gl.exit_status = 1;
 		exit(1);
 	}

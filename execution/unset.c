@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 21:07:40 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/23 17:03:37 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/25 09:59:25 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	unset(t_simple_cmd *p, t_var **env, t_var **exp)
 		if ((is_alpha(p->str[i][0]) != 1 && p->str[i][0] != '_') || \
 		invalid_unset(p->str[i]) == 1)
 		{
-			ft_putstr_fd("sash: unset: `", 2);
+			ft_putstr_fd("minishell: unset: `", 2);
 			ft_putstr_fd(p->str[i], 2);
 			ft_putstr_fd("\': not a valid identifier\n", 2);
 			flag++;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_swap_home.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 14:44:05 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/21 17:59:07 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/25 09:59:25 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@ int	home_success(t_all *all, t_pwd *p)
 			free(p->pwd_ex->val), p->pwd_ex->val = ft_strdup(p->node->val), 0);
 		}
 		else
-			return (ft_putstr_fd("sash: cd: PWD not set\n", 2), 0);
+			return (ft_putstr_fd("minishell: cd: PWD not set\n", 2), 0);
 	}
 	return (0);
 }
 
 void	cd_error(char *path, char *str)
 {
-	ft_putstr_fd("sash: ", 2);
+	ft_putstr_fd("minishell: ", 2);
 	if (access(path, F_OK) == -1)
 	{
 		ft_putstr_fd("cd: ", 2);
@@ -72,7 +72,7 @@ int	cd_home(t_all *all)
 	err = -1;
 	pwd.node = check_char(all->exp, "HOME");
 	if (!pwd.node)
-		return (ft_putstr_fd("sash: cd: HOME not set\n", 2), 0);
+		return (ft_putstr_fd("minishell: cd: HOME not set\n", 2), 0);
 	else
 		err = chdir(pwd.node->val);
 	if (err == 0)
@@ -95,7 +95,7 @@ void	swap_success(t_pwd *pwd)
 	char	*val;
 
 	if (!pwd->pwd_en | !pwd->pwd_ex)
-		return (ft_putstr_fd("sash: cd: PWD not set\n", 2));
+		return (ft_putstr_fd("minishell: cd: PWD not set\n", 2));
 	else
 	{
 		val = ft_strdup(pwd->pwd_en->val);
@@ -122,7 +122,7 @@ int	cd_swap(t_all *all)
 	pd.oldpwd_en = check_char(all->env, "OLDPWD");
 	pd.oldpwd_ex = check_char(all->exp, "OLDPWD");
 	if (!pd.oldpwd_en || !pd.oldpwd_ex)
-		return (ft_putstr_fd("sash: cd: OLDPWD not set\n", 2), 0);
+		return (ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2), 0);
 	else
 		err = chdir(pd.oldpwd_en->val);
 	if (err == 0)

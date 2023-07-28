@@ -6,11 +6,11 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 17:27:46 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/24 17:48:10 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/25 09:56:00 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	empty_env(t_all *all)
 {

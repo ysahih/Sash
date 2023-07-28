@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 14:13:39 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/23 17:04:42 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/25 09:59:25 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	print_invalid(t_simple_cmd *p, int i)
 {
-	ft_putstr_fd("sash: export: `", 2);
+	ft_putstr_fd("minishell: export: `", 2);
 	ft_putstr_fd(p->str[i], 2);
 	ft_putstr_fd("': not a valid identifier\n", 2);
 }

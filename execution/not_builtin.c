@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 16:49:15 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/24 18:29:43 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/25 09:59:25 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	notbuiltin_error(t_simple_cmd *p, int len, int flag)
 {
 	if (p->err && flag == 0)
 	{
-		ft_putstr_fd("sash : ", 2);
+		ft_putstr_fd("minishell : ", 2);
 		ft_putstr_fd(strerror(p->err), 2);
 		ft_putstr_fd("\n", 2);
 		exit(1);
@@ -52,13 +52,13 @@ void	notbuiltin_error(t_simple_cmd *p, int len, int flag)
 	if (flag == 1
 		&& (p->str[0][0] == '/' || p->str[0][len - 1] == '/'))
 	{
-		ft_putstr_fd("sash: ", 2);
+		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(p->str[0], 2);
 		ft_putstr_fd(": ", 2);
 	}
 	if (flag == 2)
 	{
-		ft_putstr_fd("sash: ", 2);
+		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(p->str[0], 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
 		exit(127);

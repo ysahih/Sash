@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:32 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/24 18:29:43 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/25 09:59:25 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool	pipe_checker(t_lexer *cmd, int i)
 
 void	print_err(char *s)
 {
-	ft_putstr_fd("sash: syntax error near unexpected token '", 2);
+	ft_putstr_fd("minishell: syntax error near unexpected token '", 2);
 	ft_putstr_fd(s, 2);
 	ft_putstr_fd("'\n", 2);
 	g_gl.exit_status = 258;
@@ -65,7 +65,7 @@ bool	analyze_quote(t_lexer **node, int flag)
 	cmd = *node;
 	if (!cmd->next)
 	{
-		ft_putstr_fd("sash: syntax error: unexpected end of file\n", 2);
+		ft_putstr_fd("minishell: syntax error: unexpected end of file\n", 2);
 		g_gl.exit_status = 258;
 		return (false);
 	}
@@ -75,7 +75,7 @@ bool	analyze_quote(t_lexer **node, int flag)
 	*node = cmd;
 	if (!cmd)
 	{
-		ft_putstr_fd("sash: syntax error: unexpected end of file\n", 2);
+		ft_putstr_fd("minishell: syntax error: unexpected end of file\n", 2);
 		g_gl.exit_status = 258;
 		return (false);
 	}

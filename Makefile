@@ -1,10 +1,10 @@
-NAME = sash
+NAME = minishell
 
 HDR = minishell.h
 
 SRCS = main.c\
-signals.c\
-empty_env.c\
+utils/signals.c\
+utils/empty_env.c\
 parsing/lexer/lexer_tools.c\
 parsing/lexer/lexer.c\
 parsing/parser/expander.c\
@@ -21,7 +21,7 @@ utils/utils01.c\
 utils/utils02.c\
 syntax_analyzer/syntax_analyzer.c\
 syntax_analyzer/tools.c\
-allocate.c\
+utils/allocate.c\
 execution/exec.c\
 execution/exec_utils.c\
 execution/utils00.c\
@@ -48,7 +48,7 @@ RM = rm -rf
 CC = cc
 OBJS = $(SRCS:%.c=%.o)
 B_OBJS = $(B_SRCS:%.c=%.o)
-CFLAGS = -Wall -Wextra -Werror -I/Users/ysahih/Desktop/readline/include -fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror -I/Users/ysahih/Desktop/readline/include
  
 RLFLAGS = -L/Users/ysahih/Desktop/readline/lib/
 

@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 16:28:32 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/24 11:51:56 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/25 09:59:25 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	egal_not_exist(t_all *all, t_simple_cmd *p, int i)
 
 	if (is_valid(p->str[i]) == -1)
 	{
-		ft_putstr_fd("sash: export: `", 2);
+		ft_putstr_fd("minishell: export: `", 2);
 		ft_putstr_fd(p->str[i], 2);
 		ft_putstr_fd("': not a valid identifier\n", 2);
 		return ;

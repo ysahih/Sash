@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 19:37:48 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/24 18:29:43 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/25 09:59:25 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	print_message(t_simple_cmd *tmp)
 {
 	if (tmp->err)
 	{	
-		ft_putstr_fd("sash : ", 2);
+		ft_putstr_fd("minishell : ", 2);
 		ft_putstr_fd(strerror(tmp->err), 2);
 		ft_putstr_fd("\n", 2);
 	}
@@ -75,7 +75,7 @@ void	print_message_err(t_simple_cmd *tmp)
 {
 	if (tmp->err)
 	{	
-		ft_putstr_fd("sash : ", 2);
+		ft_putstr_fd("minishell : ", 2);
 		ft_putstr_fd(strerror(tmp->err), 2);
 		ft_putstr_fd("\n", 2);
 		exit(1);

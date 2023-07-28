@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kaboussi <kaboussi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 19:39:14 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/21 12:38:40 by kaboussi         ###   ########.fr       */
+/*   Updated: 2023/07/25 09:59:25 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	else_success(t_all *all, t_pwd *pwd, char *path)
 		pwd->oldpwd_ex->val = NULL;
 		return (pwd->oldpwd_ex->val = ft_strdup(val), free(val), 0);
 	}
-	return (ft_putstr_fd("sash: cd: PWD not set\n", 2), 0);
+	return (ft_putstr_fd("minishell: cd: PWD not set\n", 2), 0);
 }
 
 int	cd_else(t_all *all)

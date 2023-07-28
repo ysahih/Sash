@@ -6,11 +6,11 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 18:27:22 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/24 18:29:43 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/25 09:56:15 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	handle_int(int sig)
 {

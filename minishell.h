@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 17:43:01 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/24 18:33:35 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/25 10:00:25 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include <string.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdbool.h>

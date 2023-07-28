@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 14:41:23 by kaboussi          #+#    #+#             */
-/*   Updated: 2023/07/24 18:29:43 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/25 09:59:25 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	cmd_not_found(char **path, char **k, t_simple_cmd *p)
 {
 	ft_freee(path);
 	ft_freee(k);
-	ft_putstr_fd("sash: ", 2);
+	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(p->str[0], 2);
 	ft_putstr_fd(": command not found\n", 2);
 	g_gl.exit_status = 127;
@@ -57,7 +57,7 @@ void	shelvl(t_all *all, t_simple_cmd *p)
 	int		new;
 	char	*str;
 
-	if (!ft_strcmp(p->str[0], "./sash"))
+	if (!ft_strcmp(p->str[0], "./minishell"))
 	{
 		shelvl_en = check_char(all->env, "SHLVL");
 		shelvl_ex = check_char(all->exp, "SHLVL");

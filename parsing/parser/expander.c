@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:50 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/24 18:29:43 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/28 18:55:26 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,14 @@ char	*find_var(t_var *var, char *str)
 	char	*val;
 
 	val = NULL;
-	if (!strcmp("?", str))
+	if (!ft_strcmp("?", str))
 	{
 		val = ft_itoa(g_gl.exit_status);
-		free(str);
 		return (val);
 	}
 	while (var)
 	{
-		if (!strcmp(var->key, str))
+		if (!ft_strcmp(var->key, str))
 		{
 			val = ft_strdup(var->val);
 		}

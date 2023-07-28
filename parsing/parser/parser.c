@@ -6,7 +6,7 @@
 /*   By: ysahih <ysahih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:34:44 by ysahih            #+#    #+#             */
-/*   Updated: 2023/07/24 18:29:43 by ysahih           ###   ########.fr       */
+/*   Updated: 2023/07/25 09:59:25 by ysahih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_lexer	*filter(t_all *all, t_lexer *cmdline)
 		cmd = cmd->next;
 	if (!cmd || (cmd && cmd->type == WSPACE))
 	{
-		ft_putstr_fd("sash: : command not found\n", 2);
+		ft_putstr_fd("minishell: : command not found\n", 2);
 		g_gl.exit_status = 127;
 		while (cmd && cmd->type != PIPE)
 			cmd = cmd->next;
